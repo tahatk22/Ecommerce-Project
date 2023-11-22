@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Attract.Framework\Attract.Framework.csproj" />
+    <ProjectReference Include="..\Attract.Infrastructure\Attract.Infrastructure.csproj" />
     <ProjectReference Include="..\Attract.Service\Attract.Service.csproj" />
     <ProjectReference Include="..\AttractDomain\AttractDomain.csproj" />
   </ItemGroup>
