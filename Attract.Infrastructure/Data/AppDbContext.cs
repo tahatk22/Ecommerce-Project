@@ -1,13 +1,6 @@
 ﻿using Attract.Domain.Entities.Attract;
-using Attract.Domain.Entities.Lookup;
 using AttractDomain.Entities.Attract;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Attract.Infrastructure.Data
 {
@@ -17,7 +10,13 @@ namespace Attract.Infrastructure.Data
         {
 
         }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails{ get; set; }
+        public DbSet<Bill> Bills{ get; set; }
 
     }
 }

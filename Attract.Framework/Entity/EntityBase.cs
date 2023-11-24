@@ -9,9 +9,9 @@ namespace Attract.Framework.Entity
         public EntityBase()
         {
             CreatedOn = DateTime.Now;
-            IsDeleted = false;
+            IsActive = false;
         }
-        public virtual bool IsDeleted { get; set; }
+        public virtual bool IsActive { get; set; }
         public virtual int CreatedBy { get; set; }
         public virtual DateTime CreatedOn { get;  set; }
         public virtual int? ModifyBy { get;  set; }
