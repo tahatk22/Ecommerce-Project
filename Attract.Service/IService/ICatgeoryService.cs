@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Attract.Service
+namespace Attract.Service.IService
 {
-    public interface IProductTest
+    public interface ICatgeoryService
     {
-        Task<BaseCommandResponse> GetProducts();
+        Task<BaseCommandResponse> GetAllCategories();
     }
 }

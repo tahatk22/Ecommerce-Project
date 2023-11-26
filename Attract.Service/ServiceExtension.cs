@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Attract.Service.IService;
+using Attract.Service.Service;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Attract.Service
 {
@@ -6,7 +8,7 @@ namespace Attract.Service
     {
         public static void ConfigureService(this IServiceCollection services)
         {
-            services.AddScoped<IProductTest, ProductTest>();
+            services.AddScoped<ICatgeoryService,CategoryService>();
         }
     }
 }

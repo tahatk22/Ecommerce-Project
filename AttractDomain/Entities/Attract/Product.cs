@@ -1,21 +1,35 @@
-﻿using Attract.Domain.Entities.Lookup;
-using Attract.Framework.Entity;
+﻿using Attract.Framework.Entity;
+using AttractDomain.Entities.Attract;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Attract.Domain.Entities.Attract
 {
-    [Table("ProductType", Schema = "Attract")]
+    [Table("Product", Schema = "Attract")]
 
     public class Product: EntityBase
     {
+        public Product()
+        {
+            Images = new HashSet<ProductImage>();
+            OrderDetails=new HashSet<OrderDetail>();
+        }
         public int Id { get; set; }
+        [MaxLength(250)]
+        [Required]
         public string Name { get; set; }
+        [Required]
         public decimal Price { get; set; }
         public string Description { get; set; }
-        //public int? ProductTypeId { get; set; }
-        //public virtual ProductType ProductType { get; set; }
-        //public int? CategoryId { get; set; }
-        //public virtual Category Category { get; set; }
-        //public ICollection<string> AvailableSize { get; set; }
+        [Required]
+        public int Quantity { get; set; }
+        [Required]
+        public ICollection<string> Colors { get; set; }
+        public int? SubCategoryId { get; set; }
+        public virtual SubCategory SubCategory { get; set; }
+        public ICollection<ProductImage> Images { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        [Required]
+        public ICollection<string> AvailableSize { get; set; }
     }
 }
