@@ -11,6 +11,15 @@ namespace Attract.Infrastructure.Data
         {
 
         }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<AvailableSize>  availableSizes { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails{ get; set; }
+        public DbSet<Bill> Bills{ get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BillConfiguration());
@@ -21,15 +30,5 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ColorConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableSizeConfiguration());
         }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<SubCategory> SubCategories { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<Color> Colors { get; set; }
-        public DbSet<AvailableSize>  availableSizes { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails{ get; set; }
-        public DbSet<Bill> Bills{ get; set; }
-
     }
 }
