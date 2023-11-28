@@ -13,8 +13,9 @@ namespace Attract.Framework
     {
         public static void ConfigureFramework(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IRepositoryFactory, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
     }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Attract.Infrastructure.Data
 {
-    public class AppDbContext:IdentityDbContext<User>
+    public class AppDbContext:DbContext
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
