@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Entities.Attract
 {
-    [Table("ProductImage", Schema = "Attract")]
-
-    public class ProductImage:EntityBase
+    [Table("Color", Schema = "Attract")]
+    public class Color : EntityBase
     {
         public int Id { get; set; }
         [MaxLength(250)]
