@@ -4,6 +4,7 @@ using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Attract.Service.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductService(IUnitOfWork unitOfWork,IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -25,7 +26,7 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId)
         {
             var response = new BaseCommandResponse();
-            var products=await unitOfWork.GetRepository<Product>().GetAllAsync(s=>s.SubCategoryId==subCategoryId);
+            var products = await unitOfWork.GetRepository<Product>().GetAllAsync(s => s.SubCategoryId == subCategoryId,include: s => s.Include(p => p.Colors));
             if (products == null)
             {
                 response.Success = false;

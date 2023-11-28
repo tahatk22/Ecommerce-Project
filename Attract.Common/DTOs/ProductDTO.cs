@@ -19,11 +19,9 @@ namespace Attract.Common.DTOs
         [Required]
         public int Quantity { get; set; }
         [Required]
-        [JsonPropertyName("Colors")]
-        public IList<string> Colors { get; set; }
+        public List<string> Colors { get; set; }
         public int? SubCategoryId { get; set; }
         [Required]
-        [JsonPropertyName("AvailableSize")]
 
         public IList<string> AvailableSize { get; set; }
     }

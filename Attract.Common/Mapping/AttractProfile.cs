@@ -12,7 +12,7 @@ namespace Attract.Common.Mapping
         }
         private void AttractMapper()
         {
-            CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ForMember(s=>s.Colors,tr=>tr.MapFrom(a=>a.Colors.Select(s=>s.Name))).ReverseMap();
         }
     }
 }
