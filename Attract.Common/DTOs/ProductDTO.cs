@@ -22,7 +22,6 @@ namespace Attract.Common.DTOs
         public List<string> Colors { get; set; }
         public int? SubCategoryId { get; set; }
         [Required]
-
-        public IList<string> AvailableSize { get; set; }
+        public List<string> AvailableSize { get; set; }
     }
 }
