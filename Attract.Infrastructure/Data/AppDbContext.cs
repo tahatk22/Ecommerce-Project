@@ -1,4 +1,5 @@
 ﻿using Attract.Domain.Entities.Attract;
+using AttractDomain.Configuration;
 using AttractDomain.Entities.Attract;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,13 @@ namespace Attract.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<Bill> Bills{ get; set; }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new BillConfiguration());
+            modelBuilder.ApplyConfiguration(new ImageConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
+        }
     }
 }
