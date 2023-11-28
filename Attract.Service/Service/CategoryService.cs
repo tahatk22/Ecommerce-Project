@@ -2,12 +2,6 @@
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Attract.Service.Service
 {
@@ -22,10 +16,12 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> GetAllCategories()
         {
             var response = new BaseCommandResponse();
-            var categories=await unitOfWork.GetRepository<Category>().GetAllAsync();
-            response.Success=true;
-            response.Data=categories;
+            var categories = await unitOfWork.GetRepository<Category>()
+                .GetAllAsync(include: s => Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include(s, p => p.SubCategories));
+            response.Success = true;
+            response.Data = categories;
             return response;
         }
+
     }
 }
