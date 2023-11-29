@@ -10,5 +10,6 @@ namespace Attract.Service.IService
     public interface ICatgeoryService
     {
         Task<BaseCommandResponse> GetAllCategories();
+        Task<BaseCommandResponse> GetCategory(int categoryID);
     }
 }

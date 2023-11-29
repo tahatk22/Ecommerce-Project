@@ -21,5 +21,10 @@ namespace Attract.API.Controllers.Category
         {
             return Ok(await catgeoryService.GetAllCategories());
         }
+        [HttpGet("GetCategory/{ctgryId}")]
+        public async Task<ActionResult<BaseCommandResponse>> GetCategory(int ctgryId)
+        {
+            return Ok(await catgeoryService.GetCategory(ctgryId));
+        }
     }
 }
