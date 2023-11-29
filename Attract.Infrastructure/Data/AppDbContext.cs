@@ -16,10 +16,13 @@ namespace Attract.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Color> Colors { get; set; }
-        public DbSet<AvailableSize>  availableSizes { get; set; }
+        public DbSet<AvailableSize>  AvailableSizes { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<Bill> Bills{ get; set; }
+        public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
+        public DbSet<ProductColor> ProductColors{ get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BillConfiguration());
@@ -27,8 +30,8 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new ColorConfiguration());
-            modelBuilder.ApplyConfiguration(new AvailableSizeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());
         }
     }
 }
