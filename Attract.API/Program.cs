@@ -21,8 +21,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<DbContext, AppDbContext>();
 
 builder.Services.ConfigureFramework();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
 builder.Services.ConfigureService();
 var app = builder.Build();
+app.UseCors("AllowAnyOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
