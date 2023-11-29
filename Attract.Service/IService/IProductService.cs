@@ -1,4 +1,5 @@
 ﻿using Attract.Common.BaseResponse;
+using Attract.Common.DTOs.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Attract.Service.IService
     public interface IProductService
     {
         Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId);
+        Task<BaseCommandResponse> AddProduct(AddProductDTO addProductDTO);
     }
 }
