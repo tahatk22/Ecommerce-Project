@@ -1,4 +1,5 @@
 ﻿using Attract.Common.BaseResponse;
+using Attract.Common.DTOs;
 using Attract.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,16 @@ namespace Attract.API.Controllers.Category
         public async Task<ActionResult<BaseCommandResponse>> GetCategory(int ctgryId)
         {
             return Ok(await catgeoryService.GetCategory(ctgryId));
+        }
+        [HttpPost("AddCtgry")]
+        public async Task<ActionResult<BaseCommandResponse>> AddCtegory(categoryAddDto categoryAddDto)
+        {
+            return Ok(await catgeoryService.AddCategory(categoryAddDto));
+        }
+        [HttpPut("UpdCtgry")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdCtgry(categoryUpdDto categoryUpdDto)
+        {
+            return Ok(await catgeoryService.UpdCategory(categoryUpdDto));
         }
     }
 }

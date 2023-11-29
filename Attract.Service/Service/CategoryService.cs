@@ -17,6 +17,37 @@ namespace Attract.Service.Service
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
+
+        public async Task<BaseCommandResponse> AddCategory(categoryAddDto categoryAddDto)
+        {
+            var response = new BaseCommandResponse();
+            var newCtgry = mapper.Map<Category>(categoryAddDto);
+            //var newProduct = mapper.Map<Product>(addProductDTO);
+            await unitOfWork.GetRepository<Category>().InsertAsync(newCtgry);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newCtgry.Id;
+            return response;
+        }
+        public async Task<BaseCommandResponse> UpdCategory(categoryUpdDto categoryUpdDto)
+        {
+            var response = new BaseCommandResponse();
+            // Retrieve the existing category from the database
+            var existingCategory = await unitOfWork.GetRepository<Category>().GetFirstOrDefaultAsync(predicate: x => x.Id == categoryUpdDto.Id);
+
+            if (existingCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Category not found.";
+                return response;
+            }
+            var newCtgry = mapper.Map<Category>(categoryUpdDto);
+            unitOfWork.GetRepository<Category>().UpdateAsync(newCtgry);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newCtgry.Id;
+            return response;
+        }
         public async Task<BaseCommandResponse> GetAllCategories()
         {
             var response = new BaseCommandResponse();

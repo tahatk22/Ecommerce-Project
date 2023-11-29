@@ -14,6 +14,11 @@ namespace Attract.Common.Mapping
         {
             CreateMap<Product, ProductDTO>().ForMember(s=>s.Colors,tr=>tr.MapFrom(a=>a.Colors.Select(s=>s.Name))).ReverseMap();
             CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
+            CreateMap<categoryAddDto, Category>();
+            CreateMap<categoryUpdDto, Category>()
+            .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+
         }
     }
 }
