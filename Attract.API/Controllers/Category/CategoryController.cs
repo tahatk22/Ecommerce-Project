@@ -28,12 +28,12 @@ namespace Attract.API.Controllers.Category
             return Ok(await catgeoryService.GetCategory(ctgryId));
         }
         [HttpPost("AddCtgry")]
-        public async Task<ActionResult<BaseCommandResponse>> AddCtegory(categoryAddDto categoryAddDto)
+        public async Task<ActionResult<BaseCommandResponse>> AddCtegory(CategoryAddDto categoryAddDto)
         {
             return Ok(await catgeoryService.AddCategory(categoryAddDto));
         }
         [HttpPut("UpdCtgry")]
-        public async Task<ActionResult<BaseCommandResponse>> UpdCtgry(categoryUpdDto categoryUpdDto)
+        public async Task<ActionResult<BaseCommandResponse>> UpdCtgry(CategoryUpdDto categoryUpdDto)
         {
             return Ok(await catgeoryService.UpdCategory(categoryUpdDto));
         }

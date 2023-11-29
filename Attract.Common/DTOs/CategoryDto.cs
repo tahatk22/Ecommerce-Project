@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs
 {
-    public class CategoryDto:categoryAddDto
+    public class CategoryDto:CategoryAddDto
     {
         public int Id { get; set; }
         public IList<string> SubCategories { get; set; }

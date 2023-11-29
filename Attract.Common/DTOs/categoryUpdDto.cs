@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs
 {
-    public class categoryUpdDto:categoryAddDto
+    public class CategoryUpdDto:CategoryAddDto
     {
         public int Id { get; set; }
     }

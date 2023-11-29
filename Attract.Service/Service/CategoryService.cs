@@ -18,7 +18,7 @@ namespace Attract.Service.Service
             this.mapper = mapper;
         }
 
-        public async Task<BaseCommandResponse> AddCategory(categoryAddDto categoryAddDto)
+        public async Task<BaseCommandResponse> AddCategory(CategoryAddDto categoryAddDto)
         {
             var response = new BaseCommandResponse();
             var newCtgry = mapper.Map<Category>(categoryAddDto);
@@ -29,7 +29,7 @@ namespace Attract.Service.Service
             response.Data = newCtgry.Id;
             return response;
         }
-        public async Task<BaseCommandResponse> UpdCategory(categoryUpdDto categoryUpdDto)
+        public async Task<BaseCommandResponse> UpdCategory(CategoryUpdDto categoryUpdDto)
         {
             var response = new BaseCommandResponse();
             // Retrieve the existing category from the database

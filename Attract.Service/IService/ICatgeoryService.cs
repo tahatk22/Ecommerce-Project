@@ -12,7 +12,7 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllCategories();
         Task<BaseCommandResponse> GetCategory(int categoryID);
-        Task<BaseCommandResponse> AddCategory(categoryAddDto categoryAddDto);
-        Task<BaseCommandResponse> UpdCategory(categoryUpdDto categoryUpdDto);
+        Task<BaseCommandResponse> AddCategory(CategoryAddDto categoryAddDto);
+        Task<BaseCommandResponse> UpdCategory(CategoryUpdDto categoryUpdDto);
     }
 }

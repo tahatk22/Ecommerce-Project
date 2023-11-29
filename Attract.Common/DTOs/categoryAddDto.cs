@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs
 {
-    public class categoryAddDto
+    public class CategoryAddDto
     {
         public string CategoryName { get; set; }
         public string Description { get; set; }
