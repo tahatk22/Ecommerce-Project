@@ -4,6 +4,7 @@ using Attract.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attract.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128100916_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,7 +134,12 @@ namespace Attract.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("AvailableSize", "Attract");
                 });
@@ -201,7 +209,12 @@ namespace Attract.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Color", "Attract");
                 });
@@ -284,66 +297,6 @@ namespace Attract.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetail", "Attract");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AvailableSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProductId", "AvailableSizeId");
-
-                    b.HasIndex("AvailableSizeId");
-
-                    b.ToTable("ProductAvailableSize", "Attract");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProductId", "ColorId");
-
-                    b.HasIndex("ColorId");
-
-                    b.ToTable("ProductColor", "Attract");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductImage", b =>
@@ -432,6 +385,17 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("SubCategory");
                 });
 
+            modelBuilder.Entity("AttractDomain.Entities.Attract.AvailableSize", b =>
+                {
+                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
+                        .WithMany("AvailableSizes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("AttractDomain.Entities.Attract.Bill", b =>
                 {
                     b.HasOne("AttractDomain.Entities.Attract.Order", "Order")
@@ -439,6 +403,17 @@ namespace Attract.Infrastructure.Migrations
                         .HasForeignKey("AttractDomain.Entities.Attract.Bill", "OrderId");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("AttractDomain.Entities.Attract.Color", b =>
+                {
+                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
+                        .WithMany("Colors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.OrderDetail", b =>
@@ -452,44 +427,6 @@ namespace Attract.Infrastructure.Migrations
                         .HasForeignKey("ProductId");
 
                     b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.AvailableSize", "AvailableSize")
-                        .WithMany("ProductAvailableSizes")
-                        .HasForeignKey("AvailableSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("ProductAvailableSizes")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AvailableSize");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.Color", "Color")
-                        .WithMany("ProductColors")
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("ProductColors")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Color");
 
                     b.Navigation("Product");
                 });
@@ -523,23 +460,13 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("Attract.Domain.Entities.Attract.Product", b =>
                 {
+                    b.Navigation("AvailableSizes");
+
+                    b.Navigation("Colors");
+
                     b.Navigation("Images");
 
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductAvailableSizes");
-
-                    b.Navigation("ProductColors");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.AvailableSize", b =>
-                {
-                    b.Navigation("ProductAvailableSizes");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.Color", b =>
-                {
-                    b.Navigation("ProductColors");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.Order", b =>

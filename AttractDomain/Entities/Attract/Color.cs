@@ -10,14 +10,17 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Entities.Attract
 {
-    [Table("ProductImage", Schema = "Attract")]
-
-    public class ProductImage:EntityBase
+    [Table("Color", Schema = "Attract")]
+    public class Color : EntityBase
     {
+        public Color()
+        {
+            ProductColors=new HashSet<ProductColor>();
+        }
         public int Id { get; set; }
         [MaxLength(250)]
         public string Name { get; set; }
-        public int ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        public ICollection<ProductColor> ProductColors { get; set; }
+
     }
 }

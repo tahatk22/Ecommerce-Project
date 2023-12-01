@@ -9,7 +9,7 @@ namespace Attract.Framework.Entity
         public EntityBase()
         {
             CreatedOn = DateTime.Now;
-            IsActive = false;
+            IsActive = true;
         }
         public virtual bool IsActive { get; set; }
         public virtual int CreatedBy { get; set; }

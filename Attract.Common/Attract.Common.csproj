@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <ProjectReference Include="..\AttractDomain\AttractDomain.csproj" />
   </ItemGroup>
 
 </Project>

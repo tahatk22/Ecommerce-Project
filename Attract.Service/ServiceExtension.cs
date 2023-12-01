@@ -9,6 +9,7 @@ namespace Attract.Service
         public static void ConfigureService(this IServiceCollection services)
         {
             services.AddScoped<ICatgeoryService,CategoryService>();
+            services.AddScoped<IProductService,ProductService>();
         }
     }
 }

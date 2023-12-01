@@ -11,6 +11,8 @@ namespace Attract.Domain.Entities.Attract
     {
         public Product()
         {
+            ProductAvailableSizes = new HashSet<ProductAvailableSize>();
+            ProductColors = new HashSet<ProductColor>();
             Images = new HashSet<ProductImage>();
             OrderDetails=new HashSet<OrderDetail>();
         }
@@ -23,13 +25,13 @@ namespace Attract.Domain.Entities.Attract
         public string Description { get; set; }
         [Required]
         public int Quantity { get; set; }
-        [Required]
-        public ICollection<string> Colors { get; set; }
+
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public ICollection<ProductImage> Images { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
-        [Required]
-        public ICollection<string> AvailableSize { get; set; }
+        public ICollection<ProductAvailableSize> ProductAvailableSizes { get; set; }
+        public ICollection<ProductColor> ProductColors { get; set; }
+
     }
 }
