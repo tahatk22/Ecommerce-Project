@@ -1,5 +1,6 @@
 ﻿using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.Image;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,8 @@ namespace Attract.Common.DTOs.Product
         public int Id { get; set; }
         [Required]
         public IList<string> AvailableSizes { get; set; } 
-        public List<string> Colors { get; set; } 
+        public List<string> Colors { get; set; }
+        public List<string> ImagePaths { get; set; }
+
     }
 }

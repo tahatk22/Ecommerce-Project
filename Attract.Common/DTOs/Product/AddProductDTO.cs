@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Attract.Common.DTOs.Image;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,5 +15,11 @@ namespace Attract.Common.DTOs.Product
         public string Description { get; set; }
         public int Quantity { get; set; }
         public int? SubCategoryId { get; set; }
+
+        public class AddProductWithImageDTO
+        {
+            public AddProductDTO ProductDTO { get; set; }
+            public ProductImageDTO ProductImageDTO { get; set; }
+        }
     }
 }
