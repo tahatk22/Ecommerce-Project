@@ -10,6 +10,7 @@ namespace Attract.Service
         {
             services.AddScoped<ICatgeoryService,CategoryService>();
             services.AddScoped<IProductService,ProductService>();
+            services.AddScoped<ISubCategoryService,SubCategoryService>();
         }
     }
 }

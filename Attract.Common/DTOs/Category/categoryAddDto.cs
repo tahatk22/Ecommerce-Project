@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Attract.Common.DTOs
+namespace Attract.Common.DTOs.Category
 {
     public class CategoryAddDto
     {

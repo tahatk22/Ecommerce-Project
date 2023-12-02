@@ -1,5 +1,5 @@
 ﻿using Attract.Common.BaseResponse;
-using Attract.Common.DTOs;
+using Attract.Common.DTOs.Category;
 using Attract.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

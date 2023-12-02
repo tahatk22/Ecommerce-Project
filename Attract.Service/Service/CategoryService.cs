@@ -1,5 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs;
+using Attract.Common.DTOs.Category;
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;

@@ -1,4 +1,5 @@
-﻿using AttractDomain.Entities.Attract;
+﻿using Attract.Common.DTOs.Category;
+using AttractDomain.Entities.Attract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

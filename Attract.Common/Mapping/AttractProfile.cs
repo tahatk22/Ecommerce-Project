@@ -1,7 +1,9 @@
 ﻿using Attract.Common.DTOs;
 using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Product;
+using Attract.Common.DTOs.SubCategory;
 using Attract.Domain.Entities.Attract;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
@@ -27,7 +29,8 @@ namespace Attract.Common.Mapping
             CreateMap<CategoryAddDto, Category>();
             CreateMap<CategoryUpdDto, Category>()
             .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
-
+            /////////////////////////
+            CreateMap<SubCategory, SubCategoryDto>().ForMember(s => s.Products, tr => tr.MapFrom(a => a.Products.Select(s => s.Name))).ReverseMap(); ;
 
         }
     }
