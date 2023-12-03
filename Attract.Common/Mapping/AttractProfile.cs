@@ -35,7 +35,9 @@ namespace Attract.Common.Mapping
             .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
             /////////////////////////
             CreateMap<SubCategory, SubCategoryDto>().ForMember(s => s.Products, tr => tr.MapFrom(a => a.Products.Select(s => s.Name))).ReverseMap(); ;
-
+            CreateMap<SubCategoryAddDto, SubCategory>();
+            CreateMap<SubCategoryUpdDto, SubCategory>()
+           .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
         }
     }
 }

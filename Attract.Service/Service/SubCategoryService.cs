@@ -24,9 +24,16 @@ namespace Attract.Service.Service
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public Task<BaseCommandResponse> AddSubCategory(CategoryAddDto categoryAddDto)
+        public async Task<BaseCommandResponse> AddSubCategory(SubCategoryAddDto subCategoryAddDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseCommandResponse();
+            var newSubCtgry = mapper.Map<SubCategory>(subCategoryAddDto);
+            newSubCtgry.CreatedBy = 1;
+            await unitOfWork.GetRepository<SubCategory>().InsertAsync(newSubCtgry);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newSubCtgry.Id;
+            return response;
         }
 
         public async Task<BaseCommandResponse> GetAllSubCategories()
@@ -64,9 +71,26 @@ namespace Attract.Service.Service
 
         }
 
-        public Task<BaseCommandResponse> UpdSubCategory(CategoryUpdDto categoryUpdDto)
+        public async Task<BaseCommandResponse> UpdSubCategory(SubCategoryUpdDto subCategoryUpdDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseCommandResponse();
+            // Retrieve the existing category from the database
+            var existingSubCategory = await unitOfWork.GetRepository<SubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == subCategoryUpdDto.Id);
+
+            if (existingSubCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Category not found.";
+                return response;
+            }
+            var newSubCtgry = mapper.Map<SubCategory>(subCategoryUpdDto);
+            newSubCtgry.CreatedBy = existingSubCategory.CreatedBy;
+            newSubCtgry.CreatedOn = existingSubCategory.CreatedOn;
+            unitOfWork.GetRepository<SubCategory>().UpdateAsync(newSubCtgry);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newSubCtgry.Id;
+            return response;
         }
     }
 }

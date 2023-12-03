@@ -1,5 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Category;
+using Attract.Common.DTOs.SubCategory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllSubCategories();
         Task<BaseCommandResponse> GetSubCategory(int subCategoryId);
-        Task<BaseCommandResponse> AddSubCategory(CategoryAddDto categoryAddDto);
-        Task<BaseCommandResponse> UpdSubCategory(CategoryUpdDto categoryUpdDto);
+        Task<BaseCommandResponse> AddSubCategory(SubCategoryAddDto subCategoryAddDto);
+        Task<BaseCommandResponse> UpdSubCategory(SubCategoryUpdDto subCategoryUpdDto);
 
     }
 }
