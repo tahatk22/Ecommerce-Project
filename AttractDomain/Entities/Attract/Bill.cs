@@ -16,5 +16,7 @@ namespace AttractDomain.Entities.Attract
         public decimal TotalPrice { get; set; }
         public int? OrderId { get; set; }
         public virtual Order Order { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

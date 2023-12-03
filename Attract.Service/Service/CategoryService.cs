@@ -5,7 +5,6 @@ using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AutoMapper;
-using System.Data.Entity;
 
 namespace Attract.Service.Service
 {

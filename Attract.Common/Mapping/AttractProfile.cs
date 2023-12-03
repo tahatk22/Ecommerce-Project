@@ -4,6 +4,7 @@ using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
+using Attract.Common.DTOs.User;
 using Attract.Domain.Entities.Attract;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
@@ -19,6 +20,8 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
+            CreateMap<User,UserDTO>().ReverseMap();
+            CreateMap<User,LoginUserDTO>().ReverseMap();
             CreateMap<Product,AddProductDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))

@@ -2,6 +2,7 @@
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
@@ -31,12 +32,7 @@ namespace Attract.API.Controllers.Product
         [HttpPost("AddProduct")]
         public async Task<ActionResult<BaseCommandResponse>> UploadImage([FromForm] AddProductWithImageDTO addProductImageDto)
         {
-            // Validate and process the DTO as needed
-
-            // Call the service to add the product image
             var productId = await productService.AddProductImageAsync(addProductImageDto);
-
-            // Handle the result, e.g., return a response to the client
             return Ok(productId);
         }
     }
