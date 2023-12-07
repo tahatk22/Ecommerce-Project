@@ -15,5 +15,6 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId);
         Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductImageDTO);
+        Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO);
     }
 }

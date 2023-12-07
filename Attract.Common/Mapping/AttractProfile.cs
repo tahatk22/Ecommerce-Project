@@ -22,6 +22,8 @@ namespace Attract.Common.Mapping
 
             CreateMap<User,UserDTO>().ReverseMap();
             CreateMap<User,LoginUserDTO>().ReverseMap();
+            CreateMap<Product,EditProductDTO>().ReverseMap();
+            CreateMap<Product,EditProductWithImageDTO>().ReverseMap();
             CreateMap<Product,AddProductDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
