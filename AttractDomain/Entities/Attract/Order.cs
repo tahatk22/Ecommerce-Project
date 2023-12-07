@@ -20,11 +20,10 @@ namespace AttractDomain.Entities.Attract
         public int Id { get; set; }
         [MaxLength(250)]
         [Required]
-        public string Name { get; set; }
+        public string CustomerName { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
-        public int OrderNumber { get; set; }
         [Required]
-        public int Amount { get; set; }
+        public decimal TotalAmount { get; set; }
         public virtual Bill Bill { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
