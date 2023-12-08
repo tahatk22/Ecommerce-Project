@@ -2,6 +2,7 @@
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
 using Attract.Common.DTOs.User;
@@ -38,6 +39,13 @@ namespace Attract.Common.Mapping
             CreateMap<SubCategoryAddDto, SubCategory>();
             CreateMap<SubCategoryUpdDto, SubCategory>()
            .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+            //////////
+          CreateMap<CustomSubCategoryAddDto, CustomSubCategory>()
+            .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
+            .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
+
         }
     }
 }

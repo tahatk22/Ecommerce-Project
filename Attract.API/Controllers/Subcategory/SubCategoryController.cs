@@ -23,17 +23,17 @@ namespace Attract.API.Controllers.Subcategory
             return Ok(await subCategoryService.GetAllSubCategories());
         }
         [HttpGet("GetSubCategory/{subCtgryId}")]
-        public async Task<ActionResult<BaseCommandResponse>> GetCategory(int subCtgryId)
+        public async Task<ActionResult<BaseCommandResponse>> GetSubCategory(int subCtgryId)
         {
             return Ok(await subCategoryService.GetSubCategory(subCtgryId));
         }
         [HttpPost("AddSubCtgry")]
-        public async Task<ActionResult<BaseCommandResponse>> AddCtegory(SubCategoryAddDto subCategoryAddDto)
+        public async Task<ActionResult<BaseCommandResponse>> AddSubCtgry(SubCategoryAddDto subCategoryAddDto)
         {
             return Ok(await subCategoryService.AddSubCategory(subCategoryAddDto));
         }
         [HttpPut("UpdSubCtgry")]
-        public async Task<ActionResult<BaseCommandResponse>> UpdCtgry(SubCategoryUpdDto subCategoryUpdDto)
+        public async Task<ActionResult<BaseCommandResponse>> UpdSubCtgry(SubCategoryUpdDto subCategoryUpdDto)
         {
             return Ok(await subCategoryService.UpdSubCategory(subCategoryUpdDto));
         }

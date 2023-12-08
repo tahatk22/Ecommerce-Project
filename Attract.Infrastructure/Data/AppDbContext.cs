@@ -24,6 +24,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<Bill> Bills{ get; set; }
         public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
         public DbSet<ProductColor> ProductColors{ get; set; }
+        public DbSet<CustomSubCategory> customSubCategories{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
