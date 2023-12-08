@@ -12,6 +12,7 @@ namespace Attract.API.Controllers.Product
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
@@ -34,6 +35,13 @@ namespace Attract.API.Controllers.Product
         {
             var productId = await productService.AddProductImageAsync(addProductImageDto);
             return Ok(productId);
+        }
+
+        [HttpPut("UpdateProduct")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateProduct([FromForm] EditProductWithImageDTO editProductDTO)
+        {
+            var product = await productService.EditProductWithImageAsync(editProductDTO);
+            return Ok(product);
         }
     }
 }
