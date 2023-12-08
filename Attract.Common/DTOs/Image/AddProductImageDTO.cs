@@ -2,8 +2,9 @@
 
 namespace Attract.Common.DTOs.Image
 {
-    public class ProductImageDTO
+    public class AddProductImageDTO
     {
+        public List<string> ImageColorHexa { get; set; }
         public List<IFormFile> ImageFiles { get; set; }
 
     }
