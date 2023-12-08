@@ -6,6 +6,7 @@ using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Hosting.Internal;
 using System;
@@ -21,11 +22,13 @@ namespace Attract.Service.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public CustomSubCategoryService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public CustomSubCategoryService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.webHostEnvironment = webHostEnvironment;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseCommandResponse> AddCustomSubCategory(CustomSubCategoryAddDto customSubCategoryDto)
@@ -46,6 +49,28 @@ namespace Attract.Service.Service
             }
             response.Success = true;
             response.Data = newSubCtgry.Id;
+            return response;
+        }
+
+        public async Task<BaseCommandResponse> GetAllCustomSubCategories()
+        {
+            var response = new BaseCommandResponse();
+            var subCategories = await unitOfWork.GetRepository<CustomSubCategory>()
+                .GetAllAsync();
+            if (subCategories == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = mapper.Map<IList<CustomSubCategoryDto>>(subCategories);
+            //var httpContext = httpContextAccessor.HttpContext;
+            //var imgdbNm =result.Where(x=>x.Id == ) ;
+            // Get the host value
+            //var hostValue = httpContext.Request.Host.Value;
+            //var imgNm = $"{hostValue}/wwwroot/Images/customsubcategory/{imgdbNm}";
+            response.Success = true;
+            response.Data = result;
             return response;
         }
     }

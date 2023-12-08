@@ -13,5 +13,6 @@ namespace Attract.Service.IService
     public interface ICustomSubCategoryService
     {
         Task<BaseCommandResponse> AddCustomSubCategory(CustomSubCategoryAddDto customSubCategoryDto);
+        Task<BaseCommandResponse> GetAllCustomSubCategories();
     }
 }

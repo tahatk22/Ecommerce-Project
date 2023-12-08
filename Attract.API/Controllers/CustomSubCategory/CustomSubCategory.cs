@@ -22,5 +22,10 @@ namespace Attract.API.Controllers.CustomSubCategory
         {
             return Ok(await customSubCategoryService.AddCustomSubCategory(customSubCategoryDto));
         }
+        [HttpGet("GetAllCustomSubCategories")]
+        public async Task<ActionResult<BaseCommandResponse>> GetAll()
+        {
+            return Ok(await customSubCategoryService.GetAllCustomSubCategories());
+        }
     }
 }
