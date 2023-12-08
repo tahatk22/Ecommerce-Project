@@ -20,6 +20,8 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
+            CreateMap<AvailableSize,AvailableSizeDTO>().ReverseMap();
+            CreateMap<Color,ColorDTO>().ReverseMap();
             CreateMap<User,UserDTO>().ReverseMap();
             CreateMap<User,LoginUserDTO>().ReverseMap();
             CreateMap<Product,EditProductDTO>().ReverseMap();
@@ -29,6 +31,8 @@ namespace Attract.Common.Mapping
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
                 .ForMember(dest => dest.Colors, opt => opt.MapFrom(src => src.ProductColors.Select(pc => pc.Color.Name)))
                 .ForMember(dest => dest.ImagePaths, opt => opt.MapFrom(src => src.Images.Select(pc => pc.Name)))
+                .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.Images.Select(pc => pc.ImageColorHexa)))
+                .ForMember(dest => dest.ImgesColors, opt => opt.MapFrom(src => src.Images.Select(pc => pc.ImageColor))).ReverseMap();
                 // Map other properties as needed...
                 ;
             CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();

@@ -1,5 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.User;
+using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
@@ -79,34 +80,83 @@ namespace Attract.Service.Service
             else
                 return null;
         }
-        public async Task<BaseCommandResponse> Register(UserDTO userDTO)
+        /* public async Task<BaseCommandResponse> Register(UserDTO userDTO)
+         {
+             var response = new BaseCommandResponse();
+
+             if (userDTO == null)
+             {
+                 response.Success = false;
+                 response.Message = "Failed Attempt!";
+             }
+             var user = mapper.Map<User>(userDTO);
+             user.UserName = userDTO.Email;
+             var result = await userManager.CreateAsync(user, userDTO.Password);
+             if (!result.Succeeded)
+             {
+                 response.Success = false;
+                 response.Message = "Failed Attempt!";
+             }
+             else
+             {
+                 await userManager.AddToRolesAsync(user, userDTO.Roles);
+                 response.Success = true;
+                 response.Message = "Your Account Created Successfully!";
+                 response.Data = result;
+             }
+             return response;
+         }*/
+        public async Task<BaseCommandResponse> Register(UserDTO request)
         {
             var response = new BaseCommandResponse();
 
-            if (userDTO == null)
-            {
-                response.Success = false;
-                response.Message = "Failed Attempt!";
-            }
-            var user = mapper.Map<User>(userDTO);
-            user.UserName = userDTO.Email;
-            var result = await userManager.CreateAsync(user, userDTO.Password);
-            if (!result.Succeeded)
-            {
-                response.Success = false;
-                response.Message = "Failed Attempt!";
-            }
-            else
-            {
-                await userManager.AddToRolesAsync(user, userDTO.Roles);
-                response.Success = true;
-                response.Message = "Your Account Created Successfully!";
-                response.Data = result;
-            }
-            return response;
-        }
+            var existingUser = await userManager.FindByEmailAsync(request.Email);
 
+            if (existingUser != null)
+            {
+                response.Success = false;
+                response.Message = "Email Already Exist!";
+                return response;
+            }
+
+            var user = CreateUser(request);
+
+            try
+            {
+                var createUserResult = await userManager.CreateAsync(user, request.Password);
+
+                if (createUserResult.Succeeded)
+                {
+                    var userFromDb = await userManager.FindByNameAsync(user.UserName);
+                    response.Success = true;
+                    response.Message = "Registered Successfully!";
+                    response.Data = user.Id.ToString();
+                    return response;
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = createUserResult.Errors.FirstOrDefault()?.Description ?? "Unknown error during registration.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = "An error occurred during registration.";
+                return response;
+            }
+        }
         #region private methods
+        private User CreateUser(UserDTO userDTO)
+        {
+            return new User
+            {
+                UserName=userDTO.Email,
+                Email = userDTO.Email,
+                Gender = userDTO.Gender,
+            };
+        }
         private async Task<JwtSecurityToken> GenerateToken(User user)
         {
             var userClaims = await userManager.GetClaimsAsync(user);

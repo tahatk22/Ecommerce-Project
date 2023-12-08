@@ -19,6 +19,6 @@ namespace Attract.Common.DTOs.Product
     public class EditProductWithImageDTO
     {
         public EditProductDTO ProductDTO { get; set; }
-        public ProductImageDTO ProductImageDTO { get; set; }
+        public AddProductImageDTO ProductImageDTO { get; set; }
     }
 }
