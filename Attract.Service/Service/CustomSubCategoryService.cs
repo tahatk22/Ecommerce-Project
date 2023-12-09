@@ -37,13 +37,13 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> AddCustomSubCategory(CustomSubCategoryAddDto customSubCategoryDto)
         {
             var response = new BaseCommandResponse();
-            var userId = httpContextAccessor.HttpContext.User?.FindFirstValue("UserID");
+            //var userId = httpContextAccessor.HttpContext.User?.FindFirstValue("UserID");
             var newSubCtgry = mapper.Map<CustomSubCategory>(customSubCategoryDto);
             string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/customsubcategory");
             string uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryDto.ImgNm.FileName;
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
             newSubCtgry.ImgNm = uniqueFileName;
-            newSubCtgry.CreatedBy = Convert.ToInt32(userId);
+            newSubCtgry.CreatedBy = 1;//Convert.ToInt32(userId);
             await unitOfWork.GetRepository<CustomSubCategory>().InsertAsync(newSubCtgry);
             await unitOfWork.SaveChangesAsync();
             using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -72,10 +72,71 @@ namespace Attract.Service.Service
             {
                 //Get the host value
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-                item.ImgNm = $"https://{hostValue}/Images/customsubcategory/{item.ImgNm}";
+                item.ImgUrl = $"https://{hostValue}/Images/customsubcategory/{item.ImgNm}";
             }
             response.Success = true;
             response.Data = result;
+            return response;
+        }
+
+        public async Task<BaseCommandResponse> GetCustomSubCategory(int CustomSubCategoryId)
+        {
+            var response = new BaseCommandResponse();
+            var subCategory = await unitOfWork.GetRepository<CustomSubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == CustomSubCategoryId);
+            if (subCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = mapper.Map<CustomSubCategoryDto>(subCategory);
+            //Get the host value
+            var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+            result.ImgUrl = $"https://{hostValue}/Images/customsubcategory/{result.ImgNm}";
+            response.Success = true;
+            response.Data = result;
+            return response;
+        }
+
+        public async Task<BaseCommandResponse> UpdCustomSubCategory(CustomSubCategoryUpdDto customSubCategoryUpdDto)
+        {
+            bool isImageUpdated = false;
+            string uniqueFileName = string.Empty, filePath = string.Empty;
+            var response = new BaseCommandResponse();
+            // Retrieve the existing category from the database
+            var existingSubCategory = await unitOfWork.GetRepository<CustomSubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == customSubCategoryUpdDto.Id);
+
+            if (existingSubCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Category not found.";
+                return response;
+            }
+            
+            if (customSubCategoryUpdDto.ImgNm != null)
+            {
+                isImageUpdated = true;
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/customsubcategory");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryUpdDto.ImgNm.FileName;
+                filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            }
+            var newSubCtgry = mapper.Map<CustomSubCategory>(customSubCategoryUpdDto);
+            newSubCtgry.CreatedBy = existingSubCategory.CreatedBy;
+            newSubCtgry.CreatedOn = existingSubCategory.CreatedOn;
+            newSubCtgry.ImgNm = existingSubCategory.ImgNm;
+            unitOfWork.GetRepository<CustomSubCategory>().UpdateAsync(newSubCtgry);
+            if (isImageUpdated)
+            {
+                newSubCtgry.ImgNm = uniqueFileName;
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    customSubCategoryUpdDto.ImgNm.CopyTo(fileStream);
+                    fileStream.Close();
+                }
+            }
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newSubCtgry.Id;
             return response;
         }
     }

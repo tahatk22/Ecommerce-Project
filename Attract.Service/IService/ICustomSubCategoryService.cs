@@ -14,5 +14,7 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> AddCustomSubCategory(CustomSubCategoryAddDto customSubCategoryDto);
         Task<BaseCommandResponse> GetAllCustomSubCategories();
+        Task<BaseCommandResponse> UpdCustomSubCategory(CustomSubCategoryUpdDto customSubCategoryUpdDto);
+        Task<BaseCommandResponse> GetCustomSubCategory(int CustomSubCategoryId);
     }
 }
