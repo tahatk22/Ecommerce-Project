@@ -126,7 +126,7 @@ namespace Attract.Service.Service
             if (existingSubCategory == null)
             {
                 response.Success = false;
-                response.Message = "Category not found.";
+                response.Message = "Custom SubCategory not found.";
                 return response;
             }
             
