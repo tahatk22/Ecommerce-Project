@@ -101,11 +101,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 
-    // Other configurations...
-
-    app.UseStaticFiles();
-
-    // Other configurations...
+ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
