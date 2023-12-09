@@ -76,8 +76,6 @@ namespace Attract.Service.Service
                         include: s => s
                             .Include(p => p.ProductAvailableSizes)
                             .ThenInclude(pas => pas.AvailableSize)
-                            .Include(p => p.ProductColors)
-                            .ThenInclude(pc => pc.Color)
                             .Include(p=>p.OrderDetails)
                             .Include(w=>w.Images)
                     );
@@ -221,7 +219,7 @@ namespace Attract.Service.Service
 
                 var productImage = new ProductImage
                 {
-                    Name = Path.GetFileNameWithoutExtension(imageFile.FileName),
+                    Name = Path.GetFullPath(imageFile.FileName),
                     ProductId = product.Id,
                     ImageColorHexa=imgHexa,
                     ImageFileName = imageFile.FileName,
