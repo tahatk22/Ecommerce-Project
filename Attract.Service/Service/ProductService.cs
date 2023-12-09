@@ -1,7 +1,10 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Category;
+using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.Helpers;
+using Attract.Common.Helpers.ProductHelper;
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -12,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
 using static Attract.Common.DTOs.Product.AddProductDTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Attract.Service.Service
 {
@@ -42,8 +46,10 @@ namespace Attract.Service.Service
                 await CreateProductDirectoryAsync(newProduct);
 
                 // Map and insert the product images with the correct product ID
-                await AddProductImagesAsync(newProduct, addProductWithImagesDTO.ProductImageDTO.ImageFiles);
-
+                await AddProductImagesAsync(newProduct, addProductWithImagesDTO.ProductImageDTO.ImageFiles,addProductWithImagesDTO.ColorDTO.Names
+                    ,addProductWithImagesDTO.ProductImageDTO.ImageColorHexa);
+                await AddProductColorsAsync(newProduct, addProductWithImagesDTO.ColorDTO.Names);
+                await AddProductSizesAsync(newProduct, addProductWithImagesDTO.AvailableSizeDTO.Names);
                 // Save changes to the database
                 await unitOfWork.SaveChangesAsync();
 
@@ -61,34 +67,32 @@ namespace Attract.Service.Service
 
             return response;
         }
-        public async Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId)
+        public async Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination)
         {
             var response = new BaseCommandResponse();
-            var userId = authService.GetCurrentUserId();
+            IQueryable<Product> products;
             try
             {
-                var products = await unitOfWork.GetRepository<Product>()
-                    .GetAllAsync(
-                        s => s.SubCategoryId == subCategoryId,
-                        include: s => s
+                 products = unitOfWork.GetRepository<Product>()
+                    .GetAll()
                             .Include(p => p.ProductAvailableSizes)
                             .ThenInclude(pas => pas.AvailableSize)
-                            .Include(p => p.ProductColors)
-                            .ThenInclude(pc => pc.Color)
-                            .Include(p=>p.OrderDetails)
-                            .Include(w=>w.Images)
-                    );
-
+                            .Include(p => p.OrderDetails)
+                            .Include(w => w.Images);
+                                 
                 if (products == null || !products.Any())
                 {
                     response.Success = false;
                     response.Message = "Not Found";
                     return response;
                 }
+                products = await filterProducts(productPagination, products);
                 var result = mapper.Map<IList<ProductDTO>>(products);
                 response.Success = true;
+                /*var PagedCenter = await PagedList<Product>.CreateAsync(result, productPagination.PageNumber, productPagination.PageSize);
+                response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
+*/
                 response.Data = result;
-
                 return response;
             }
             catch (Exception ex)
@@ -138,6 +142,66 @@ namespace Attract.Service.Service
             return newProduct;
         }
 
+        private async Task AddProductSizesAsync(Product product, List<string> avaliableSizes)
+        {
+            foreach (var avaliableSize in avaliableSizes)
+            {
+                var size = await GetOrCreateSizeAsync(avaliableSize);
+
+                var productSize = new ProductAvailableSize
+                {
+                    ProductId = product.Id,
+                    AvailableSizeId = size.Id
+                };
+
+                await unitOfWork.GetRepository<ProductAvailableSize>().InsertAsync(productSize);
+            }
+        }
+        private async Task<AvailableSize> GetOrCreateSizeAsync(string size)
+        {
+            var existingSize = await unitOfWork.GetRepository<AvailableSize>().GetFirstOrDefaultAsync(predicate: c => c.Name == size);
+
+            if (existingSize != null)
+            {
+                return existingSize;
+            }
+
+            var newSize = new AvailableSize { Name = size };
+            await unitOfWork.GetRepository<AvailableSize>().InsertAsync(newSize);
+            await unitOfWork.SaveChangesAsync();
+
+            return newSize;
+        }
+        private async Task AddProductColorsAsync(Product product, List<string> colorNames)
+        {
+            foreach (var colorName in colorNames)
+            {
+                var color = await GetOrCreateColorAsync(colorName);
+
+                var productColor = new ProductColor
+                {
+                    ProductId = product.Id,
+                    ColorId = color.Id
+                };
+
+                await unitOfWork.GetRepository<ProductColor>().InsertAsync(productColor);
+            }
+        }
+        private async Task<Color> GetOrCreateColorAsync(string colorName)
+        {
+            var existingColor = await unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate:c => c.Name == colorName);
+
+            if (existingColor != null)
+            {
+                return existingColor;
+            }
+
+            var newColor = new Color { Name = colorName };
+            await unitOfWork.GetRepository<Color>().InsertAsync(newColor);
+            await unitOfWork.SaveChangesAsync();
+
+            return newColor;
+        }
         private async Task CreateProductDirectoryAsync(Product product)
         {
             var productDirectoryName = SanitizeDirectoryName(product.Name);
@@ -148,15 +212,21 @@ namespace Attract.Service.Service
             }
         }
 
-        private async Task AddProductImagesAsync(Product product, List<IFormFile> imageFiles)
+        private async Task AddProductImagesAsync(Product product, List<IFormFile> imageFiles, List<string> colorNames,List<string> imgColorHexa)
         {
-            foreach (var imageFile in imageFiles)
+            for (int i = 0; i < imageFiles.Count; i++)
             {
+                var imageFile = imageFiles[i];
+                var colorName = colorNames[i];
+                var imgHexa = imgColorHexa[i];
+
                 var productImage = new ProductImage
                 {
                     Name = Path.GetFullPath(imageFile.FileName),
-                    ProductId = product.Id,  // Use the newly created product's ID
-                    ImageFileName = imageFile.FileName
+                    ProductId = product.Id,
+                    ImageColorHexa=imgHexa,
+                    ImageFileName = imageFile.FileName,
+                    ImageColor = colorName
                 };
 
                 await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
@@ -261,6 +331,17 @@ namespace Attract.Service.Service
                     await newImageFile.CopyToAsync(fileStream);
                 }
             }
+        }
+        private async Task<IQueryable<Product>> filterProducts(ProductPagination PagingParams, IQueryable<Product> products)
+        {
+            if (!string.IsNullOrEmpty(PagingParams.SearchString))
+            {
+                products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower())||
+                s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
+                s.Price.ToString().Contains(PagingParams.SearchString)||s.Brand.Contains(PagingParams.SearchString));
+
+            }        
+            return products;
         }
         #endregion
     }

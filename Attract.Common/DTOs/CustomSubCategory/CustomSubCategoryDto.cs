@@ -11,15 +11,16 @@ namespace Attract.Common.DTOs.CustomSubCategory
 {
     public class CustomSubCategoryDto
     {
-        public int Id { get; set; } 
+        public int id { get; set; } 
 
-        public string CategoryName { get; set; }
+        public string categoryName { get; set; }
 
-        public string SubCategoryName { get; set; }
+        public string subCategoryName { get; set; }
 
-        public string Title { get; set; }
+        public string title { get; set; }
 
 
-        public string ImgNm { get; set; }
+        public string imgNm { get; set; }
+        public string imgUrl { get; set; }
     }
 }

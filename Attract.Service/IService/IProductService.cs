@@ -1,6 +1,8 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.Helpers;
+using Attract.Common.Helpers.ProductHelper;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace Attract.Service.IService
 {
     public interface IProductService
     {
-        Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId);
+        Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination);
         Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductImageDTO);
         Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO);
     }

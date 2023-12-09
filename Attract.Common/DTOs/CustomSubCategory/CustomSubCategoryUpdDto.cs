@@ -9,17 +9,19 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs.CustomSubCategory
 {
-    public class CustomSubCategoryAddDto
+    public class CustomSubCategoryUpdDto
     {
-        [Required]
-        public string categoryName { get; set; }
-        [Required]
-        public string subCategoryName { get; set; }
-        [Required]
-        public string title { get; set; }
-        [Required]
+
+        public int? id { get; set; }
+
+        public string? categoryName { get; set; }
+
+        public string? subCategoryName { get; set; }
+
+        public string? title { get; set; }
+
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
 
-        public IFormFile imgNm { get; set; }
+        public IFormFile? imgNm { get; set; }
     }
 }

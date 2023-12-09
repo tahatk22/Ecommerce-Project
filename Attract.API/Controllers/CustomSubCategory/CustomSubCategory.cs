@@ -27,5 +27,20 @@ namespace Attract.API.Controllers.CustomSubCategory
         {
             return Ok(await customSubCategoryService.GetAllCustomSubCategories());
         }
+        [HttpPut("UpdCustomSubCtgry")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdCustomSubCtgry([FromForm] CustomSubCategoryUpdDto customSubCategoryUpdDto)
+        {
+            return Ok(await customSubCategoryService.UpdCustomSubCategory(customSubCategoryUpdDto));
+        }
+        [HttpDelete("DelCustomSubCtgry")]
+        public async Task<ActionResult<BaseCommandResponse>> DelCustomSubCtgry(int customSubCtgryId)
+        {
+            return Ok(await customSubCategoryService.DeleteCustomSubCategory( customSubCtgryId));
+        }
+        [HttpGet("GetCustomSubCategory/{customSubCtgryId}")]
+        public async Task<ActionResult<BaseCommandResponse>> GetCustomSubCategory(int customSubCtgryId)
+        {
+            return Ok(await customSubCategoryService.GetCustomSubCategory(customSubCtgryId));
+        }
     }
 }

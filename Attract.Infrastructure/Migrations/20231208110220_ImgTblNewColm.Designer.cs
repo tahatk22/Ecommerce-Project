@@ -4,6 +4,7 @@ using Attract.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attract.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208110220_ImgTblNewColm")]
+    partial class ImgTblNewColm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +67,6 @@ namespace Attract.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -182,91 +182,6 @@ namespace Attract.Infrastructure.Migrations
                     b.ToTable("Bill", "Attract");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Cart", "Attract");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.CartProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ProductAvailableSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductAvailableSizeId");
-
-                    b.HasIndex("ProductColorId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartProduct", "Attract");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.Color", b =>
                 {
                     b.Property<int>("Id")
@@ -299,50 +214,6 @@ namespace Attract.Infrastructure.Migrations
                     b.ToTable("Color", "Attract");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.CustomSubCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CategoryName")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImgNm")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SubCategoryName")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomSubCategory", "Attract");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -351,16 +222,14 @@ namespace Attract.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -371,11 +240,16 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -422,11 +296,8 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AvailableSizeId")
                         .HasColumnType("int");
@@ -446,25 +317,17 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ProductId", "AvailableSizeId");
 
                     b.HasIndex("AvailableSizeId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductAvailableSize", "Attract");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ColorId")
                         .HasColumnType("int");
@@ -484,14 +347,9 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ProductId", "ColorId");
 
                     b.HasIndex("ColorId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductColor", "Attract");
                 });
@@ -511,9 +369,6 @@ namespace Attract.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageColorHexa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageFileName")
@@ -813,44 +668,6 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.Cart", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.User", "User")
-                        .WithMany("Carts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.CartProduct", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.Cart", "Cart")
-                        .WithMany("CartProducts")
-                        .HasForeignKey("CartId");
-
-                    b.HasOne("AttractDomain.Entities.Attract.ProductAvailableSize", "ProductAvailableSize")
-                        .WithMany("CartProducts")
-                        .HasForeignKey("ProductAvailableSizeId");
-
-                    b.HasOne("AttractDomain.Entities.Attract.ProductColor", "ProductColor")
-                        .WithMany("CartProducts")
-                        .HasForeignKey("ProductColorId");
-
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("CartProducts")
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductAvailableSize");
-
-                    b.Navigation("ProductColor");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.OrderDetail", b =>
                 {
                     b.HasOne("AttractDomain.Entities.Attract.Order", "Order")
@@ -984,8 +801,6 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("Attract.Domain.Entities.Attract.Product", b =>
                 {
-                    b.Navigation("CartProducts");
-
                     b.Navigation("Images");
 
                     b.Navigation("OrderDetails");
@@ -1000,11 +815,6 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("ProductAvailableSizes");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.Cart", b =>
-                {
-                    b.Navigation("CartProducts");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.Color", b =>
                 {
                     b.Navigation("ProductColors");
@@ -1017,16 +827,6 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("OrderDetails");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.Navigation("CartProducts");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
-                {
-                    b.Navigation("CartProducts");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.SubCategory", b =>
                 {
                     b.Navigation("Products");
@@ -1035,8 +835,6 @@ namespace Attract.Infrastructure.Migrations
             modelBuilder.Entity("AttractDomain.Entities.Attract.User", b =>
                 {
                     b.Navigation("Bills");
-
-                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

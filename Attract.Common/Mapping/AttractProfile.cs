@@ -4,6 +4,7 @@ using Attract.Common.DTOs.Cart;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.CustomSubCategory;
+using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
 using Attract.Common.DTOs.User;
@@ -22,18 +23,23 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, LoginUserDTO>().ReverseMap();
-            CreateMap<Product, EditProductDTO>().ReverseMap();
-            CreateMap<Product, EditProductWithImageDTO>().ReverseMap();
-            CreateMap<Product, AddProductDTO>().ReverseMap();
+            CreateMap<ProductImage,ImageDTO>()
+                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.ImageColorHexa))
+                .ForMember(dest => dest.ImgesColor, opt => opt.MapFrom(src => src.ImageColor))
+                .ReverseMap();
+            CreateMap<AvailableSize,AvailableSizeDTO>().ReverseMap();
+            CreateMap<Color,ColorDTO>().ReverseMap();
+            CreateMap<User,UserDTO>().ReverseMap();
+            CreateMap<User,LoginUserDTO>().ReverseMap();
+            CreateMap<Product,EditProductDTO>().ReverseMap();
+            CreateMap<Product,EditProductWithImageDTO>().ReverseMap();
+            CreateMap<Product,AddProductDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
-                .ForMember(dest => dest.Colors, opt => opt.MapFrom(src => src.ProductColors.Select(pc => pc.Color.Name)))
-                .ForMember(dest => dest.ImagePaths, opt => opt.MapFrom(src => src.Images.Select(pc => pc.Name)))
-                // Map other properties as needed...
-                ;
-            CreateMap<Category, CategoryDto>().ForMember(s => s.SubCategories, tr => tr.MapFrom(a => a.SubCategories.Select(s => s.SubCategoryName))).ReverseMap();
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
+                
+            CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
             CreateMap<CategoryUpdDto, Category>()
             .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
@@ -49,6 +55,9 @@ namespace Attract.Common.Mapping
               .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
               .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
             CreateMap<CustomSubCategory, CustomSubCategoryDto>();
+            CreateMap<CustomSubCategoryUpdDto, CustomSubCategory>()
+         .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow))
+         .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
 
 
             #region Cart
