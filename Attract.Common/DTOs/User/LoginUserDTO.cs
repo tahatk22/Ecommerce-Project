@@ -11,7 +11,6 @@ namespace Attract.Common.DTOs.User
     {
         [DataType(DataType.PhoneNumber)]
         public string Gender { get; set; }
-        public ICollection<string> Roles { get; set; }
     }
 
     public class LoginUserDTO

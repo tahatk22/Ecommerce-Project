@@ -1,4 +1,6 @@
-﻿using Attract.Common.DTOs.Image;
+﻿using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.Image;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,8 +20,10 @@ namespace Attract.Common.DTOs.Product
 
         public class AddProductWithImageDTO
         {
+            public ColorDTO ColorDTO { get; set; }
+            public AvailableSizeDTO AvailableSizeDTO { get; set; }
             public AddProductDTO ProductDTO { get; set; }
-            public ProductImageDTO ProductImageDTO { get; set; }
+            public AddProductImageDTO ProductImageDTO { get; set; }
         }
     }
 }

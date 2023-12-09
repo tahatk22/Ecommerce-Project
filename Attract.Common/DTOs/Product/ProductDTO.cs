@@ -17,7 +17,8 @@ namespace Attract.Common.DTOs.Product
         [Required]
         public IList<string> AvailableSizes { get; set; } 
         public List<string> Colors { get; set; }
+        public List<string> ImgesHexa { get; set; }
+        public List<string> ImgesColors { get; set; }
         public List<string> ImagePaths { get; set; }
-
     }
 }
