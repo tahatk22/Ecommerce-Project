@@ -8,27 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="customsubcategory\290519fe-a359-48dd-8eb6-4134496f886e_2.jpg" />
-    <None Remove="customsubcategory\71adeb50-0222-44e6-91d9-06863fd911e0_2.jpg" />
-    <None Remove="customsubcategory\87b6a52b-7f3e-43e6-b009-51056cb22176_2.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="customsubcategory\290519fe-a359-48dd-8eb6-4134496f886e_2.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="customsubcategory\71adeb50-0222-44e6-91d9-06863fd911e0_2.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="customsubcategory\87b6a52b-7f3e-43e6-b009-51056cb22176_2.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />

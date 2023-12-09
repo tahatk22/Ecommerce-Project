@@ -54,6 +54,9 @@ namespace Attract.Common.Mapping
             .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
             .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
             CreateMap<CustomSubCategory, CustomSubCategoryDto>();
+            CreateMap<CustomSubCategoryUpdDto, CustomSubCategory>()
+         .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow))
+         .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
 
         }
     }
