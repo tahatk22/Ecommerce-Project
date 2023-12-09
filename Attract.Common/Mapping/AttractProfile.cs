@@ -3,6 +3,7 @@ using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.CustomSubCategory;
+using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
 using Attract.Common.DTOs.User;
@@ -21,6 +22,11 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
+            CreateMap<ProductImage,ImageDTO>()
+                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.ImageColorHexa))
+                .ForMember(dest => dest.ImgesColor, opt => opt.MapFrom(src => src.ImageColor))
+                .ReverseMap();
             CreateMap<AvailableSize,AvailableSizeDTO>().ReverseMap();
             CreateMap<Color,ColorDTO>().ReverseMap();
             CreateMap<User,UserDTO>().ReverseMap();
@@ -30,12 +36,8 @@ namespace Attract.Common.Mapping
             CreateMap<Product,AddProductDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
-                .ForMember(dest => dest.Colors, opt => opt.MapFrom(src => src.ProductColors.Select(pc => pc.Color.Name)))
-                .ForMember(dest => dest.ImagePaths, opt => opt.MapFrom(src => src.Images.Select(pc => pc.Name)))
-                .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.Images.Select(pc => pc.ImageColorHexa)))
-                .ForMember(dest => dest.ImgesColors, opt => opt.MapFrom(src => src.Images.Select(pc => pc.ImageColor))).ReverseMap();
-                // Map other properties as needed...
-                ;
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
+                
             CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
             CreateMap<CategoryUpdDto, Category>()
