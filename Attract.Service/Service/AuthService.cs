@@ -80,32 +80,6 @@ namespace Attract.Service.Service
             else
                 return null;
         }
-        /* public async Task<BaseCommandResponse> Register(UserDTO userDTO)
-         {
-             var response = new BaseCommandResponse();
-
-             if (userDTO == null)
-             {
-                 response.Success = false;
-                 response.Message = "Failed Attempt!";
-             }
-             var user = mapper.Map<User>(userDTO);
-             user.UserName = userDTO.Email;
-             var result = await userManager.CreateAsync(user, userDTO.Password);
-             if (!result.Succeeded)
-             {
-                 response.Success = false;
-                 response.Message = "Failed Attempt!";
-             }
-             else
-             {
-                 await userManager.AddToRolesAsync(user, userDTO.Roles);
-                 response.Success = true;
-                 response.Message = "Your Account Created Successfully!";
-                 response.Data = result;
-             }
-             return response;
-         }*/
         public async Task<BaseCommandResponse> Register(UserDTO request)
         {
             var response = new BaseCommandResponse();
