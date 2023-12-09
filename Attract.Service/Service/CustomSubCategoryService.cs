@@ -56,6 +56,23 @@ namespace Attract.Service.Service
             return response;
         }
 
+        public async Task<BaseCommandResponse> DeleteCustomSubCategory(int CustomSubCategoryId)
+        {
+            var response = new BaseCommandResponse();
+            var subCategory = await unitOfWork.GetRepository<CustomSubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == CustomSubCategoryId);
+            if (subCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = mapper.Map<CustomSubCategoryDto>(subCategory);
+            unitOfWork.GetRepository<CustomSubCategory>().Delete(subCategory.Id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
+
         public async Task<BaseCommandResponse> GetAllCustomSubCategories()
         {
             var response = new BaseCommandResponse();
