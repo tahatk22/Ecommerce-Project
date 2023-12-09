@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.Helpers.ProductHelper;
 using Attract.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,10 @@ namespace Attract.API.Controllers.Product
             this.productService = productService;
         }
 
-        [HttpGet("GetAllSubCategoryProducts")]
-        public async Task<ActionResult<BaseCommandResponse>> GetAllSubCategoryProducts(int subCategoryId)
+        [HttpGet("GetAllProducts")]
+        public async Task<ActionResult<BaseCommandResponse>> GetAllProducts([FromQuery]ProductPagination productPagination)
         {
-            var products=await productService.GetAllSubCategoryProducts(subCategoryId);
+            var products=await productService.GetAllProducts(productPagination);
             return Ok(products);
         }
 

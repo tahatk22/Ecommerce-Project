@@ -3,6 +3,8 @@ using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.Helpers;
+using Attract.Common.Helpers.ProductHelper;
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -13,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
 using static Attract.Common.DTOs.Product.AddProductDTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Attract.Service.Service
 {
@@ -64,32 +67,32 @@ namespace Attract.Service.Service
 
             return response;
         }
-        public async Task<BaseCommandResponse> GetAllSubCategoryProducts(int subCategoryId)
+        public async Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination)
         {
             var response = new BaseCommandResponse();
-            var userId = authService.GetCurrentUserId();
+            IQueryable<Product> products;
             try
             {
-                var products = await unitOfWork.GetRepository<Product>()
-                    .GetAllAsync(
-                        s => s.SubCategoryId == subCategoryId,
-                        include: s => s
+                 products = unitOfWork.GetRepository<Product>()
+                    .GetAll()
                             .Include(p => p.ProductAvailableSizes)
                             .ThenInclude(pas => pas.AvailableSize)
-                            .Include(p=>p.OrderDetails)
-                            .Include(w=>w.Images)
-                    );
-
+                            .Include(p => p.OrderDetails)
+                            .Include(w => w.Images);
+                                 
                 if (products == null || !products.Any())
                 {
                     response.Success = false;
                     response.Message = "Not Found";
                     return response;
                 }
+                products = await filterProducts(productPagination, products);
                 var result = mapper.Map<IList<ProductDTO>>(products);
                 response.Success = true;
+                /*var PagedCenter = await PagedList<Product>.CreateAsync(result, productPagination.PageNumber, productPagination.PageSize);
+                response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
+*/
                 response.Data = result;
-
                 return response;
             }
             catch (Exception ex)
@@ -328,6 +331,17 @@ namespace Attract.Service.Service
                     await newImageFile.CopyToAsync(fileStream);
                 }
             }
+        }
+        private async Task<IQueryable<Product>> filterProducts(ProductPagination PagingParams, IQueryable<Product> products)
+        {
+            if (!string.IsNullOrEmpty(PagingParams.SearchString))
+            {
+                products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower())||
+                s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
+                s.Price.ToString().Contains(PagingParams.SearchString)||s.Brand.Contains(PagingParams.SearchString));
+
+            }        
+            return products;
         }
         #endregion
     }
