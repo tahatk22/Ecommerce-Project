@@ -12,16 +12,16 @@ namespace Attract.Common.DTOs.CustomSubCategory
     public class CustomSubCategoryUpdDto
     {
         [Required]
-        public int Id { get; set; }
+        public int id { get; set; }
         [Required]
-        public string CategoryName { get; set; }
+        public string categoryName { get; set; }
         [Required]
-        public string SubCategoryName { get; set; }
+        public string subCategoryName { get; set; }
         [Required]
-        public string Title { get; set; }
+        public string title { get; set; }
 
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
 
-        public IFormFile? ImgNm { get; set; }
+        public IFormFile? imgNm { get; set; }
     }
 }

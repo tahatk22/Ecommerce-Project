@@ -40,7 +40,7 @@ namespace Attract.Service.Service
             //var userId = httpContextAccessor.HttpContext.User?.FindFirstValue("UserID");
             var newSubCtgry = mapper.Map<CustomSubCategory>(customSubCategoryDto);
             string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/customsubcategory");
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryDto.ImgNm.FileName;
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryDto.imgNm.FileName;
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
             newSubCtgry.ImgNm = uniqueFileName;
             newSubCtgry.CreatedBy = 1;//Convert.ToInt32(userId);
@@ -48,7 +48,7 @@ namespace Attract.Service.Service
             await unitOfWork.SaveChangesAsync();
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                customSubCategoryDto.ImgNm.CopyTo(fileStream);
+                customSubCategoryDto.imgNm.CopyTo(fileStream);
                 fileStream.Close();
             }
             response.Success = true;
@@ -72,7 +72,7 @@ namespace Attract.Service.Service
             {
                 //Get the host value
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-                item.ImgUrl = $"https://{hostValue}/Images/customsubcategory/{item.ImgNm}";
+                item.imgUrl = $"https://{hostValue}/Images/customsubcategory/{item.imgNm}";
             }
             response.Success = true;
             response.Data = result;
@@ -92,7 +92,7 @@ namespace Attract.Service.Service
             var result = mapper.Map<CustomSubCategoryDto>(subCategory);
             //Get the host value
             var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-            result.ImgUrl = $"https://{hostValue}/Images/customsubcategory/{result.ImgNm}";
+            result.imgUrl = $"https://{hostValue}/Images/customsubcategory/{result.imgNm}";
             response.Success = true;
             response.Data = result;
             return response;
@@ -104,7 +104,7 @@ namespace Attract.Service.Service
             string uniqueFileName = string.Empty, filePath = string.Empty;
             var response = new BaseCommandResponse();
             // Retrieve the existing category from the database
-            var existingSubCategory = await unitOfWork.GetRepository<CustomSubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == customSubCategoryUpdDto.Id);
+            var existingSubCategory = await unitOfWork.GetRepository<CustomSubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == customSubCategoryUpdDto.id);
 
             if (existingSubCategory == null)
             {
@@ -113,11 +113,11 @@ namespace Attract.Service.Service
                 return response;
             }
             
-            if (customSubCategoryUpdDto.ImgNm != null)
+            if (customSubCategoryUpdDto.imgNm != null)
             {
                 isImageUpdated = true;
                 string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/customsubcategory");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryUpdDto.ImgNm.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryUpdDto.imgNm.FileName;
                 filePath = Path.Combine(uploadsFolder, uniqueFileName);
             }
             var newSubCtgry = mapper.Map<CustomSubCategory>(customSubCategoryUpdDto);
@@ -130,7 +130,7 @@ namespace Attract.Service.Service
                 newSubCtgry.ImgNm = uniqueFileName;
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    customSubCategoryUpdDto.ImgNm.CopyTo(fileStream);
+                    customSubCategoryUpdDto.imgNm.CopyTo(fileStream);
                     fileStream.Close();
                 }
             }
