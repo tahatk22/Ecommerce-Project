@@ -21,6 +21,11 @@ namespace AttractDomain.Configuration
                 .HasOne(pc => pc.Product)
                 .WithMany(p => p.ProductColors)
                 .HasForeignKey(pc => pc.ProductId);
+
+            builder
+                .HasOne(pc => pc.Color)
+                .WithMany(p => p.ProductColors)
+                .HasForeignKey(pc => pc.ColorId);
         }
     }
 }

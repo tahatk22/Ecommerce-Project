@@ -21,8 +21,9 @@ namespace Attract.API.Controllers.Cart
         }
 
         [HttpPost("AddToCart")]
-        public async Task<ActionResult<BaseCommandResponse>> AddProduct(AddCartProductsDTO viewModel)
+        public async Task<ActionResult<BaseCommandResponse>> AddCartProduct(AddCartProductsDTO viewModel)
         {
+
             viewModel.CartId = await _cartService.GetCartByUser(viewModel.UserId);
             if(viewModel.CartId == 0)
             {
@@ -34,7 +35,7 @@ namespace Attract.API.Controllers.Cart
             }
             return Ok(await _cartProductService.AddCartProduct(viewModel));
         }
-        [HttpGet("GetAllCategories")]
+        [HttpGet("GetCartProducts")]
         public async Task<ActionResult<BaseCommandResponse>> GetAll(string userId)
         {
             int CartId = await _cartService.GetCartByUser(userId);
@@ -53,10 +54,5 @@ namespace Attract.API.Controllers.Cart
         {
             return Ok(await _cartProductService.UpdateCartProducts(viewModel));
         }
-        //[HttpGet("GetCategory/{ctgryId}")]
-        //public async Task<ActionResult<BaseCommandResponse>> GetCategory(int UserId)
-        //{
-        //    return Ok(await catgeoryService.GetCategory(UserId));
-        //}
     }
 }

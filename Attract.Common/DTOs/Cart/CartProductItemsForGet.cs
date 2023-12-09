@@ -8,18 +8,17 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs.Cart
 {
-    public class AddCartProductsDTO
+    public class CartProductItemsForGet
     {
-        [JsonIgnore]
+        public int Id { get; set; }
         public int CartId { get; set; }
-        [Required]
-        public string UserId { get; set; }
-        [Required]
         public int ProductId { get; set; }
-        [Required]
+        public string ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
         public int ProductColorId { get; set; }
-        [Required]
+        public string ProductColorName { get; set; }
         public int ProductAvailableSizeId { get; set; }
-        public int Quantity { get; set; } = 1;
+        public string ProductAvailableSizeName { get; set; }
+        public int Quantity { get; set; }
     }
 }

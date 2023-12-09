@@ -86,7 +86,7 @@ namespace Attract.Service.Service
                     response.Message = "Not Found";
                     return response;
                 }
-                products = await filterProducts(productPagination, products);
+                //products = await filterProducts(productPagination, products);
                 var result = mapper.Map<IList<ProductDTO>>(products);
                 response.Success = true;
                 /*var PagedCenter = await PagedList<Product>.CreateAsync(result, productPagination.PageNumber, productPagination.PageSize);
@@ -332,17 +332,17 @@ namespace Attract.Service.Service
                 }
             }
         }
-        private async Task<IQueryable<Product>> filterProducts(ProductPagination PagingParams, IQueryable<Product> products)
-        {
-            if (!string.IsNullOrEmpty(PagingParams.SearchString))
-            {
-                products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower())||
-                s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
-                s.Price.ToString().Contains(PagingParams.SearchString)||s.Brand.Contains(PagingParams.SearchString));
+        //private async Task<IQueryable<Product>> filterProducts(ProductPagination PagingParams, IQueryable<Product> products)
+        //{
+        //    if (!string.IsNullOrEmpty(PagingParams.SearchString))
+        //    {
+        //        products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower())||
+        //        s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
+        //        s.Price.ToString().Contains(PagingParams.SearchString)||s.Brand.Contains(PagingParams.SearchString));
 
-            }        
-            return products;
-        }
+        //    }        
+        //    return products;
+        //}
         #endregion
     }
 }

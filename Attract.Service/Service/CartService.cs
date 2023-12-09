@@ -29,6 +29,10 @@ namespace Attract.Service.Service
             {
                 cartId = await AddCart(userId);
             }
+            else
+            {
+                cartId = cart.Id;
+            }
             return cartId;
         }
 

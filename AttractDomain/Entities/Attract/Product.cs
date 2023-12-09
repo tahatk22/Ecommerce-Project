@@ -25,7 +25,7 @@ namespace Attract.Domain.Entities.Attract
         public string Description { get; set; }
         [Required]
         public int Quantity { get; set; }
-        public string Brand { get; set; }
+        //public string Brand { get; set; }
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public ICollection<ProductImage> Images { get; set; }

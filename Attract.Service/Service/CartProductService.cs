@@ -5,6 +5,7 @@ using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Attract.Service.Service
                 x.ProductColorId == viewModel.ProductColorId);
             if (cartProduct != null)
             {
-                cartProduct.Quantity = viewModel.Quantity;
+                cartProduct.Quantity += viewModel.Quantity;
                 _unitOfWork.GetRepository<CartProduct>().UpdateAsync(cartProduct);
                 await _unitOfWork.SaveChangesAsync();
                 return new BaseCommandResponse
@@ -60,15 +61,23 @@ namespace Attract.Service.Service
             var cartProducts = await _unitOfWork.GetRepository<CartProduct>()
                 .GetAllAsync(
                 predicate: x => x.CartId == cartId,
-                include: s => Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.Include(s,
-                p => new { p.Product, p.ProductColor, p.ProductAvailableSize }));
+                include: s => 
+                s.Include(p => p.Product)
+                .Include(p => p.ProductColor)
+                .ThenInclude(x => x.Color)
+                .Include(p => p.ProductAvailableSize)
+                .ThenInclude(x => x.AvailableSize));
             if (cartProducts == null)
             {
                 response.Success = false;
                 response.Message = "Not Found";
                 return response;
             }
-            var result = _mapper.Map<IList<CartProductsDTO>>(cartProducts);
+            var items = _mapper.Map<List<CartProductItemsForGet>>(cartProducts);
+            var result = new CartProductsDTO
+            {
+                CartProducts = items
+            };
             response.Success = true;
             response.Data = result;
             return response;
@@ -78,23 +87,18 @@ namespace Attract.Service.Service
         {
             var cartProducts = await _unitOfWork.GetRepository<CartProduct>()
                 .GetAllAsync(
-                predicate: x => x.CartId == viewModel.CartProducts.Select(x => x.CartId).FirstOrDefault());
+                predicate: x => x.CartId == viewModel.CartId);
             if (cartProducts == null)
             {
-                foreach (var product in viewModel.CartProducts)
-                {
-                    AddCartProduct(product);
-                }
-                await _unitOfWork.SaveChangesAsync();
                 return new BaseCommandResponse
                 {
                     Success = true,
-                    Message = "Updated Successfully"
+                    Message = "Not Found"
                 };
             }
             if (viewModel.CartProducts.Count == 0)
             {
-                foreach (var product in viewModel.CartProducts)
+                foreach (var product in cartProducts)
                 {
                     _unitOfWork.GetRepository<CartProduct>().Delete(product.Id);
                 }
@@ -108,13 +112,14 @@ namespace Attract.Service.Service
 
             foreach (var record in cartProducts)
             {
-                if (!viewModel.CartProducts.Select(x => x.CartId).Contains(record.Id))
+                if (!viewModel.CartProducts.Select(x => x.Id).Contains(record.Id))
                 {
                     _unitOfWork.GetRepository<CartProduct>().Delete(record.Id);
                 }
                 else
                 {
                     record.Quantity = viewModel.CartProducts.Where(x => x.Id == record.Id).Select(x => x.Quantity).FirstOrDefault();
+                    record.ModifyOn = DateTime.Now;
                     _unitOfWork.GetRepository<CartProduct>().UpdateAsync(record);
                 }
             }

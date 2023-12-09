@@ -62,14 +62,13 @@ namespace Attract.Common.Mapping
 
             #region Cart
 
-            CreateMap<CartProduct, CartProductsDTO>()
+            CreateMap<CartProduct, CartProductItemsForGet>()
                 .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.Product.Name))
                 .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.Product.Price))
-                .ForMember(dst => dst.ProductColorName, opt => opt.MapFrom(src => src.ProductColor.Color))
-                .ForMember(dst => dst.ProductAvailableSizeName, opt => opt.MapFrom(src => src.ProductAvailableSize.AvailableSize)).ReverseMap();
+                .ForMember(dst => dst.ProductColorName, opt => opt.MapFrom(src => src.ProductColor.Color.Name))
+                .ForMember(dst => dst.ProductAvailableSizeName, opt => opt.MapFrom(src => src.ProductAvailableSize.AvailableSize.Name)).ReverseMap();
             CreateMap<AddCartProductsDTO, CartProduct>();
-            CreateMap<UpdateCartProductsDTO, CartProduct>();
-                //.ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
+            CreateMap<CartProductItemForUpdate, AddCartProductsDTO>();
 
             #endregion
 
