@@ -2,6 +2,7 @@
 using Attract.Framework.Entity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,16 +10,14 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Entities.Attract
 {
-    [Table("ProductColor", Schema = "Attract")]
-
-    public class ProductColor:EntityBase
+    [Table("Cart", Schema = "Attract")]
+    public class Cart : EntityBase
     {
-        public int ProductId { get; set; }
-        public int ColorId { get; set; }
+        public int Id { get; set; }
+        [Required]
+        public int UserId { get; set; }
 
-        // Navigation properties
-        public Product Product { get; set; }
-        public Color Color { get; set; }
+        public User User { get; set; }
         public ICollection<CartProduct> CartProducts { get; set; }
     }
 }

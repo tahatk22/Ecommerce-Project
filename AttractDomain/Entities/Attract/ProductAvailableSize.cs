@@ -18,5 +18,6 @@ namespace AttractDomain.Entities.Attract
 
         public Product Product { get; set; }
         public AvailableSize AvailableSize { get; set; }
+        public ICollection<CartProduct> CartProducts { get; set; }
     }
 }

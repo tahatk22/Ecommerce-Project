@@ -32,6 +32,7 @@ namespace Attract.Domain.Entities.Attract
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<ProductAvailableSize> ProductAvailableSizes { get; set; }
         public ICollection<ProductColor> ProductColors { get; set; }
+        public ICollection<CartProduct> CartProducts { get; set; }
 
     }
 }

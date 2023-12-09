@@ -25,6 +25,8 @@ namespace Attract.Infrastructure.Data
         public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
         public DbSet<ProductColor> ProductColors{ get; set; }
         public DbSet<CustomSubCategory> customSubCategories{ get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartProduct> CartProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +38,8 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
             modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());
+            modelBuilder.ApplyConfiguration(new CartConfiguration());
+            modelBuilder.ApplyConfiguration(new CartProductConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
