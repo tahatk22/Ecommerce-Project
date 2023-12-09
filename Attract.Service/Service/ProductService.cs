@@ -76,8 +76,6 @@ namespace Attract.Service.Service
                         include: s => s
                             .Include(p => p.ProductAvailableSizes)
                             .ThenInclude(pas => pas.AvailableSize)
-/*                            .Include(p => p.ProductColors)
-                            .ThenInclude(pc => pc.Color)*/
                             .Include(p=>p.OrderDetails)
                             .Include(w=>w.Images)
                     );
