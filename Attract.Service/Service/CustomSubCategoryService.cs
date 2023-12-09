@@ -8,10 +8,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +25,8 @@ namespace Attract.Service.Service
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
-        public CustomSubCategoryService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
+        public CustomSubCategoryService(IUnitOfWork unitOfWork, IMapper mapper, 
+            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -34,12 +37,13 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> AddCustomSubCategory(CustomSubCategoryAddDto customSubCategoryDto)
         {
             var response = new BaseCommandResponse();
+            var userId = httpContextAccessor.HttpContext.User?.FindFirstValue("UserID");
             var newSubCtgry = mapper.Map<CustomSubCategory>(customSubCategoryDto);
             string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/customsubcategory");
             string uniqueFileName = Guid.NewGuid().ToString() + "_" + customSubCategoryDto.ImgNm.FileName;
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
             newSubCtgry.ImgNm = uniqueFileName;
-            newSubCtgry.CreatedBy = 1;
+            newSubCtgry.CreatedBy = Convert.ToInt32(userId);
             await unitOfWork.GetRepository<CustomSubCategory>().InsertAsync(newSubCtgry);
             await unitOfWork.SaveChangesAsync();
             using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -64,11 +68,12 @@ namespace Attract.Service.Service
                 return response;
             }
             var result = mapper.Map<IList<CustomSubCategoryDto>>(subCategories);
-            //var httpContext = httpContextAccessor.HttpContext;
-            //var imgdbNm =result.Where(x=>x.Id == ) ;
-            // Get the host value
-            //var hostValue = httpContext.Request.Host.Value;
-            //var imgNm = $"{hostValue}/wwwroot/Images/customsubcategory/{imgdbNm}";
+            foreach (var item in result)
+            {
+                //Get the host value
+                var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+                item.ImgNm = $"https://{hostValue}/Images/customsubcategory/{item.ImgNm}";
+            }
             response.Success = true;
             response.Data = result;
             return response;
