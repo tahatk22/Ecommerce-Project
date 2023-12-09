@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,27 +16,27 @@ namespace AttractDomain.Configuration
         public void Configure(EntityTypeBuilder<CartProduct> builder)
         {
             builder
-                .HasKey(cp => cp.Id);
+            .HasKey(cp => cp.Id);
 
             builder
-                .HasOne(pc => pc.Product)
+                .HasOne(cp => cp.Product)
                 .WithMany(p => p.CartProducts)
-                .HasForeignKey(pc => pc.ProductId);
+                .HasForeignKey(cp => cp.ProductId);
 
             builder
-                .HasOne(pc => pc.Cart)
+                .HasOne(cp => cp.Cart)
                 .WithMany(c => c.CartProducts)
-                .HasForeignKey(pc => pc.CartId);
+                .HasForeignKey(cp => cp.CartId);
 
             builder
-                .HasOne(pc => pc.ProductAvailableSize)
+                .HasOne(cp => cp.ProductAvailableSize)
                 .WithMany(p => p.CartProducts)
-                .HasForeignKey(pc => pc.ProductAvailableSizeId);
+                .HasForeignKey(cp => cp.ProductAvailableSizeId);
 
             builder
-                .HasOne(pc => pc.ProductColor)
+                .HasOne(cp => cp.ProductColor)
                 .WithMany(p => p.CartProducts)
-                .HasForeignKey(pc => pc.ProductColorId);
+                .HasForeignKey(cp => cp.ProductColorId);
         }
     }
 }

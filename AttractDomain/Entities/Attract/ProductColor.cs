@@ -13,6 +13,7 @@ namespace AttractDomain.Entities.Attract
 
     public class ProductColor:EntityBase
     {
+        public int Id { get; set; }
         public int ProductId { get; set; }
         public int ColorId { get; set; }
 

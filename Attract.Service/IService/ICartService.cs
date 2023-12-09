@@ -8,5 +8,6 @@ namespace Attract.Service.IService
 {
     public interface ICartService
     {
+        Task<int> GetCartByUser(string userId);
     }
 }

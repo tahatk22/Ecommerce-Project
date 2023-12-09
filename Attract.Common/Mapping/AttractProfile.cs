@@ -1,5 +1,6 @@
 ﻿using Attract.Common.DTOs;
 using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Cart;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.CustomSubCategory;
@@ -12,7 +13,7 @@ using AutoMapper;
 
 namespace Attract.Common.Mapping
 {
-    public class AttractProfile:Profile
+    public class AttractProfile : Profile
     {
         public AttractProfile()
         {
@@ -21,18 +22,18 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
-            CreateMap<User,UserDTO>().ReverseMap();
-            CreateMap<User,LoginUserDTO>().ReverseMap();
-            CreateMap<Product,EditProductDTO>().ReverseMap();
-            CreateMap<Product,EditProductWithImageDTO>().ReverseMap();
-            CreateMap<Product,AddProductDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<Product, EditProductDTO>().ReverseMap();
+            CreateMap<Product, EditProductWithImageDTO>().ReverseMap();
+            CreateMap<Product, AddProductDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
                 .ForMember(dest => dest.Colors, opt => opt.MapFrom(src => src.ProductColors.Select(pc => pc.Color.Name)))
                 .ForMember(dest => dest.ImagePaths, opt => opt.MapFrom(src => src.Images.Select(pc => pc.Name)))
                 // Map other properties as needed...
                 ;
-            CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
+            CreateMap<Category, CategoryDto>().ForMember(s => s.SubCategories, tr => tr.MapFrom(a => a.SubCategories.Select(s => s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
             CreateMap<CategoryUpdDto, Category>()
             .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
@@ -43,11 +44,25 @@ namespace Attract.Common.Mapping
            .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             //////////
-          CreateMap<CustomSubCategoryAddDto, CustomSubCategory>()
-            .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
-            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
-            .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
+            CreateMap<CustomSubCategoryAddDto, CustomSubCategory>()
+              .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
+              .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
+              .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
             CreateMap<CustomSubCategory, CustomSubCategoryDto>();
+
+
+            #region Cart
+
+            CreateMap<CartProduct, CartProductsDTO>()
+                .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.Product.Price))
+                .ForMember(dst => dst.ProductColorName, opt => opt.MapFrom(src => src.ProductColor.Color))
+                .ForMember(dst => dst.ProductAvailableSizeName, opt => opt.MapFrom(src => src.ProductAvailableSize.AvailableSize)).ReverseMap();
+            CreateMap<AddCartProductsDTO, CartProduct>();
+            CreateMap<UpdateCartProductsDTO, CartProduct>();
+                //.ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+            #endregion
 
         }
     }
