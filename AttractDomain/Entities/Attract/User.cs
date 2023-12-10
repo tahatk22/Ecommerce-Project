@@ -12,5 +12,6 @@ namespace AttractDomain.Entities.Attract
         public string LastName { get; set; }
         public string Gender { get; set; }
         public ICollection<Bill> Bills { get; set; }
+        public ICollection<Cart> Carts { get; set; }
     }
 }

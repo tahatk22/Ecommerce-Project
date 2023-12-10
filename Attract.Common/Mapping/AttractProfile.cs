@@ -1,5 +1,6 @@
 ﻿using Attract.Common.DTOs;
 using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Cart;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.CustomSubCategory;
@@ -13,7 +14,7 @@ using AutoMapper;
 
 namespace Attract.Common.Mapping
 {
-    public class AttractProfile:Profile
+    public class AttractProfile : Profile
     {
         public AttractProfile()
         {
@@ -49,14 +50,27 @@ namespace Attract.Common.Mapping
            .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             //////////
-          CreateMap<CustomSubCategoryAddDto, CustomSubCategory>()
-            .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
-            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
-            .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
+            CreateMap<CustomSubCategoryAddDto, CustomSubCategory>()
+              .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.UtcNow))
+              .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
+              .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
             CreateMap<CustomSubCategory, CustomSubCategoryDto>();
             CreateMap<CustomSubCategoryUpdDto, CustomSubCategory>()
          .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow))
          .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
+
+
+            #region Cart
+
+            CreateMap<CartProduct, CartProductItemsForGet>()
+                .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.Product.Price))
+                .ForMember(dst => dst.ProductColorName, opt => opt.MapFrom(src => src.ProductColor.Color.Name))
+                .ForMember(dst => dst.ProductAvailableSizeName, opt => opt.MapFrom(src => src.ProductAvailableSize.AvailableSize.Name)).ReverseMap();
+            CreateMap<AddCartProductsDTO, CartProduct>();
+            CreateMap<CartProductItemForUpdate, AddCartProductsDTO>();
+
+            #endregion
 
         }
     }

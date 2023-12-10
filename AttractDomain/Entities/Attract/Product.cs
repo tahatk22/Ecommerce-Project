@@ -25,13 +25,14 @@ namespace Attract.Domain.Entities.Attract
         public string Description { get; set; }
         [Required]
         public int Quantity { get; set; }
-        public string Brand { get; set; }
+        //public string Brand { get; set; }
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public ICollection<ProductImage> Images { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<ProductAvailableSize> ProductAvailableSizes { get; set; }
         public ICollection<ProductColor> ProductColors { get; set; }
+        public ICollection<CartProduct> CartProducts { get; set; }
 
     }
 }
