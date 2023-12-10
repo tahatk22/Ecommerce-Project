@@ -13,7 +13,6 @@ namespace Attract.API.Controllers.Product
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
