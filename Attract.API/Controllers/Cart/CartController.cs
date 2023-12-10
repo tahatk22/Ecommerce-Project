@@ -35,7 +35,7 @@ namespace Attract.API.Controllers.Cart
             }
             return Ok(await _cartProductService.AddCartProduct(viewModel));
         }
-        [HttpGet("GetCartProducts")]
+       /* [HttpGet("GetCartProducts")]
         public async Task<ActionResult<BaseCommandResponse>> GetAll(string userId)
         {
             int CartId = await _cartService.GetCartByUser(userId);
@@ -48,7 +48,7 @@ namespace Attract.API.Controllers.Cart
                 });
             }
             return Ok(await _cartProductService.GetAllCartProducts(CartId));
-        }
+        }*/
         [HttpPut("UpdCtgry")]
         public async Task<ActionResult<BaseCommandResponse>> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {

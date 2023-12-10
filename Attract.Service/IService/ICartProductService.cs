@@ -11,7 +11,7 @@ namespace Attract.Service.IService
     public interface ICartProductService
     {
         Task<BaseCommandResponse> AddCartProduct(AddCartProductsDTO viewModel);
-        Task<BaseCommandResponse> GetAllCartProducts(int cartId);
+        //Task<BaseCommandResponse> GetAllCartProducts(int cartId);
         Task<BaseCommandResponse> UpdateCartProducts(UpdateCartProductsDTO viewModel);
     }
 }

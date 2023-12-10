@@ -14,8 +14,7 @@ namespace AttractDomain.Configuration
         public void Configure(EntityTypeBuilder<ProductAvailableSize> builder)
         {
             builder
-        .HasKey(pas => pas.Id);
-
+           .HasKey(sc => new { sc.ProductId, sc.AvailableSizeId });
             builder
                 .HasOne(pas => pas.Product)
                 .WithMany(p => p.ProductAvailableSizes)

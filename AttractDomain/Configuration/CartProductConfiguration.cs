@@ -15,7 +15,7 @@ namespace AttractDomain.Configuration
 
         public void Configure(EntityTypeBuilder<CartProduct> builder)
         {
-            builder
+           /* builder
             .HasKey(cp => cp.Id);
 
             builder
@@ -36,7 +36,7 @@ namespace AttractDomain.Configuration
             builder
                 .HasOne(cp => cp.ProductColor)
                 .WithMany(p => p.CartProducts)
-                .HasForeignKey(cp => cp.ProductColorId);
+                .HasForeignKey(cp => cp.ProductColorId);*/
         }
     }
 }

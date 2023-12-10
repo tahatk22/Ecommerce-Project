@@ -54,7 +54,7 @@ namespace Attract.Service.Service
                 Data = cartProductToBeAdded.Id
             };
         }
-        public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
+       /* public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
         {
 
             var response = new BaseCommandResponse();
@@ -81,7 +81,7 @@ namespace Attract.Service.Service
             response.Success = true;
             response.Data = result;
             return response;
-        }
+        }*/
 
         public async Task<BaseCommandResponse> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {

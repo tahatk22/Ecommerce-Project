@@ -13,7 +13,6 @@ namespace AttractDomain.Entities.Attract
 
     public class ProductAvailableSize:EntityBase
     {
-        public int Id { get; set; }
         public int ProductId { get; set; }
         public int AvailableSizeId { get; set; }
 

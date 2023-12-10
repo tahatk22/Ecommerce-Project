@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace AttractDomain.Configuration
         public void Configure(EntityTypeBuilder<ProductColor> builder)
         {
             builder
-        .HasKey(pc => pc.Id);
+           .HasKey(sc => new { sc.ProductId, sc.ColorId});
 
             builder
                 .HasOne(pc => pc.Product)

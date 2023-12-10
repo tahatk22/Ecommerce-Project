@@ -22,7 +22,7 @@ namespace AttractDomain.Entities.Attract
 
         public Cart Cart { get; set; }
         public Product Product { get; set; }
-        public ProductAvailableSize ProductAvailableSize { get; set; }
-        public ProductColor ProductColor { get; set; }
+        //public ProductAvailableSize ProductAvailableSize { get; set; }
+        //public ProductColor ProductColor { get; set; }
     }
 }
