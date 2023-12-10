@@ -70,6 +70,7 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination)
         {
             var response = new BaseCommandResponse();
+            string userId = authService.GetCurrentUserId();
             IQueryable<Product> products;
             try
             {
@@ -89,9 +90,6 @@ namespace Attract.Service.Service
                 products = await filterProducts(productPagination, products);
                 var result = mapper.Map<IList<ProductDTO>>(products);
                 response.Success = true;
-                /*var PagedCenter = await PagedList<Product>.CreateAsync(result, productPagination.PageNumber, productPagination.PageSize);
-                response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
-*/
                 response.Data = result;
                 return response;
             }

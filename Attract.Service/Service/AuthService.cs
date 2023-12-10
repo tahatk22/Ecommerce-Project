@@ -71,7 +71,7 @@ namespace Attract.Service.Service
         {
             if (httpContextAccessor.HttpContext != null)
             {
-                var userId = httpContextAccessor.HttpContext.User?.FindFirstValue("UserID");
+                var userId = httpContextAccessor.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (userId != null)
                     return userId;
