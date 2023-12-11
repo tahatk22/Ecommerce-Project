@@ -31,8 +31,8 @@ namespace Attract.Service.Service
                 .GetFirstOrDefaultAsync(predicate:
                 x => x.CartId == viewModel.CartId &&
                 x.ProductId == viewModel.ProductId &&
-                x.ProductAvailableSizeId == viewModel.ProductAvailableSizeId &&
-                x.ProductColorId == viewModel.ProductColorId);
+                x.AvailableSizeId == viewModel.AvailableSizeId &&
+                x.ColorId == viewModel.ColorId);
             if (cartProduct != null)
             {
                 cartProduct.Quantity += viewModel.Quantity;
@@ -54,7 +54,7 @@ namespace Attract.Service.Service
                 Data = cartProductToBeAdded.Id
             };
         }
-       /* public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
+        public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
         {
 
             var response = new BaseCommandResponse();
@@ -81,7 +81,7 @@ namespace Attract.Service.Service
             response.Success = true;
             response.Data = result;
             return response;
-        }*/
+        }
 
         public async Task<BaseCommandResponse> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {
