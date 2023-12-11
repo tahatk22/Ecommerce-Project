@@ -24,14 +24,33 @@ namespace Attract.Service.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IAuthService authService;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper,IHostingEnvironment hostingEnvironment,IAuthService authService)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment hostingEnvironment
+            , IHttpContextAccessor httpContextAccessor, IAuthService authService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.hostingEnvironment = hostingEnvironment;
+            this.httpContextAccessor = httpContextAccessor;
             this.authService = authService;
+        }
+        public async Task<BaseCommandResponse> DeleteProduct(int id)
+        {
+            var response=new BaseCommandResponse();
+            var product=await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate:s=>s.Id==id);
+            if (product!=null)
+            {
+                unitOfWork.GetRepository<Product>().Delete(product);
+                await unitOfWork.SaveChangesAsync();
+                response.Success = true;
+                response.Message = "Deleted Successfully!";
+                return response;
+            }
+            response.Success = false;
+            response.Message = "Failed to delete the product!";
+            return response;
         }
         public async Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductWithImagesDTO)
         {
@@ -46,8 +65,8 @@ namespace Attract.Service.Service
                 await CreateProductDirectoryAsync(newProduct);
 
                 // Map and insert the product images with the correct product ID
-                await AddProductImagesAsync(newProduct, addProductWithImagesDTO.ProductImageDTO.ImageFiles,addProductWithImagesDTO.ColorDTO.Names
-                    ,addProductWithImagesDTO.ProductImageDTO.ImageColorHexa);
+                await AddProductImagesAsync(newProduct, addProductWithImagesDTO.ProductImageDTO.ImageFiles, addProductWithImagesDTO.ColorDTO.Names
+                    , addProductWithImagesDTO.ProductImageDTO.ImageColorHexa);
                 await AddProductColorsAsync(newProduct, addProductWithImagesDTO.ColorDTO.Names);
                 await AddProductSizesAsync(newProduct, addProductWithImagesDTO.AvailableSizeDTO.Names);
                 // Save changes to the database
@@ -74,13 +93,13 @@ namespace Attract.Service.Service
             IQueryable<Product> products;
             try
             {
-                 products = unitOfWork.GetRepository<Product>()
-                    .GetAll()
-                            .Include(p => p.ProductAvailableSizes)
-                            .ThenInclude(pas => pas.AvailableSize)
-                            .Include(p => p.OrderDetails)
-                            .Include(w => w.Images);
-                                 
+                products = unitOfWork.GetRepository<Product>()
+                   .GetAll()
+                           .Include(p => p.ProductAvailableSizes)
+                           .ThenInclude(pas => pas.AvailableSize)
+                           .Include(p => p.OrderDetails)
+                           .Include(w => w.Images);
+
                 if (products == null || !products.Any())
                 {
                     response.Success = false;
@@ -88,9 +107,21 @@ namespace Attract.Service.Service
                     return response;
                 }
                 products = await filterProducts(productPagination, products);
+
                 var result = mapper.Map<IList<ProductDTO>>(products);
+                var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+                foreach (var product in result)
+                {
+                    // Update each ImageDTO in the collection
+                    foreach (var image in product.Images)
+                    {
+                        // Assuming 'Images' is the directory where images are stored
+                        var imageUrl = $"https://{hostValue}/Images/Product/{image.ImagePath}";
+                        image.ImagePath = imageUrl;
+                    }
+                }
                 response.Success = true;
-                response.Data = result;
+                response.Data = new { Products = result, ProductCount = result.Count };
                 return response;
             }
             catch (Exception ex)
@@ -187,7 +218,7 @@ namespace Attract.Service.Service
         }
         private async Task<Color> GetOrCreateColorAsync(string colorName)
         {
-            var existingColor = await unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate:c => c.Name == colorName);
+            var existingColor = await unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate: c => c.Name == colorName);
 
             if (existingColor != null)
             {
@@ -203,15 +234,28 @@ namespace Attract.Service.Service
         private async Task CreateProductDirectoryAsync(Product product)
         {
             var productDirectoryName = SanitizeDirectoryName(product.Name);
-            var productDirectoryPath = Path.Combine("wwwroot", "Images", productDirectoryName);
+            var productDirectoryPath = Path.Combine("wwwroot", "Images", "Product");
             if (!Directory.Exists(productDirectoryPath))
             {
                 Directory.CreateDirectory(productDirectoryPath);
             }
         }
 
-        private async Task AddProductImagesAsync(Product product, List<IFormFile> imageFiles, List<string> colorNames,List<string> imgColorHexa)
+        private async Task AddProductImagesAsync(Product product, List<IFormFile> imageFiles, List<string> colorNames, List<string> imgColorHexa)
         {
+            if (colorNames.Count < imageFiles.Count)
+            {
+                var repeatedColors = Enumerable.Repeat(colorNames, (int)Math.Ceiling((double)imageFiles.Count / colorNames.Count))
+                    .SelectMany(x => x)
+                    .Take(imageFiles.Count)
+                    .ToList();
+                var repeatedHexa = Enumerable.Repeat(imgColorHexa, (int)Math.Ceiling((double)imageFiles.Count / imgColorHexa.Count))
+                    .SelectMany(x => x)
+                    .Take(imageFiles.Count)
+                    .ToList();
+                imgColorHexa = repeatedHexa;
+                colorNames = repeatedColors;
+            }
             for (int i = 0; i < imageFiles.Count; i++)
             {
                 var imageFile = imageFiles[i];
@@ -222,14 +266,14 @@ namespace Attract.Service.Service
                 {
                     Name = Path.GetFullPath(imageFile.FileName),
                     ProductId = product.Id,
-                    ImageColorHexa=imgHexa,
+                    ImageColorHexa = imgHexa,
                     ImageFileName = imageFile.FileName,
                     ImageColor = colorName
                 };
 
                 await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
 
-                var productDirectoryPath = GetProductDirectoryPath(product);
+                var productDirectoryPath = GetProductDirectoryPath();
                 var imagePath = Path.Combine(productDirectoryPath, imageFile.FileName);
 
                 // Save the image file
@@ -240,9 +284,9 @@ namespace Attract.Service.Service
             }
         }
 
-        private string GetProductDirectoryPath(Product product)
+        private string GetProductDirectoryPath()
         {
-            return Path.Combine("wwwroot", "Images", SanitizeDirectoryName(product.Name));
+            return Path.Combine("wwwroot", "Images", "Product");
         }
 
         private string SanitizeDirectoryName(string input)
@@ -255,7 +299,7 @@ namespace Attract.Service.Service
         }
         private async Task<Product> UpdateProductAsync(EditProductDTO productDTO)
         {
-            var existingProduct = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate:s=>s.Id==productDTO.Id);
+            var existingProduct = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == productDTO.Id);
 
             if (existingProduct == null)
             {
@@ -267,7 +311,7 @@ namespace Attract.Service.Service
             mapper.Map(productDTO, existingProduct);
 
             // Mark the product entity as modified (if necessary)
-             unitOfWork.GetRepository<Product>().UpdateAsync(existingProduct);
+            unitOfWork.GetRepository<Product>().UpdateAsync(existingProduct);
 
             // No need to save changes immediately; just return the updated product
             return existingProduct;
@@ -276,7 +320,7 @@ namespace Attract.Service.Service
         {
             // Get existing images for the product
             var existingImages = await unitOfWork.GetRepository<ProductImage>()
-                .GetAllAsync(predicate:s=>s.ProductId==product.Id);
+                .GetAllAsync(predicate: s => s.ProductId == product.Id);
 
             // Determine which images need to be deleted
             var imagesToDelete = existingImages
@@ -286,7 +330,7 @@ namespace Attract.Service.Service
             // Delete images that are no longer associated with the product
             foreach (var imageToDelete in imagesToDelete)
             {
-                var imagePathToDelete = Path.Combine(GetProductDirectoryPath(product), imageToDelete.ImageFileName);
+                var imagePathToDelete = Path.Combine(GetProductDirectoryPath(), imageToDelete.ImageFileName);
 
                 // Delete the image file
                 if (File.Exists(imagePathToDelete))
@@ -322,7 +366,7 @@ namespace Attract.Service.Service
                 }
 
                 // Save the image file or update it
-                var imagePath = Path.Combine(GetProductDirectoryPath(product), newImageFile.FileName);
+                var imagePath = Path.Combine(GetProductDirectoryPath(), newImageFile.FileName);
 
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
                 {
