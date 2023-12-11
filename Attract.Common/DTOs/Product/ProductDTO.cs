@@ -15,7 +15,7 @@ namespace Attract.Common.DTOs.Product
     {
         public int Id { get; set; }
         [Required]
-        public IList<string> AvailableSizes { get; set; } 
+        public IList<string> AvailableSizes { get; set; }
         public ICollection<ImageDTO> Images { get; set; }
     }
 }

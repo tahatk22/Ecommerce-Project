@@ -121,7 +121,7 @@ namespace Attract.Service.Service
                     }
                 }
                 response.Success = true;
-                response.Data = result;
+                response.Data = new { Products = result, ProductCount = result.Count };
                 return response;
             }
             catch (Exception ex)
