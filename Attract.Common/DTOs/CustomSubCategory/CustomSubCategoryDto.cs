@@ -19,7 +19,6 @@ namespace Attract.Common.DTOs.CustomSubCategory
 
         public string title { get; set; }
 
-
         public string imgNm { get; set; }
         public string imgUrl { get; set; }
     }

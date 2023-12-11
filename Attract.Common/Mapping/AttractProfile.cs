@@ -24,10 +24,11 @@ namespace Attract.Common.Mapping
         {
 
             CreateMap<ProductImage,ImageDTO>()
-                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImageFileName))
                 .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.ImageColorHexa))
                 .ForMember(dest => dest.ImgesColor, opt => opt.MapFrom(src => src.ImageColor))
                 .ReverseMap();
+
             CreateMap<AvailableSize,AvailableSizeDTO>().ReverseMap();
             CreateMap<Color,ColorDTO>().ReverseMap();
             CreateMap<User,UserDTO>().ReverseMap();
@@ -35,6 +36,7 @@ namespace Attract.Common.Mapping
             CreateMap<Product,EditProductDTO>().ReverseMap();
             CreateMap<Product,EditProductWithImageDTO>().ReverseMap();
             CreateMap<Product,AddProductDTO>().ReverseMap();
+
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();

@@ -16,6 +16,7 @@ namespace Attract.Service.IService
     public interface IProductService
     {
         Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination);
+        Task<BaseCommandResponse> DeleteProduct(int id);
         Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductImageDTO);
         Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO);
     }

@@ -43,5 +43,11 @@ namespace Attract.API.Controllers.Product
             var product = await productService.EditProductWithImageAsync(editProductDTO);
             return Ok(product);
         }
+        [HttpDelete("DeletProduct/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteProduct(int id)
+        {
+            var product = await productService.DeleteProduct(id);
+            return Ok(product);
+        }
     }
 }
