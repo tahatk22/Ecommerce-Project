@@ -9,10 +9,12 @@ namespace Attract.Common.DTOs.User
 {
     public class UserDTO : LoginUserDTO
     {
-        [DataType(DataType.PhoneNumber)]
         public string Gender { get; set; }
     }
-
+    public class RegisterDTO : LoginUserDTO
+    {
+        public bool IsAdmin { get; set; }
+    }
     public class LoginUserDTO
     {
         [Required]
