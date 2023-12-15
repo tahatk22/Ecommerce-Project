@@ -15,10 +15,11 @@ namespace AttractDomain.Configuration
         {
             builder
            .HasKey(sc => new { sc.ProductId, sc.AvailableSizeId });
-            builder
-                .HasOne(pas => pas.Product)
-                .WithMany(p => p.ProductAvailableSizes)
-                .HasForeignKey(pas => pas.ProductId);
+
+            //builder
+            //    .HasOne(pas => pas.Product)
+            //    .WithMany(p => p.ProductAvailableSizes)
+            //    .HasForeignKey(pas => pas.ProductId);
 
             builder
                 .HasOne(pas => pas.AvailableSize)

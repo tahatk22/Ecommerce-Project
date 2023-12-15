@@ -37,9 +37,9 @@ namespace Attract.Common.Mapping
             CreateMap<Product,EditProductWithImageDTO>().ReverseMap();
             CreateMap<Product,AddProductDTO>().ReverseMap();
 
-            CreateMap<Product, ProductDTO>()
-                .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
+                //.ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
+                //.ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
                 
             CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
@@ -65,10 +65,10 @@ namespace Attract.Common.Mapping
             #region Cart
 
            CreateMap<CartProduct, CartProductItemsForGet>()
-                .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.Product.Name))
-                .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.Product.Price))
-                .ForMember(dst => dst.ColorName, opt => opt.MapFrom(src => src.ProductColor.Color.Name))
-                .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductAvailableSize.AvailableSize.Name)).ReverseMap();
+                .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.ProductQuantity.Product.Name))
+                .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.ProductQuantity.Price))
+                .ForMember(dst => dst.ColorName, opt => opt.MapFrom(src => src.ProductQuantity.ProductColor.Color.Name))
+                .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductQuantity.ProductAvailableSize.AvailableSize.Name)).ReverseMap();
             CreateMap<AddCartProductsDTO, CartProduct>();
             CreateMap<CartProductItemForUpdate, AddCartProductsDTO>();
 

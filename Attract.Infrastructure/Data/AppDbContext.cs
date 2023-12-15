@@ -16,6 +16,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductQuantity> ProductQuantities { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<AvailableSize>  AvailableSizes { get; set; }
@@ -35,6 +36,7 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ImageConfiguration());
             modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductQuantityConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
             modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());

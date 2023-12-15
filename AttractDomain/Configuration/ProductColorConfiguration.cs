@@ -16,12 +16,12 @@ namespace AttractDomain.Configuration
         public void Configure(EntityTypeBuilder<ProductColor> builder)
         {
             builder
-           .HasKey(sc => new { sc.ProductId, sc.ColorId});
+           .HasKey(sc => new { sc.ProductQuantityId, sc.ColorId});
 
-            builder
-                .HasOne(pc => pc.Product)
-                .WithMany(p => p.ProductColors)
-                .HasForeignKey(pc => pc.ProductId);
+            //builder
+            //    .HasOne(pc => pc.Product)
+            //    .WithMany(p => p.ProductQuantities)
+            //    .HasForeignKey(pc => pc.ProductQuantityId);
 
             builder
                 .HasOne(pc => pc.Color)

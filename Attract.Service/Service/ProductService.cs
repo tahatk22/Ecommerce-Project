@@ -95,10 +95,9 @@ namespace Attract.Service.Service
             {
                 products = unitOfWork.GetRepository<Product>()
                    .GetAll()
-                           .Include(p => p.ProductAvailableSizes)
-                           .ThenInclude(pas => pas.AvailableSize)
-                           .Include(p => p.OrderDetails)
-                           .Include(w => w.Images);
+                           .Include(p => p.ProductQuantities)
+                           .ThenInclude(p => p.ProductAvailableSize)
+                           .ThenInclude(pas => pas.AvailableSize);
 
                 if (products == null || !products.Any())
                 {
@@ -209,7 +208,7 @@ namespace Attract.Service.Service
 
                 var productColor = new ProductColor
                 {
-                    ProductId = product.Id,
+                    ProductQuantityId = product.Id,
                     ColorId = color.Id
                 };
 
@@ -380,7 +379,7 @@ namespace Attract.Service.Service
             {
                 products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
                 s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
-                s.Price.ToString().Contains(PagingParams.SearchString) || s.Brand.Contains(PagingParams.SearchString));
+                /*s.Price.ToString().Contains(PagingParams.SearchString) ||*/ s.Brand.Contains(PagingParams.SearchString));
 
             }
             return products;
