@@ -12,7 +12,9 @@ namespace Attract.Service.IService
     public interface IAuthService
     {
         Task<BaseCommandResponse> Register(UserDTO userDTO);
+        Task<BaseCommandResponse> CreateAdmins(RegisterDTO request);
         Task<BaseCommandResponse> Login(LoginUserDTO loginUserDTO);
+        Task<BaseCommandResponse> AdminLogin(LoginUserDTO loginUserDTO);
         string GetCurrentUserId();
         
     }

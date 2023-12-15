@@ -22,6 +22,18 @@ namespace Attract.API.Controllers.Account
         {
             return Ok(await authService.Register(userDTO));
         }
+        
+        [HttpPost("CreateAdminUsers")]
+        public async Task<ActionResult<BaseCommandResponse>> CreateAdminUsers(RegisterDTO request)
+        {
+            return Ok(await authService.CreateAdmins(request));
+        }
+        
+        [HttpPost("AdminLogin")]
+        public async Task<ActionResult<BaseCommandResponse>> AdminLogin(LoginUserDTO request)
+        {
+            return Ok(await authService.AdminLogin(request));
+        }
 
         [HttpPost("login")]
         public async Task<ActionResult<BaseCommandResponse>> Login(LoginUserDTO loginUserDTO)

@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Numerics;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +38,97 @@ namespace Attract.Service.Service
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.httpContextAccessor = httpContextAccessor;
+        }
+        public async Task<BaseCommandResponse> CreateAdmins(RegisterDTO request)
+        {
+            var response = new BaseCommandResponse();
+
+            var existingUser = await userManager.FindByEmailAsync(request.Email);
+
+            if (existingUser != null)
+            {
+                response.Success = false;
+                response.Message = "Email Already Exist!";
+                return response;
+            }
+            var user = CreateAdminUser(request);
+            try
+            {
+                var result = await userManager.CreateAsync(user, request.Password);
+                if (result.Succeeded)
+                {
+                    if(request.IsAdmin)
+                    {
+                        var addToRoleResult = await userManager.AddToRoleAsync(user, "Admin");
+                        if(!addToRoleResult.Succeeded)
+                        {
+                            response.Success = false;
+                            response.Message = $"Failed to assign admin role to the user {user.UserName}";
+                            return response;
+                        }
+                        response.Success = true;
+                        response.Message = "Registerd Successfully!";
+                        return response;
+                    }
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "User registration failed. Please check the provided information.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = "An error occurred during user registration.";
+                // Log the exception if needed...
+                return response;
+            }
+            return response;
+        }
+        public async Task<BaseCommandResponse> AdminLogin(LoginUserDTO loginUserDTO)
+        {
+            var user = await userManager.FindByEmailAsync(loginUserDTO.Email);
+            var response = new BaseCommandResponse();
+
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "User Not Found!";
+                return response;
+            }
+
+            bool isAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower());
+
+            if (!isAdmin)
+            {
+                response.Success = false;
+                response.Message = "Admin Login Required!";
+                return response;
+            }
+
+            var result = await signInManager.PasswordSignInAsync(user.UserName, loginUserDTO.Password, false, lockoutOnFailure: false);
+
+            if (result.IsNotAllowed || !result.Succeeded)
+            {
+                response.Success = false;
+                return response;
+            }
+
+            JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+            var responseAuth = new
+            {
+                Id = user.Id.ToString(),
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                Email = user.Email,
+                UserName = user.UserName
+            };
+
+            response.Success = true;
+            response.Data = responseAuth;
+            return response;
         }
         public async Task<BaseCommandResponse> Login(LoginUserDTO userDTO)
         {
@@ -122,6 +215,15 @@ namespace Attract.Service.Service
             }
         }
         #region private methods
+
+        private User CreateAdminUser(RegisterDTO userDTO)
+        {
+            return new User
+            {
+                UserName = userDTO.Email,
+                Email = userDTO.Email,
+            };
+        }
         private User CreateUser(UserDTO userDTO)
         {
             return new User
@@ -159,7 +261,7 @@ namespace Attract.Service.Service
                 expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(configuration.GetSection("Jwt:DurationInMinutes").Value)),
                 signingCredentials: signingCredentials);
             return jwtSecurityToken;
-        }
+        }        
         #endregion
     }
 }
