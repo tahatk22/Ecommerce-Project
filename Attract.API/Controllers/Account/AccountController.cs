@@ -34,7 +34,6 @@ namespace Attract.API.Controllers.Account
         {
             return Ok(await authService.AdminLogin(request));
         }
-
         [HttpPost("login")]
         public async Task<ActionResult<BaseCommandResponse>> Login(LoginUserDTO loginUserDTO)
         {

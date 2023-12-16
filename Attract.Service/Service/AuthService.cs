@@ -99,9 +99,10 @@ namespace Attract.Service.Service
                 return response;
             }
 
-            bool isAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower());
-
-            if (!isAdmin)
+            bool isAdminOrSuperAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower()) 
+                || await userManager.IsInRoleAsync(user, "SuperAdmin".ToLower());
+            var userRole=await userManager.GetRolesAsync(user);
+            if (!isAdminOrSuperAdmin)
             {
                 response.Success = false;
                 response.Message = "Admin Login Required!";
@@ -123,7 +124,9 @@ namespace Attract.Service.Service
                 Id = user.Id.ToString(),
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                Role = userRole  
+
             };
 
             response.Success = true;
