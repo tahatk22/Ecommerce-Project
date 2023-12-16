@@ -10,13 +10,6 @@ namespace Attract.Domain.Entities.Attract
 
     public class Product: EntityBase
     {
-        public Product()
-        {
-            //ProductAvailableSizes = new HashSet<ProductAvailableSize>();
-            //ProductColors = new HashSet<ProductColor>();
-            //Images = new HashSet<ProductImage>();
-            //OrderDetails=new HashSet<OrderDetail>();
-        }
         public int Id { get; set; }
         [MaxLength(250)]
         [Required]
@@ -29,7 +22,7 @@ namespace Attract.Domain.Entities.Attract
         //public bool RecommendedProducts { get; set; } = false;
         //public bool FeaturedProducts { get; set; } = false;
         //public bool TrendingProducts { get; set; } = false;
-        public int SaleCount { get; set; }
+        public int SaleCount { get; set; } = 0;
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         //public ICollection<OrderDetail> OrderDetails { get; set; }

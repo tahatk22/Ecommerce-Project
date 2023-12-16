@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs.AvailableSize
 {
-    public class AvailableSizeDTO
+    public class AddAvailableSizeDTO
     {
-        public int Id {  get; set; }
         public string Name { get; set; }
     }
 }

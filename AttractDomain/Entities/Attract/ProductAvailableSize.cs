@@ -13,10 +13,9 @@ namespace AttractDomain.Entities.Attract
 
     public class ProductAvailableSize:EntityBase
     {
-        public int ProductId { get; set; }
+        public int ProductQuantityId { get; set; }
         public int AvailableSizeId { get; set; }
 
-        public Product Product { get; set; }
         public AvailableSize AvailableSize { get; set; }
         public ICollection<ProductQuantity> ProductQuantities { get; set; }
     }

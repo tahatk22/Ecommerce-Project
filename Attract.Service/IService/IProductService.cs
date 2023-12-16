@@ -17,7 +17,7 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination);
         Task<BaseCommandResponse> DeleteProduct(int id);
-        Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductImageDTO);
+        Task<BaseCommandResponse> AddProduct(AddProductDTO addProductImageDTO);
         Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO);
     }
 }

@@ -20,6 +20,8 @@ namespace Attract.Infrastructure.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<AvailableSize>  AvailableSizes { get; set; }
+        public DbSet<Tag>  Tags { get; set; }
+        public DbSet<ProductTag>  ProductTags { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<Bill> Bills{ get; set; }
@@ -40,6 +42,7 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
             modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductTagConfiguration());
             modelBuilder.ApplyConfiguration(new CartConfiguration());
             modelBuilder.ApplyConfiguration(new CartProductConfiguration());
             base.OnModelCreating(modelBuilder);

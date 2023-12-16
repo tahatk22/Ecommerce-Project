@@ -18,11 +18,6 @@ namespace AttractDomain.Configuration
             builder
            .HasKey(sc => new { sc.ProductQuantityId, sc.ColorId});
 
-            //builder
-            //    .HasOne(pc => pc.Product)
-            //    .WithMany(p => p.ProductQuantities)
-            //    .HasForeignKey(pc => pc.ProductQuantityId);
-
             builder
                 .HasOne(pc => pc.Color)
                 .WithMany(p => p.ProductColors)

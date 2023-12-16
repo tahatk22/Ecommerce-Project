@@ -1,8 +1,12 @@
 ﻿using Attract.Common.BaseResponse;
+using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.DTOs.Tag;
 using Attract.Common.Helpers.ProductHelper;
 using Attract.Service.IService;
+using Attract.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +20,20 @@ namespace Attract.API.Controllers.Product
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
+        private readonly IColorService _colorService;
+        private readonly IAvailableSizeService _availableSizeService;
+        private readonly ITagService _tagService;
 
-        public ProductController(IProductService productService)
+        public ProductController(
+            IProductService productService,
+            IColorService colorService,
+            IAvailableSizeService availableSizeService,
+            ITagService tagService)
         {
             this.productService = productService;
+            _colorService = colorService;
+            _availableSizeService = availableSizeService;
+            _tagService = tagService;
         }
 
         [HttpGet("GetAllProducts")]
@@ -31,9 +45,46 @@ namespace Attract.API.Controllers.Product
 
 
         [HttpPost("AddProduct")]
-        public async Task<ActionResult<BaseCommandResponse>> UploadImage([FromForm] AddProductWithImageDTO addProductImageDto)
+        public async Task<ActionResult<BaseCommandResponse>> Add([FromForm] AddProductDTO viewModel)
         {
-            var productId = await productService.AddProductImageAsync(addProductImageDto);
+            if (viewModel.productQuantities.Where(x => x.Color.Id == 0).Any())
+            {
+                foreach (var item in viewModel.productQuantities.Where(x => x.Color.Id == 0).ToList())
+                {
+                    item.Color.Id =
+                        await _colorService.AddColor(
+                            new AddColorDTO
+                            {
+                                Name = item.Color.Name,
+                                ColorHexa = item.Color.ColorHexa,
+                            });
+                }
+            }
+            if (viewModel.productQuantities.Where(x => x.Size.Id == 0).Any())
+            {
+                foreach (var item in viewModel.productQuantities.Where(x => x.Size.Id == 0).ToList())
+                {
+                    item.Size.Id =
+                        await _availableSizeService.AddAvailableSize(
+                            new AddAvailableSizeDTO
+                            {
+                                Name = item.Size.Name,
+                            });
+                }
+            }
+            if (viewModel.Tags.Where(x => x.Id == 0).Any())
+            {
+                foreach (var item in viewModel.Tags.Where(x => x.Id == 0).ToList())
+                {
+                    item.Id =
+                        await _tagService.AddTag(
+                            new AddTagDTO
+                            {
+                                Name = item.Name,
+                            });
+                }
+            }
+            var productId = await productService.AddProduct(viewModel);
             return Ok(productId);
         }
 
