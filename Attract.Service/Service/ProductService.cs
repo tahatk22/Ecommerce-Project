@@ -1,4 +1,5 @@
 ﻿using Attract.Common.BaseResponse;
+using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Image;
@@ -27,8 +28,12 @@ namespace Attract.Service.Service
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IAuthService authService;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment hostingEnvironment
-            , IHttpContextAccessor httpContextAccessor, IAuthService authService)
+        public ProductService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IHostingEnvironment hostingEnvironment,
+            IHttpContextAccessor httpContextAccessor,
+            IAuthService authService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -38,9 +43,9 @@ namespace Attract.Service.Service
         }
         public async Task<BaseCommandResponse> DeleteProduct(int id)
         {
-            var response=new BaseCommandResponse();
-            var product=await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate:s=>s.Id==id);
-            if (product!=null)
+            var response = new BaseCommandResponse();
+            var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == id);
+            if (product != null)
             {
                 unitOfWork.GetRepository<Product>().Delete(product);
                 await unitOfWork.SaveChangesAsync();
@@ -52,36 +57,26 @@ namespace Attract.Service.Service
             response.Message = "Failed to delete the product!";
             return response;
         }
-        public async Task<BaseCommandResponse> AddProductImageAsync(AddProductWithImageDTO addProductWithImagesDTO)
+        public async Task<BaseCommandResponse> AddProduct(AddProductDTO viewModel)
         {
             var response = new BaseCommandResponse();
 
             try
             {
-                // Map and insert the product
-                var newProduct = await AddProductAsync(addProductWithImagesDTO.ProductDTO);
-
-                // Create a directory for the product if it doesn't exist
+                var newProduct = await AddProductAsync(viewModel);
                 await CreateProductDirectoryAsync(newProduct);
 
-                // Map and insert the product images with the correct product ID
-                await AddProductImagesAsync(newProduct, addProductWithImagesDTO.ProductImageDTO.ImageFiles, addProductWithImagesDTO.ColorDTO.Names
-                    , addProductWithImagesDTO.ProductImageDTO.ImageColorHexa);
-                await AddProductColorsAsync(newProduct, addProductWithImagesDTO.ColorDTO.Names);
-                await AddProductSizesAsync(newProduct, addProductWithImagesDTO.AvailableSizeDTO.Names);
-                // Save changes to the database
+                
+                await AddProductQuantities(newProduct.Id, viewModel);
                 await unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
-                response.Data = newProduct.Id;  // You can return the ID of the newly created product
+                response.Data = newProduct.Id;
             }
             catch (Exception ex)
             {
-                // Handle exceptions, log them, etc.
                 response.Success = false;
                 response.Message = "An error occurred while adding the product and images.";
-                // Optionally log the exception details
-                // logger.LogError(ex, "Error adding product and images");
             }
 
             return response;
@@ -95,10 +90,9 @@ namespace Attract.Service.Service
             {
                 products = unitOfWork.GetRepository<Product>()
                    .GetAll()
-                           .Include(p => p.ProductAvailableSizes)
-                           .ThenInclude(pas => pas.AvailableSize)
-                           .Include(p => p.OrderDetails)
-                           .Include(w => w.Images);
+                           .Include(p => p.ProductQuantities)
+                           .ThenInclude(p => p.ProductAvailableSize)
+                           .ThenInclude(pas => pas.AvailableSize);
 
                 if (products == null || !products.Any())
                 {
@@ -179,7 +173,7 @@ namespace Attract.Service.Service
 
                 var productSize = new ProductAvailableSize
                 {
-                    ProductId = product.Id,
+                    ProductQuantityId = product.Id,
                     AvailableSizeId = size.Id
                 };
 
@@ -209,7 +203,7 @@ namespace Attract.Service.Service
 
                 var productColor = new ProductColor
                 {
-                    ProductId = product.Id,
+                    ProductQuantityId = product.Id,
                     ColorId = color.Id
                 };
 
@@ -241,47 +235,29 @@ namespace Attract.Service.Service
             }
         }
 
-        private async Task AddProductImagesAsync(Product product, List<IFormFile> imageFiles, List<string> colorNames, List<string> imgColorHexa)
+        private async Task AddProductQuantities(int productId, AddProductDTO product)
         {
-            if (colorNames.Count < imageFiles.Count)
+            foreach (var item in product.productQuantities)
             {
-                var repeatedColors = Enumerable.Repeat(colorNames, (int)Math.Ceiling((double)imageFiles.Count / colorNames.Count))
-                    .SelectMany(x => x)
-                    .Take(imageFiles.Count)
-                    .ToList();
-                var repeatedHexa = Enumerable.Repeat(imgColorHexa, (int)Math.Ceiling((double)imageFiles.Count / imgColorHexa.Count))
-                    .SelectMany(x => x)
-                    .Take(imageFiles.Count)
-                    .ToList();
-                imgColorHexa = repeatedHexa;
-                colorNames = repeatedColors;
-            }
-            for (int i = 0; i < imageFiles.Count; i++)
-            {
-                var imageFile = imageFiles[i];
-                var colorName = colorNames[i];
-                var imgHexa = imgColorHexa[i];
-
-                var productImage = new ProductImage
-                {
-                    Name = Path.GetFullPath(imageFile.FileName),
-                    ProductId = product.Id,
-                    ImageColorHexa = imgHexa,
-                    ImageFileName = imageFile.FileName,
-                    ImageColor = colorName
-                };
-
-                await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
-
                 var productDirectoryPath = GetProductDirectoryPath();
-                var imagePath = Path.Combine(productDirectoryPath, imageFile.FileName);
-
+                var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
                 // Save the image file
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await imageFile.CopyToAsync(fileStream);
+                    await item.ImageFile.CopyToAsync(fileStream);
                 }
-            }
+
+                var productQuantity = new ProductQuantity
+                {
+                    ProductId = productId,
+                    AvailableSizeId = item.Size.Id,
+                    ColorId = item.Color.Id,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    ImageName = Path.GetFullPath(item.ImageFile.FileName)
+                };
+                await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
+            }            
         }
 
         private string GetProductDirectoryPath()
@@ -380,7 +356,7 @@ namespace Attract.Service.Service
             {
                 products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
                 s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
-                s.Price.ToString().Contains(PagingParams.SearchString) || s.Brand.Contains(PagingParams.SearchString));
+                /*s.Price.ToString().Contains(PagingParams.SearchString) ||*/ s.Brand.Contains(PagingParams.SearchString));
 
             }
             return products;

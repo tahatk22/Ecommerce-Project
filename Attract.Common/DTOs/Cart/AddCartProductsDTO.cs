@@ -13,13 +13,11 @@ namespace Attract.Common.DTOs.Cart
         [JsonIgnore]
         public int CartId { get; set; }
         [Required]
-        public string UserId { get; set; }
-        [Required]
         public int ProductId { get; set; }
         [Required]
-        public int ProductColorId { get; set; }
+        public int ColorId { get; set; }
         [Required]
-        public int ProductAvailableSizeId { get; set; }
+        public int AvailableSizeId { get; set; }
         public int Quantity { get; set; } = 1;
     }
 }

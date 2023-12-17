@@ -29,10 +29,10 @@ namespace Attract.Service.Service
         {
             var cartProduct = await _unitOfWork.GetRepository<CartProduct>()
                 .GetFirstOrDefaultAsync(predicate:
-                x => x.CartId == viewModel.CartId &&
+                x => x.CartId == viewModel.CartId /*&&
                 x.ProductId == viewModel.ProductId &&
-                x.ProductAvailableSizeId == viewModel.ProductAvailableSizeId &&
-                x.ProductColorId == viewModel.ProductColorId);
+                x.AvailableSizeId == viewModel.AvailableSizeId &&
+                x.ColorId == viewModel.ColorId*/);
             if (cartProduct != null)
             {
                 cartProduct.Quantity += viewModel.Quantity;
@@ -54,7 +54,7 @@ namespace Attract.Service.Service
                 Data = cartProductToBeAdded.Id
             };
         }
-       /* public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
+        public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
         {
 
             var response = new BaseCommandResponse();
@@ -62,10 +62,11 @@ namespace Attract.Service.Service
                 .GetAllAsync(
                 predicate: x => x.CartId == cartId,
                 include: s => 
-                s.Include(p => p.Product)
-                .Include(p => p.ProductColor)
+                s.Include(p => p.ProductQuantity)
+                .ThenInclude(p => p.ProductColor)
                 .ThenInclude(x => x.Color)
-                .Include(p => p.ProductAvailableSize)
+                .Include(x => x.ProductQuantity)
+                .ThenInclude(p => p.ProductAvailableSize)
                 .ThenInclude(x => x.AvailableSize));
             if (cartProducts == null)
             {
@@ -81,7 +82,7 @@ namespace Attract.Service.Service
             response.Success = true;
             response.Data = result;
             return response;
-        }*/
+        }
 
         public async Task<BaseCommandResponse> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {

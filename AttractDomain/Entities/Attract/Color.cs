@@ -20,6 +20,7 @@ namespace AttractDomain.Entities.Attract
         public int Id { get; set; }
         [MaxLength(250)]
         public string Name { get; set; }
+        public string ColorHexa { get; set; }
         public ICollection<ProductColor> ProductColors { get; set; }
 
     }

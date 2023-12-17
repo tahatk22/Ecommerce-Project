@@ -13,7 +13,7 @@ namespace AttractDomain.Configuration
     {
         public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
-            builder.HasOne(s => s.Product).WithMany(a => a.Images).HasForeignKey(s => s.ProductId);
+            //builder.HasOne(s => s.Product).WithMany(a => a.Images).HasForeignKey(s => s.ProductId);
         }
     }
 }
