@@ -541,14 +541,9 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.HasKey("ProductQuantityId", "ColorId");
 
                     b.HasIndex("ColorId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductColor", "Attract");
                 });
@@ -997,13 +992,7 @@ namespace Attract.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
                     b.Navigation("Color");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductImage", b =>
