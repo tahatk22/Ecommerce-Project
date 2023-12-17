@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Attract.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Product : Migration
+    public partial class product : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -308,31 +308,6 @@ namespace Attract.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductAvailableSize",
-                schema: "Attract",
-                columns: table => new
-                {
-                    ProductQuantityId = table.Column<int>(type: "int", nullable: false),
-                    AvailableSizeId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifyBy = table.Column<int>(type: "int", nullable: true),
-                    ModifyOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductAvailableSize", x => new { x.ProductQuantityId, x.AvailableSizeId });
-                    table.ForeignKey(
-                        name: "FK_ProductAvailableSize_AvailableSize_AvailableSizeId",
-                        column: x => x.AvailableSizeId,
-                        principalSchema: "Attract",
-                        principalTable: "AvailableSize",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SubCategory",
                 schema: "Attract",
                 columns: table => new
@@ -457,38 +432,6 @@ namespace Attract.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductColor",
-                schema: "Attract",
-                columns: table => new
-                {
-                    ProductQuantityId = table.Column<int>(type: "int", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifyBy = table.Column<int>(type: "int", nullable: true),
-                    ModifyOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductColor", x => new { x.ProductQuantityId, x.ColorId });
-                    table.ForeignKey(
-                        name: "FK_ProductColor_Color_ColorId",
-                        column: x => x.ColorId,
-                        principalSchema: "Attract",
-                        principalTable: "Color",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductColor_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalSchema: "Attract",
-                        principalTable: "Product",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductImage",
                 schema: "Attract",
                 columns: table => new
@@ -519,6 +462,48 @@ namespace Attract.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductQuantity",
+                schema: "Attract",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
+                    AvailableSizeId = table.Column<int>(type: "int", nullable: true),
+                    ColorId = table.Column<int>(type: "int", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifyBy = table.Column<int>(type: "int", nullable: true),
+                    ModifyOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductQuantity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductQuantity_AvailableSize_AvailableSizeId",
+                        column: x => x.AvailableSizeId,
+                        principalSchema: "Attract",
+                        principalTable: "AvailableSize",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductQuantity_Color_ColorId",
+                        column: x => x.ColorId,
+                        principalSchema: "Attract",
+                        principalTable: "Color",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductQuantity_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Attract",
+                        principalTable: "Product",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductTags",
                 columns: table => new
                 {
@@ -545,48 +530,6 @@ namespace Attract.Infrastructure.Migrations
                         name: "FK_ProductTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductQuantity",
-                schema: "Attract",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    AvailableSizeId = table.Column<int>(type: "int", nullable: true),
-                    ColorId = table.Column<int>(type: "int", nullable: true),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifyBy = table.Column<int>(type: "int", nullable: true),
-                    ModifyOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductQuantity", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductQuantity_ProductAvailableSize_ProductId_AvailableSizeId",
-                        columns: x => new { x.ProductId, x.AvailableSizeId },
-                        principalSchema: "Attract",
-                        principalTable: "ProductAvailableSize",
-                        principalColumns: new[] { "ProductQuantityId", "AvailableSizeId" });
-                    table.ForeignKey(
-                        name: "FK_ProductQuantity_ProductColor_ProductId_ColorId",
-                        columns: x => new { x.ProductId, x.ColorId },
-                        principalSchema: "Attract",
-                        principalTable: "ProductColor",
-                        principalColumns: new[] { "ProductQuantityId", "ColorId" });
-                    table.ForeignKey(
-                        name: "FK_ProductQuantity_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalSchema: "Attract",
-                        principalTable: "Product",
                         principalColumn: "Id");
                 });
 
@@ -714,40 +657,28 @@ namespace Attract.Infrastructure.Migrations
                 column: "SubCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductAvailableSize_AvailableSizeId",
-                schema: "Attract",
-                table: "ProductAvailableSize",
-                column: "AvailableSizeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductColor_ColorId",
-                schema: "Attract",
-                table: "ProductColor",
-                column: "ColorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductColor_ProductId",
-                schema: "Attract",
-                table: "ProductColor",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductImage_ProductId",
                 schema: "Attract",
                 table: "ProductImage",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductQuantity_ProductId_AvailableSizeId",
+                name: "IX_ProductQuantity_AvailableSizeId",
                 schema: "Attract",
                 table: "ProductQuantity",
-                columns: new[] { "ProductId", "AvailableSizeId" });
+                column: "AvailableSizeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductQuantity_ProductId_ColorId",
+                name: "IX_ProductQuantity_ColorId",
                 schema: "Attract",
                 table: "ProductQuantity",
-                columns: new[] { "ProductId", "ColorId" });
+                column: "ColorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductQuantity_ProductId",
+                schema: "Attract",
+                table: "ProductQuantity",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductTags_ProductId",
@@ -827,14 +758,6 @@ namespace Attract.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "ProductAvailableSize",
-                schema: "Attract");
-
-            migrationBuilder.DropTable(
-                name: "ProductColor",
-                schema: "Attract");
 
             migrationBuilder.DropTable(
                 name: "AvailableSize",

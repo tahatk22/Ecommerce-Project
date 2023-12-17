@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Configuration
 {
-    public class ProductColorConfiguration : IEntityTypeConfiguration<ProductColor>
-    {
+    //public class ProductColorConfiguration : IEntityTypeConfiguration<ProductColor>
+    //{
 
-        public void Configure(EntityTypeBuilder<ProductColor> builder)
-        {
-            builder
-           .HasKey(sc => new { sc.ProductQuantityId, sc.ColorId});
+    //    public void Configure(EntityTypeBuilder<ProductColor> builder)
+    //    {
+    //       // builder
+    //       //.HasKey(sc => new { sc.ProductQuantityId, sc.ColorId});
 
-            builder
-                .HasOne(pc => pc.Color)
-                .WithMany(p => p.ProductColors)
-                .HasForeignKey(pc => pc.ColorId);
-        }
-    }
+    //       // builder
+    //       //     .HasOne(pc => pc.Color)
+    //       //     .WithMany(p => p.ProductColors)
+    //       //     .HasForeignKey(pc => pc.ColorId);
+    //    }
+    //}
 }

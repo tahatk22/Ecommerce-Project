@@ -91,7 +91,6 @@ namespace Attract.Service.Service
                 products = unitOfWork.GetRepository<Product>()
                    .GetAll()
                            .Include(p => p.ProductQuantities)
-                           .ThenInclude(p => p.ProductAvailableSize)
                            .ThenInclude(pas => pas.AvailableSize);
 
                 if (products == null || !products.Any())
@@ -165,21 +164,21 @@ namespace Attract.Service.Service
             return newProduct;
         }
 
-        private async Task AddProductSizesAsync(Product product, List<string> avaliableSizes)
-        {
-            foreach (var avaliableSize in avaliableSizes)
-            {
-                var size = await GetOrCreateSizeAsync(avaliableSize);
+        //private async Task AddProductSizesAsync(Product product, List<string> avaliableSizes)
+        //{
+        //    foreach (var avaliableSize in avaliableSizes)
+        //    {
+        //        var size = await GetOrCreateSizeAsync(avaliableSize);
 
-                var productSize = new ProductAvailableSize
-                {
-                    ProductQuantityId = product.Id,
-                    AvailableSizeId = size.Id
-                };
+        //        var productSize = new ProductAvailableSize
+        //        {
+        //            ProductQuantityId = product.Id,
+        //            AvailableSizeId = size.Id
+        //        };
 
-                await unitOfWork.GetRepository<ProductAvailableSize>().InsertAsync(productSize);
-            }
-        }
+        //        await unitOfWork.GetRepository<ProductAvailableSize>().InsertAsync(productSize);
+        //    }
+        //}
         private async Task<AvailableSize> GetOrCreateSizeAsync(string size)
         {
             var existingSize = await unitOfWork.GetRepository<AvailableSize>().GetFirstOrDefaultAsync(predicate: c => c.Name == size);
@@ -195,21 +194,21 @@ namespace Attract.Service.Service
 
             return newSize;
         }
-        private async Task AddProductColorsAsync(Product product, List<string> colorNames)
-        {
-            foreach (var colorName in colorNames)
-            {
-                var color = await GetOrCreateColorAsync(colorName);
+        //private async Task AddProductColorsAsync(Product product, List<string> colorNames)
+        //{
+        //    foreach (var colorName in colorNames)
+        //    {
+        //        var color = await GetOrCreateColorAsync(colorName);
 
-                var productColor = new ProductColor
-                {
-                    ProductQuantityId = product.Id,
-                    ColorId = color.Id
-                };
+        //        var productColor = new ProductColor
+        //        {
+        //            ProductQuantityId = product.Id,
+        //            ColorId = color.Id
+        //        };
 
-                await unitOfWork.GetRepository<ProductColor>().InsertAsync(productColor);
-            }
-        }
+        //        await unitOfWork.GetRepository<ProductColor>().InsertAsync(productColor);
+        //    }
+        //}
         private async Task<Color> GetOrCreateColorAsync(string colorName)
         {
             var existingColor = await unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate: c => c.Name == colorName);

@@ -25,8 +25,8 @@ namespace Attract.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<Bill> Bills{ get; set; }
-        public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
-        public DbSet<ProductColor> ProductColors{ get; set; }
+        //public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
+        //public DbSet<ProductColor> ProductColors{ get; set; }
         public DbSet<CustomSubCategory> customSubCategories{ get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartProduct> CartProducts { get; set; }
@@ -40,8 +40,8 @@ namespace Attract.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new ProductQuantityConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());
+            //modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
+            //modelBuilder.ApplyConfiguration(new ProductAvailableSizeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductTagConfiguration());
             modelBuilder.ApplyConfiguration(new CartConfiguration());
             modelBuilder.ApplyConfiguration(new CartProductConfiguration());

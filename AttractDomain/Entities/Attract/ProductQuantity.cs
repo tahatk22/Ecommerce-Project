@@ -24,8 +24,8 @@ namespace AttractDomain.Entities.Attract
         public string ImageName { get; set; }
 
         public virtual Product Product { get; set; }
-        public virtual ProductAvailableSize ProductAvailableSize { get; set; }
-        public virtual ProductColor ProductColor { get; set; }
+        public virtual AvailableSize AvailableSize { get; set; }
+        public virtual Color Color { get; set; }
         public virtual ICollection<CartProduct> CartProducts { get; set;}
     }
 }
