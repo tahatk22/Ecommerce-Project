@@ -23,7 +23,10 @@ namespace Attract.Common.DTOs.Product
         public DiscountOption? DiscountOption { get; set; }
         public decimal? Discount { get; set; }
         public int? SubCategoryId { get; set; }
-        public List<TagDTO> Tags { get; set; }
+        public string Tags { get; set; }
+        public string ProductQuantities { get; set; }
+        
+        public List<TagDTO> tags { get; set; }
         public List<ProductQty> productQuantities { get; set; }
         //public class AddProductWithImageDTO
         //{
