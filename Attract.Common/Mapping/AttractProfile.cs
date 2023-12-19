@@ -3,6 +3,7 @@ using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Cart;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.Contact;
 using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
@@ -22,7 +23,11 @@ namespace Attract.Common.Mapping
         }
         private void AttractMapper()
         {
+            CreateMap<Contact, AddContactDTO>().ReverseMap();
+            CreateMap<Contact,ContactDTO>().ReverseMap();
 
+            /////////////
+            
             CreateMap<ProductImage,ImageDTO>()
                 .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImageFileName))
                 .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.ImageColorHexa))
@@ -40,6 +45,7 @@ namespace Attract.Common.Mapping
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
+                ///////////////////
                 
             CreateMap<Category, CategoryDto>().ForMember(s=>s.SubCategories,tr=>tr.MapFrom(a=>a.SubCategories.Select(s=>s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();

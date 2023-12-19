@@ -19,6 +19,7 @@ namespace Attract.Service
             services.AddScoped<ICustomSubCategoryService,CustomSubCategoryService>();
             services.AddScoped<ICartService,CartService>();
             services.AddScoped<ICartProductService,CartProductService>();
+            services.AddScoped<IContactService,ConatctService>();
 
         }
         /*public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

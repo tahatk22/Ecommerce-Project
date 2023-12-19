@@ -27,6 +27,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<CustomSubCategory> customSubCategories{ get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartProduct> CartProducts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
