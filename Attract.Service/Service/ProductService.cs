@@ -238,13 +238,13 @@ namespace Attract.Service.Service
         {
             foreach (var item in product.productQuantities)
             {
-                var productDirectoryPath = GetProductDirectoryPath();
-                var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
-                // Save the image file
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await item.ImageFile.CopyToAsync(fileStream);
-                }
+                //var productDirectoryPath = GetProductDirectoryPath();
+                //var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
+                //// Save the image file
+                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                //{
+                //    await item.ImageFile.CopyToAsync(fileStream);
+                //}
 
                 var productQuantity = new ProductQuantity
                 {
@@ -253,7 +253,7 @@ namespace Attract.Service.Service
                     ColorId = item.Color.Id,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    ImageName = Path.GetFullPath(item.ImageFile.FileName)
+                    //ImageName = Path.GetFullPath(item.ImageFile.FileName)
                 };
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
             }            

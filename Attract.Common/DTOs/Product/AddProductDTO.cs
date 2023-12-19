@@ -21,10 +21,10 @@ namespace Attract.Common.DTOs.Product
         public string Brand { get; set; }
         public bool IsArchived { get; set; } = false;
         public DiscountOption? DiscountOption { get; set; }
-        public decimal? Discount { get; set; }
+        public decimal Discount { get; set; } = 0;
         public int? SubCategoryId { get; set; }
-        public string Tags { get; set; }
-        public string ProductQuantities { get; set; }
+        //public string Tags { get; set; }
+        //public string ProductQuantities { get; set; }
         
         public List<TagDTO> tags { get; set; }
         public List<ProductQty> productQuantities { get; set; }
@@ -44,7 +44,7 @@ namespace Attract.Common.DTOs.Product
         public int Quantity { get; set; }
         public int Price { get; set; }
 
-        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
-        public IFormFile ImageFile { get; set; }
+        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        //public IFormFile ImageFile { get; set; }
     }
 }

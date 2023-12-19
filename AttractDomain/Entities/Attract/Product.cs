@@ -18,7 +18,7 @@ namespace Attract.Domain.Entities.Attract
         public string Brand { get; set; }
         public bool IsArchived { get; set; } = false;
         public DiscountOption DiscountOption { get; set; }
-        public decimal Discount { get; set; } = decimal.Zero;
+        public decimal Discount { get; set; } = 0;
         //public bool RecommendedProducts { get; set; } = false;
         //public bool FeaturedProducts { get; set; } = false;
         //public bool TrendingProducts { get; set; } = false;
