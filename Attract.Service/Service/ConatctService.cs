@@ -2,6 +2,7 @@
 using Attract.Common.DTOs;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Contact;
+using Attract.Common.DTOs.SubCategory;
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -50,6 +51,25 @@ namespace Attract.Service.Service
             var result = mapper.Map<IList<ContactDTO>>(contacts);
             response.Success = true;
             response.Data = result;
+            return response;
+        }
+        public async Task<BaseCommandResponse> UpdateContact(ContactDTO contactDTO)
+        {
+            var response = new BaseCommandResponse();
+            var existingContact = await unitOfWork.GetRepository<Contact>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == contactDTO.Id);
+
+            if (existingContact == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            var newContact = mapper.Map<Contact>(contactDTO);
+            unitOfWork.GetRepository<Contact>().UpdateAsync(newContact);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = newContact.Id;
             return response;
         }
     }

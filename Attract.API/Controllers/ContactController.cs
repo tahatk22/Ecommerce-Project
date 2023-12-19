@@ -30,5 +30,12 @@ namespace Attract.API.Controllers
             var contacts = await contactService.AddConatct(addContactDTO);
             return Ok(contacts);
         }
+
+        [HttpPut("UpdateContact")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateContact(ContactDTO contactDTO)
+        {
+            var contacts = await contactService.UpdateContact(contactDTO);
+            return Ok(contacts);
+        }
     }
 }

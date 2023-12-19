@@ -1,5 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Contact;
+using Attract.Common.DTOs.SubCategory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllConatcts();
         Task<BaseCommandResponse> AddConatct(AddContactDTO addContactDTO);
+        Task<BaseCommandResponse> UpdateContact(ContactDTO contactDTO);
     }
 }
