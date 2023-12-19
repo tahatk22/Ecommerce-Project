@@ -36,7 +36,9 @@ namespace Attract.Common.Mapping
             CreateMap<User, LoginUserDTO>().ReverseMap();
             CreateMap<Product, EditProductDTO>().ReverseMap();
             CreateMap<Product, EditProductWithImageDTO>().ReverseMap();
-            CreateMap<Product, AddProductDTO>().ReverseMap();
+            CreateMap<AddProductDTO, Product>()
+                .ForMember(dest => dest.ProductQuantities, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductTags, opt => opt.Ignore());
 
             CreateMap<Product, ProductDTO>().ReverseMap();
             //.ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
@@ -68,8 +70,8 @@ namespace Attract.Common.Mapping
             CreateMap<CartProduct, CartProductItemsForGet>()
                  .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.ProductQuantity.Product.Name))
                  .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.ProductQuantity.Price))
-                 .ForMember(dst => dst.ColorName, opt => opt.MapFrom(src => src.ProductQuantity.ProductColor.Color.Name))
-                 .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductQuantity.ProductAvailableSize.AvailableSize.Name)).ReverseMap();
+                 .ForMember(dst => dst.ColorName, opt => opt.MapFrom(src => src.ProductQuantity.Color.Name))
+                 .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductQuantity.AvailableSize.Name)).ReverseMap();
             CreateMap<AddCartProductsDTO, CartProduct>();
             CreateMap<CartProductItemForUpdate, AddCartProductsDTO>();
 

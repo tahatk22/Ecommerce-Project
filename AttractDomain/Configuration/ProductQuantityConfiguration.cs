@@ -24,14 +24,14 @@ namespace AttractDomain.Configuration
                 .HasForeignKey(cp => cp.ProductId);
 
             builder
-                .HasOne(cp => cp.ProductAvailableSize)
+                .HasOne(cp => cp.AvailableSize)
                 .WithMany(p => p.ProductQuantities)
-                .HasForeignKey(cp => new { cp.ProductId, cp.AvailableSizeId });
+                .HasForeignKey(cp => cp.AvailableSizeId);
 
             builder
-                .HasOne(cp => cp.ProductColor)
+                .HasOne(cp => cp.Color)
                 .WithMany(p => p.ProductQuantities)
-                .HasForeignKey(cp => new { cp.ProductId, cp.ColorId });
+                .HasForeignKey(cp => cp.ColorId);
         }
     }
 }

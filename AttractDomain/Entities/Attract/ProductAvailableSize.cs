@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Entities.Attract
 {
-    [Table("ProductAvailableSize", Schema = "Attract")]
+    //[Table("ProductAvailableSize", Schema = "Attract")]
 
-    public class ProductAvailableSize:EntityBase
-    {
-        public int ProductQuantityId { get; set; }
-        public int AvailableSizeId { get; set; }
+    //public class ProductAvailableSize:EntityBase
+    //{
+    //    public int ProductQuantityId { get; set; }
+    //    public int AvailableSizeId { get; set; }
 
-        public AvailableSize AvailableSize { get; set; }
-        public ICollection<ProductQuantity> ProductQuantities { get; set; }
-    }
+    //    public AvailableSize AvailableSize { get; set; }
+    //    public ICollection<ProductQuantity> ProductQuantities { get; set; }
+    //}
 }

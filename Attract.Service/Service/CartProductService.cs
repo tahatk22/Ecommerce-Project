@@ -63,10 +63,8 @@ namespace Attract.Service.Service
                 predicate: x => x.CartId == cartId,
                 include: s => 
                 s.Include(p => p.ProductQuantity)
-                .ThenInclude(p => p.ProductColor)
                 .ThenInclude(x => x.Color)
                 .Include(x => x.ProductQuantity)
-                .ThenInclude(p => p.ProductAvailableSize)
                 .ThenInclude(x => x.AvailableSize));
             if (cartProducts == null)
             {

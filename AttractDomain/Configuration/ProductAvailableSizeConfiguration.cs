@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace AttractDomain.Configuration
 {
-    public class ProductAvailableSizeConfiguration : IEntityTypeConfiguration<ProductAvailableSize>
-    {
-        public void Configure(EntityTypeBuilder<ProductAvailableSize> builder)
-        {
-            builder
-           .HasKey(sc => new { sc.ProductQuantityId, sc.AvailableSizeId });
+    //public class ProductAvailableSizeConfiguration : IEntityTypeConfiguration<ProductAvailableSize>
+    //{
+    //    public void Configure(EntityTypeBuilder<ProductAvailableSize> builder)
+    //    {
+    //       // builder
+    //       //.HasKey(sc => new { sc.ProductQuantityId, sc.AvailableSizeId });
 
-            builder
-                .HasOne(pas => pas.AvailableSize)
-                .WithMany(s => s.ProductAvailableSizes)
-                .HasForeignKey(pas => pas.AvailableSizeId);
-        }
-    }
+    //       // builder
+    //       //     .HasOne(pas => pas.AvailableSize)
+    //       //     .WithMany(s => s.ProductAvailableSizes)
+    //       //     .HasForeignKey(pas => pas.AvailableSizeId);
+    //    }
+    //}
 }
