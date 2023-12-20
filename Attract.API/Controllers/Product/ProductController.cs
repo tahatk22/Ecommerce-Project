@@ -1,7 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.Helpers.ProductHelper;
@@ -46,13 +45,8 @@ namespace Attract.API.Controllers.Product
 
 
         [HttpPost("AddProduct")]
-        public async Task<ActionResult<BaseCommandResponse>> Add(AddProductDTO viewModel)
+        public async Task<ActionResult<BaseCommandResponse>> Add([FromForm] AddProductDTO viewModel)
         {
-            //var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            //viewModel.tags = JsonSerializer.Deserialize<List<TagDTO>>(viewModel.Tags, serializerOptions);
-            //viewModel.productQuantities = JsonSerializer.Deserialize<List<ProductQty>>(viewModel.ProductQuantities, serializerOptions);
-
             if (viewModel.productQuantities.Where(x => x.Color.Id == 0).Any())
             {
                 foreach (var item in viewModel.productQuantities.Where(x => x.Color.Id == 0).ToList())

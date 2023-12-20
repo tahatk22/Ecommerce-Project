@@ -1,4 +1,4 @@
-﻿using Attract.Common.DTOs.Image;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +19,6 @@ namespace Attract.Common.DTOs.Product
     public class EditProductWithImageDTO
     {
         public EditProductDTO ProductDTO { get; set; }
-        public AddProductImageDTO ProductImageDTO { get; set; }
+        //public AddProductImageDTO ProductImageDTO { get; set; }
     }
 }

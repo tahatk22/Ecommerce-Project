@@ -1,6 +1,5 @@
 ﻿using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.Validation;
 using AttractDomain.Enums;
@@ -23,18 +22,9 @@ namespace Attract.Common.DTOs.Product
         public DiscountOption? DiscountOption { get; set; }
         public decimal Discount { get; set; } = 0;
         public int? SubCategoryId { get; set; }
-        //public string Tags { get; set; }
-        //public string ProductQuantities { get; set; }
         
         public List<TagDTO> tags { get; set; }
         public List<ProductQty> productQuantities { get; set; }
-        //public class AddProductWithImageDTO
-        //{
-        //    public ColorDTO ColorDTO { get; set; }
-        //    public AvailableSizeDTO AvailableSizeDTO { get; set; }
-        //    public AddProductDTO ProductDTO { get; set; }
-        //    public AddProductImageDTO ProductImageDTO { get; set; }
-        //}
     }
 
     public class ProductQty
@@ -44,7 +34,7 @@ namespace Attract.Common.DTOs.Product
         public int Quantity { get; set; }
         public int Price { get; set; }
 
-        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
-        //public IFormFile ImageFile { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile ImageFile { get; set; }
     }
 }

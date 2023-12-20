@@ -2,7 +2,6 @@
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.Helpers;
 using Attract.Common.Helpers.ProductHelper;
@@ -88,10 +87,8 @@ namespace Attract.Service.Service
             IQueryable<Product> products;
             try
             {
-                products = unitOfWork.GetRepository<Product>()
-                   .GetAll()
-                           .Include(p => p.ProductQuantities)
-                           .ThenInclude(pas => pas.AvailableSize);
+                products = unitOfWork.GetRepository<Product>().GetAll()
+                    .Include(s=>s.ProductQuantities);
 
                 if (products == null || !products.Any())
                 {
@@ -106,12 +103,12 @@ namespace Attract.Service.Service
                 foreach (var product in result)
                 {
                     // Update each ImageDTO in the collection
-                    foreach (var image in product.Images)
-                    {
-                        // Assuming 'Images' is the directory where images are stored
-                        var imageUrl = $"https://{hostValue}/Images/Product/{image.ImagePath}";
-                        image.ImagePath = imageUrl;
-                    }
+                    //foreach (var image in product.Images)
+                    //{
+                    //    // Assuming 'Images' is the directory where images are stored
+                    //    var imageUrl = $"https://{hostValue}/Images/Product/{image.ImagePath}";
+                    //    image.ImagePath = imageUrl;
+                    //}
                 }
                 response.Success = true;
                 response.Data = new { Products = result, ProductCount = result.Count };
@@ -134,8 +131,8 @@ namespace Attract.Service.Service
                 // Update the product
                 var updatedProduct = await UpdateProductAsync(editProductWithImagesDTO.ProductDTO);
 
-                // Update the product images
-                await UpdateProductImagesAsync(updatedProduct, editProductWithImagesDTO.ProductImageDTO.ImageFiles);
+                //// Update the product images
+                //await UpdateProductImagesAsync(updatedProduct, editProductWithImagesDTO.ProductImageDTO.ImageFiles);
 
                 // Save changes to the database
                 await unitOfWork.SaveChangesAsync();
@@ -164,21 +161,6 @@ namespace Attract.Service.Service
             return newProduct;
         }
 
-        //private async Task AddProductSizesAsync(Product product, List<string> avaliableSizes)
-        //{
-        //    foreach (var avaliableSize in avaliableSizes)
-        //    {
-        //        var size = await GetOrCreateSizeAsync(avaliableSize);
-
-        //        var productSize = new ProductAvailableSize
-        //        {
-        //            ProductQuantityId = product.Id,
-        //            AvailableSizeId = size.Id
-        //        };
-
-        //        await unitOfWork.GetRepository<ProductAvailableSize>().InsertAsync(productSize);
-        //    }
-        //}
         private async Task<AvailableSize> GetOrCreateSizeAsync(string size)
         {
             var existingSize = await unitOfWork.GetRepository<AvailableSize>().GetFirstOrDefaultAsync(predicate: c => c.Name == size);
@@ -194,21 +176,6 @@ namespace Attract.Service.Service
 
             return newSize;
         }
-        //private async Task AddProductColorsAsync(Product product, List<string> colorNames)
-        //{
-        //    foreach (var colorName in colorNames)
-        //    {
-        //        var color = await GetOrCreateColorAsync(colorName);
-
-        //        var productColor = new ProductColor
-        //        {
-        //            ProductQuantityId = product.Id,
-        //            ColorId = color.Id
-        //        };
-
-        //        await unitOfWork.GetRepository<ProductColor>().InsertAsync(productColor);
-        //    }
-        //}
         private async Task<Color> GetOrCreateColorAsync(string colorName)
         {
             var existingColor = await unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate: c => c.Name == colorName);
@@ -226,7 +193,6 @@ namespace Attract.Service.Service
         }
         private async Task CreateProductDirectoryAsync(Product product)
         {
-            var productDirectoryName = SanitizeDirectoryName(product.Name);
             var productDirectoryPath = Path.Combine("wwwroot", "Images", "Product");
             if (!Directory.Exists(productDirectoryPath))
             {
@@ -238,14 +204,13 @@ namespace Attract.Service.Service
         {
             foreach (var item in product.productQuantities)
             {
-                //var productDirectoryPath = GetProductDirectoryPath();
-                //var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
-                //// Save the image file
-                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                //{
-                //    await item.ImageFile.CopyToAsync(fileStream);
-                //}
-
+                var productDirectoryPath = GetProductDirectoryPath();
+                var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
+                // Save the image file
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await item.ImageFile.CopyToAsync(fileStream);
+                }
                 var productQuantity = new ProductQuantity
                 {
                     ProductId = productId,
@@ -253,7 +218,7 @@ namespace Attract.Service.Service
                     ColorId = item.Color.Id,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    //ImageName = Path.GetFullPath(item.ImageFile.FileName)
+                    ImageName = item.ImageFile.FileName
                 };
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
             }            
@@ -262,15 +227,6 @@ namespace Attract.Service.Service
         private string GetProductDirectoryPath()
         {
             return Path.Combine("wwwroot", "Images", "Product");
-        }
-
-        private string SanitizeDirectoryName(string input)
-        {
-            return input.Replace(" ", "_");
-        }
-        private string GetImagePath(string imageFileName)
-        {
-            return Path.Combine("wwwroot", "Images", imageFileName);
         }
         private async Task<Product> UpdateProductAsync(EditProductDTO productDTO)
         {
