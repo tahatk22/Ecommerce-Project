@@ -27,14 +27,12 @@ namespace Attract.Common.DTOs.Product
     public class ProductQuantityDTO
     {
         public ColorDTO Color { get; set; }
-        public SizeDTO Size { get; set; }
+        public AvailableSizeDTO AvailableSize { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
+        public string ImageName { get; set; }
+        public string ImageUrl { get; set; }
     }
 
-    public class SizeDTO
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+ 
 }

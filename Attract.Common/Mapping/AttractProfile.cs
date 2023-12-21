@@ -23,8 +23,7 @@ namespace Attract.Common.Mapping
         private void AttractMapper()
         {
 
-            CreateMap<AvailableSize, AvailableSizeDTO>().ReverseMap();
-            //CreateMap<Color, ColorDTO>().ReverseMap();
+
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
             CreateMap<Product, EditProductDTO>().ReverseMap();

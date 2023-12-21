@@ -88,7 +88,8 @@ namespace Attract.Service.Service
             try
             {
                 products = unitOfWork.GetRepository<Product>().GetAll()
-                    .Include(s=>s.ProductQuantities);
+                    .Include(s => s.ProductQuantities).ThenInclude(x => x.Color)
+                   .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize);
 
                 if (products == null || !products.Any())
                 {
@@ -100,15 +101,12 @@ namespace Attract.Service.Service
 
                 var result = mapper.Map<IList<ProductDTO>>(products);
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-                foreach (var product in result)
+
+                foreach (var product in result.SelectMany(product => product.ProductQuantities))
                 {
-                    // Update each ImageDTO in the collection
-                    //foreach (var image in product.Images)
-                    //{
-                    //    // Assuming 'Images' is the directory where images are stored
-                    //    var imageUrl = $"https://{hostValue}/Images/Product/{image.ImagePath}";
-                    //    image.ImagePath = imageUrl;
-                    //}
+                        //Update each ImageDTO in the collection
+                        var imageUrl = $"https://{hostValue}/Images/Product/{product.ImageName}";
+                        product.ImageUrl = imageUrl;
                 }
                 response.Success = true;
                 response.Data = new { Products = result, ProductCount = result.Count };
