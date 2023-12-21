@@ -12,7 +12,7 @@ namespace Attract.Service.IService
     public interface IContactService
     {
         Task<BaseCommandResponse> GetAllConatcts();
-        Task<BaseCommandResponse> AddConatct(AddContactDTO addContactDTO);
+        Task<BaseCommandResponse> AddConatct(List<AddContactDTO> addContactDTOs);
         Task<BaseCommandResponse> UpdateContact(ContactDTO contactDTO);
     }
 }

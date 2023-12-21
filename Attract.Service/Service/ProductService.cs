@@ -112,10 +112,8 @@ namespace Attract.Service.Service
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
                 foreach (var product in result)
                 {
-                    // Update each ImageDTO in the collection
                     foreach (var image in product.Images)
                     {
-                        // Assuming 'Images' is the directory where images are stored
                         var imageUrl = $"https://{hostValue}/Images/Product/{image.ImagePath}";
                         image.ImagePath = imageUrl;
                     }
@@ -292,10 +290,6 @@ namespace Attract.Service.Service
         private string SanitizeDirectoryName(string input)
         {
             return input.Replace(" ", "_");
-        }
-        private string GetImagePath(string imageFileName)
-        {
-            return Path.Combine("wwwroot", "Images", imageFileName);
         }
         private async Task<Product> UpdateProductAsync(EditProductDTO productDTO)
         {

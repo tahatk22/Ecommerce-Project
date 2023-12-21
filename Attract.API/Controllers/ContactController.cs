@@ -25,9 +25,9 @@ namespace Attract.API.Controllers
         }
 
         [HttpPost("AddContact")]
-        public async Task<ActionResult<BaseCommandResponse>> AddContact(AddContactDTO addContactDTO)
+        public async Task<ActionResult<BaseCommandResponse>> AddContact(List<AddContactDTO> addContactDTOs)
         {
-            var contacts = await contactService.AddConatct(addContactDTO);
+            var contacts = await contactService.AddConatct(addContactDTOs);
             return Ok(contacts);
         }
 

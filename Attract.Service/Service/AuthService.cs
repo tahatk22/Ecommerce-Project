@@ -28,16 +28,19 @@ namespace Attract.Service.Service
         private readonly IMapper mapper;
         private readonly SignInManager<User> signInManager;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly RoleManager<IdentityRole> roleManager;
         private User user;
 
         public AuthService(UserManager<User> userManager, IConfiguration configuration,
-            IMapper mapper, SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor)
+            IMapper mapper, SignInManager<User> signInManager,
+            IHttpContextAccessor httpContextAccessor,RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.httpContextAccessor = httpContextAccessor;
+            this.roleManager = roleManager;
         }
         public async Task<BaseCommandResponse> CreateAdmins(RegisterDTO request)
         {
@@ -52,6 +55,7 @@ namespace Attract.Service.Service
                 return response;
             }
             var user = CreateAdminUser(request);
+            var adminRoleExists = await EnsureAdminRoleExists();
             try
             {
                 var result = await userManager.CreateAsync(user, request.Password);
@@ -218,7 +222,22 @@ namespace Attract.Service.Service
             }
         }
         #region private methods
+        private async Task<bool> EnsureAdminRoleExists()
+        {
+            var adminRoleExists = await roleManager.RoleExistsAsync("Admin".ToLower());
 
+            if (!adminRoleExists)
+            {
+                var createRoleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
+                return createRoleResult.Succeeded;
+            }
+
+            return true;
+        }
+        private async Task<IdentityResult> AddUserToAdminRole(User user)
+        {
+            return await userManager.AddToRoleAsync(user, "Admin");
+        }
         private User CreateAdminUser(RegisterDTO userDTO)
         {
             return new User

@@ -26,15 +26,20 @@ namespace Attract.Service.Service
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<BaseCommandResponse> AddConatct(AddContactDTO addContactDTO)
+        public async Task<BaseCommandResponse> AddConatct(List<AddContactDTO> addContactDTOs)
         {
             var response = new BaseCommandResponse();
-            var newContact = mapper.Map<Contact>(addContactDTO);
-            await unitOfWork.GetRepository<Contact>().InsertAsync(newContact);
+            var contactList = new List<Contact>();
+            foreach (var addContactDTO in addContactDTOs)
+            {
+                var newContact = mapper.Map<Contact>(addContactDTO);
+                contactList.Add(newContact);
+            }
+            await unitOfWork.GetRepository<Contact>().InsertAsync(contactList);
             await unitOfWork.SaveChangesAsync();
             response.Success = true;
             response.Message = "Created Successfully";
-            response.Data = newContact.Id;
+            response.Data = contactList.Select(s=>s.Id);
             return response;
         }
 
