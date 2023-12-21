@@ -1,4 +1,8 @@
-﻿using Attract.Common.DTOs.Image;
+﻿using Attract.Common.DTOs.AvailableSize;
+using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.Image;
+using Attract.Common.DTOs.Tag;
+using AttractDomain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +13,27 @@ namespace Attract.Common.DTOs.Product
 {
     public class EditProductDTO
     {
-        public int Id { get; set; }  
+        public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
         public string Description { get; set; }
-        public int Quantity { get; set; }
+        public string Brand { get; set; }
+        public bool IsArchived { get; set; }
+        public DiscountOption? DiscountOption { get; set; }
+        public decimal Discount { get; set; }
         public int? SubCategoryId { get; set; }
+
+        public List<TagDTO> Tags { get; set; }
+        public List<EditProductQty> ProductQuantities { get; set; }
     }
-    public class EditProductWithImageDTO
+    public class EditProductQty
     {
-        public EditProductDTO ProductDTO { get; set; }
-        public AddProductImageDTO ProductImageDTO { get; set; }
+        public int Id { get; set; }
+        public int ColorId { get; set; }
+        public int AvailableSizeId { get; set; }
+        public int Quantity { get; set; }
+        public int Price { get; set; }
+
+        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        //public IFormFile ImageFile { get; set; }
     }
 }

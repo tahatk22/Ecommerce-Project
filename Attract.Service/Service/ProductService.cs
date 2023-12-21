@@ -125,17 +125,17 @@ namespace Attract.Service.Service
                 return response;
             }
         }
-        public async Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO)
+        public async Task<BaseCommandResponse> EditProduct(EditProductDTO viewModel)
         {
             var response = new BaseCommandResponse();
 
             try
             {
                 // Update the product
-                var updatedProduct = await UpdateProductAsync(editProductWithImagesDTO.ProductDTO);
+                var updatedProduct = await UpdateProductAsync(viewModel);
 
                 // Update the product images
-                await UpdateProductImagesAsync(updatedProduct, editProductWithImagesDTO.ProductImageDTO.ImageFiles);
+                //await UpdateProductImagesAsync(updatedProduct, viewModel.ProductQuantities.ImageFile);
 
                 // Save changes to the database
                 await unitOfWork.SaveChangesAsync();
@@ -257,6 +257,35 @@ namespace Attract.Service.Service
                 };
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
             }            
+        }
+
+        private async Task EditProductQuantities(EditProductDTO product)
+        {
+            foreach (var item in product.ProductQuantities)
+            {
+                //var productDirectoryPath = GetProductDirectoryPath();
+                //var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
+                //// Save the image file
+                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                //{
+                //    await item.ImageFile.CopyToAsync(fileStream);
+                //}
+                var existingProduct = await unitOfWork.GetRepository<ProductQuantity>().GetFirstOrDefaultAsync(predicate: s => s.Id == item.Id);
+
+                if (existingProduct == null)
+                {
+                    // Handle case where the product to update is not found
+                    throw new NotFoundException("Product not found");
+                }
+
+                // Update the existing product with new data
+                mapper.Map(item, existingProduct);
+                existingProduct.ProductId = product.Id;
+                //existingProduct.ImageName = Path.GetFullPath(item.ImageFile.FileName);
+
+                // Mark the product entity as modified (if necessary)
+                unitOfWork.GetRepository<ProductQuantity>().UpdateAsync(existingProduct);
+            }
         }
 
         private string GetProductDirectoryPath()

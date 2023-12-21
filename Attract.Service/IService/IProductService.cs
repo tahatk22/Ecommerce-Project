@@ -8,7 +8,7 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> GetAllProducts(ProductPagination productPagination);
         Task<BaseCommandResponse> DeleteProduct(int id);
-        Task<BaseCommandResponse> AddProduct(AddProductDTO addProductImageDTO);
-        Task<BaseCommandResponse> EditProductWithImageAsync(EditProductWithImageDTO editProductWithImagesDTO);
+        Task<BaseCommandResponse> AddProduct(AddProductDTO viewModel);
+        Task<BaseCommandResponse> EditProduct(EditProductDTO viewModel);
     }
 }

@@ -48,11 +48,6 @@ namespace Attract.API.Controllers.Product
         [HttpPost("AddProduct")]
         public async Task<ActionResult<BaseCommandResponse>> Add(AddProductDTO viewModel)
         {
-            //var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            //viewModel.tags = JsonSerializer.Deserialize<List<TagDTO>>(viewModel.Tags, serializerOptions);
-            //viewModel.productQuantities = JsonSerializer.Deserialize<List<ProductQty>>(viewModel.ProductQuantities, serializerOptions);
-
             if (viewModel.productQuantities.Where(x => x.Color.Id == 0).Any())
             {
                 foreach (var item in viewModel.productQuantities.Where(x => x.Color.Id == 0).ToList())
@@ -95,9 +90,9 @@ namespace Attract.API.Controllers.Product
         }
 
         [HttpPut("UpdateProduct")]
-        public async Task<ActionResult<BaseCommandResponse>> UpdateProduct([FromForm] EditProductWithImageDTO editProductDTO)
+        public async Task<ActionResult<BaseCommandResponse>> UpdateProduct(EditProductDTO viewModel)
         {
-            var product = await productService.EditProductWithImageAsync(editProductDTO);
+            var product = await productService.EditProduct(viewModel);
             return Ok(product);
         }
         [HttpDelete("DeletProduct/{id}")]

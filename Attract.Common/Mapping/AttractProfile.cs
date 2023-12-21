@@ -34,8 +34,7 @@ namespace Attract.Common.Mapping
             CreateMap<Color, ColorDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
-            CreateMap<Product, EditProductDTO>().ReverseMap();
-            CreateMap<Product, EditProductWithImageDTO>().ReverseMap();
+            CreateMap<EditProductDTO, Product>();
             CreateMap<AddProductDTO, Product>()
                 .ForMember(dest => dest.ProductQuantities, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductTags, opt => opt.Ignore());
