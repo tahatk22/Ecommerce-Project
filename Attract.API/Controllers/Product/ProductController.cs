@@ -92,6 +92,18 @@ namespace Attract.API.Controllers.Product
         [HttpPut("UpdateProduct")]
         public async Task<ActionResult<BaseCommandResponse>> UpdateProduct(EditProductDTO viewModel)
         {
+            if (viewModel.Tags.Where(x => x.Id == 0).Any())
+            {
+                foreach (var item in viewModel.Tags.Where(x => x.Id == 0).ToList())
+                {
+                    item.Id =
+                        await _tagService.AddTag(
+                            new AddTagDTO
+                            {
+                                Name = item.Name,
+                            });
+                }
+            }
             var product = await productService.EditProduct(viewModel);
             return Ok(product);
         }

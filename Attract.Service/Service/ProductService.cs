@@ -4,6 +4,7 @@ using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
+using Attract.Common.DTOs.Tag;
 using Attract.Common.Helpers;
 using Attract.Common.Helpers.ProductHelper;
 using Attract.Domain.Entities.Attract;
@@ -64,6 +65,7 @@ namespace Attract.Service.Service
             try
             {
                 var newProduct = await AddProductAsync(viewModel);
+                AddProductTags(newProduct.Id, viewModel.tags);
                 await CreateProductDirectoryAsync(newProduct);
 
                 
@@ -135,7 +137,8 @@ namespace Attract.Service.Service
                 var updatedProduct = await UpdateProductAsync(viewModel);
 
                 // Update the product images
-                //await UpdateProductImagesAsync(updatedProduct, viewModel.ProductQuantities.ImageFile);
+                await EditProductQuantities(viewModel.Id, viewModel.ProductQuantities);
+                await EditProductTags(viewModel.Id, viewModel.Tags);
 
                 // Save changes to the database
                 await unitOfWork.SaveChangesAsync();
@@ -164,21 +167,18 @@ namespace Attract.Service.Service
             return newProduct;
         }
 
-        //private async Task AddProductSizesAsync(Product product, List<string> avaliableSizes)
-        //{
-        //    foreach (var avaliableSize in avaliableSizes)
-        //    {
-        //        var size = await GetOrCreateSizeAsync(avaliableSize);
-
-        //        var productSize = new ProductAvailableSize
-        //        {
-        //            ProductQuantityId = product.Id,
-        //            AvailableSizeId = size.Id
-        //        };
-
-        //        await unitOfWork.GetRepository<ProductAvailableSize>().InsertAsync(productSize);
-        //    }
-        //}
+        private async Task AddProductTags(int productId, List<TagDTO> tags)
+        {
+            foreach (var tag in tags)
+            {
+                var productTag = new ProductTag
+                {
+                    ProductId = productId,
+                    TagId = tag.Id
+                };
+                await unitOfWork.GetRepository<ProductTag>().InsertAsync(productTag);
+            }
+        }
         private async Task<AvailableSize> GetOrCreateSizeAsync(string size)
         {
             var existingSize = await unitOfWork.GetRepository<AvailableSize>().GetFirstOrDefaultAsync(predicate: c => c.Name == size);
@@ -259,9 +259,31 @@ namespace Attract.Service.Service
             }            
         }
 
-        private async Task EditProductQuantities(EditProductDTO product)
+        private async Task EditProductQuantities(int productId, List<EditProductQty> productQuantities)
         {
-            foreach (var item in product.ProductQuantities)
+            var existingQuantities = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: s => s.Id == productId);
+
+            foreach (var item in existingQuantities)
+            {
+                if (!productQuantities.Select(x => x.Id).Contains(item.Id))
+                {
+                    unitOfWork.GetRepository<ProductQuantity>().Delete(item.Id);
+                }
+            }
+            foreach (var item in productQuantities.Where(x => x.Id == 0))
+            {
+                var productQuantity = new ProductQuantity
+                {
+                    ProductId = productId,
+                    ColorId = item.ColorId,
+                    AvailableSizeId = item.AvailableSizeId,
+                    Price = item.Price,
+                    Quantity = item.Quantity
+                };
+                await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
+            }
+
+            foreach (var item in productQuantities)
             {
                 //var productDirectoryPath = GetProductDirectoryPath();
                 //var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
@@ -280,11 +302,36 @@ namespace Attract.Service.Service
 
                 // Update the existing product with new data
                 mapper.Map(item, existingProduct);
-                existingProduct.ProductId = product.Id;
+                existingProduct.ProductId = productId;
                 //existingProduct.ImageName = Path.GetFullPath(item.ImageFile.FileName);
 
                 // Mark the product entity as modified (if necessary)
                 unitOfWork.GetRepository<ProductQuantity>().UpdateAsync(existingProduct);
+            }
+        }
+
+        private async Task EditProductTags(int productId, List<TagDTO> productTags)
+        {
+            var existingTags = await unitOfWork.GetRepository<ProductTag>().GetAllAsync(predicate: s => s.Id == productId);
+            var incomingTagsId = productTags.Select(x => x.Id);
+            foreach (var item in existingTags)
+            {
+                if (!incomingTagsId.Contains(item.TagId.Value))
+                {
+                    unitOfWork.GetRepository<ProductTag>().Delete(item.Id);
+                }
+            }
+            foreach (var item in incomingTagsId)
+            {
+                if (!existingTags.Select(x => x.TagId).Contains(item))
+                {
+                    var productTag = new ProductTag
+                    {
+                        ProductId = productId,
+                        TagId = item
+                    };
+                    await unitOfWork.GetRepository<ProductTag>().InsertAsync(productTag);
+                }
             }
         }
 
