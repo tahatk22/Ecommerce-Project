@@ -40,8 +40,8 @@ namespace Attract.Common.Mapping
                 .ForMember(dest => dest.ProductTags, opt => opt.Ignore());
 
             CreateMap<Product, ProductDTO>().ReverseMap();
-            //.ForMember(dest => dest.AvailableSizes, opt => opt.MapFrom(src => src.ProductAvailableSizes.Select(pas => pas.AvailableSize.Name)))
-            //.ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images)).ReverseMap();
+            CreateMap<EditProductQty, ProductQuantity>();
+
 
             CreateMap<Category, CategoryDto>().ForMember(s => s.SubCategories, tr => tr.MapFrom(a => a.SubCategories.Select(s => s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
