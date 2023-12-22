@@ -29,10 +29,8 @@ namespace Attract.Service.Service
         {
             var cartProduct = await _unitOfWork.GetRepository<CartProduct>()
                 .GetFirstOrDefaultAsync(predicate:
-                x => x.CartId == viewModel.CartId /*&&
-                x.ProductId == viewModel.ProductId &&
-                x.AvailableSizeId == viewModel.AvailableSizeId &&
-                x.ColorId == viewModel.ColorId*/);
+                x => x.CartId == viewModel.CartId &&
+                x.ProductQuantityId == viewModel.ProductQuantityId);
             if (cartProduct != null)
             {
                 cartProduct.Quantity += viewModel.Quantity;

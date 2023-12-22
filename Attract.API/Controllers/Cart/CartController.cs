@@ -28,7 +28,6 @@ namespace Attract.API.Controllers.Cart
         [HttpPost("AddToCart")]
         public async Task<ActionResult<BaseCommandResponse>> AddCartProduct(AddCartProductsDTO viewModel)
         {
-
             viewModel.CartId = await _cartService.GetCartByUser(_authService.GetCurrentUserId());
             if(viewModel.CartId == 0)
             {
