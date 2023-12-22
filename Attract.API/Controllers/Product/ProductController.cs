@@ -1,7 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.Helpers.ProductHelper;
@@ -46,7 +45,7 @@ namespace Attract.API.Controllers.Product
 
 
         [HttpPost("AddProduct")]
-        public async Task<ActionResult<BaseCommandResponse>> Add(AddProductDTO viewModel)
+        public async Task<ActionResult<BaseCommandResponse>> Add([FromForm] AddProductDTO viewModel)
         {
             if (viewModel.productQuantities.Where(x => x.Color.Id == 0).Any())
             {

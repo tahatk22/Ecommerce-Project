@@ -1,6 +1,5 @@
 ﻿using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.Validation;
 using AttractDomain.Enums;
@@ -35,7 +34,7 @@ namespace Attract.Common.DTOs.Product
         public int Quantity { get; set; }
         public int Price { get; set; }
 
-        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
-        //public IFormFile ImageFile { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile ImageFile { get; set; }
     }
 }

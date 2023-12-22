@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attract.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231217214854_product")]
+    [Migration("20231219205728_product")]
     partial class product
     {
         /// <inheritdoc />

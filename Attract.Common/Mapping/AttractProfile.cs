@@ -5,7 +5,6 @@ using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Contact;
 using Attract.Common.DTOs.CustomSubCategory;
-using Attract.Common.DTOs.Image;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
 using Attract.Common.DTOs.Tag;
@@ -27,14 +26,7 @@ namespace Attract.Common.Mapping
             CreateMap<Contact, AddContactDTO>().ReverseMap();
             CreateMap<Contact,ContactDTO>().ReverseMap();
 
-            CreateMap<ProductImage, ImageDTO>()
-                .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImageFileName))
-                .ForMember(dest => dest.ImgesHexa, opt => opt.MapFrom(src => src.ImageColorHexa))
-                .ForMember(dest => dest.ImgesColor, opt => opt.MapFrom(src => src.ImageColor))
-                .ReverseMap();
 
-            CreateMap<AvailableSize, AvailableSizeDTO>().ReverseMap();
-            CreateMap<Color, ColorDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
             CreateMap<EditProductDTO, Product>();
@@ -42,9 +34,12 @@ namespace Attract.Common.Mapping
                 .ForMember(dest => dest.ProductQuantities, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductTags, opt => opt.Ignore());
 
-            CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<EditProductQty, ProductQuantity>();
 
+            CreateMap<Product, ProductDTO>()
+              .ForMember(dest => dest.ProductQuantities, opt => opt.MapFrom(src => src.ProductQuantities));
+
+            // CreateMap<ProductQuantity, ProductQuantityDTO>();
 
             CreateMap<Category, CategoryDto>().ForMember(s => s.SubCategories, tr => tr.MapFrom(a => a.SubCategories.Select(s => s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
