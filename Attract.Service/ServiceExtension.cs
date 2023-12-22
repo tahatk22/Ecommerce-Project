@@ -14,6 +14,9 @@ namespace Attract.Service
         {
             services.AddScoped<ICatgeoryService,CategoryService>();
             services.AddScoped<IProductService,ProductService>();
+            services.AddScoped<IColorService,ColorService>();
+            services.AddScoped<IAvailableSizeService,AvailableSizeService>();
+            services.AddScoped<ITagService,TagService>();
             services.AddScoped<ISubCategoryService,SubCategoryService>();
             services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<ICustomSubCategoryService,CustomSubCategoryService>();

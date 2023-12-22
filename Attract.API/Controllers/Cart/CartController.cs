@@ -13,18 +13,22 @@ namespace Attract.API.Controllers.Cart
     {
         private readonly ICartService _cartService;
         private readonly ICartProductService _cartProductService;
+        private readonly IAuthService _authService;
 
-        public CartController(ICartService cartService, ICartProductService cartProductService)
+        public CartController(
+            ICartService cartService, 
+            ICartProductService cartProductService,
+            IAuthService authService)
         {
             _cartService = cartService;
             _cartProductService = cartProductService;
+            _authService = authService;
         }
 
         [HttpPost("AddToCart")]
         public async Task<ActionResult<BaseCommandResponse>> AddCartProduct(AddCartProductsDTO viewModel)
         {
-
-            viewModel.CartId = await _cartService.GetCartByUser(viewModel.UserId);
+            viewModel.CartId = await _cartService.GetCartByUser(_authService.GetCurrentUserId());
             if(viewModel.CartId == 0)
             {
                 return Ok(new BaseCommandResponse
@@ -35,10 +39,10 @@ namespace Attract.API.Controllers.Cart
             }
             return Ok(await _cartProductService.AddCartProduct(viewModel));
         }
-       /* [HttpGet("GetCartProducts")]
-        public async Task<ActionResult<BaseCommandResponse>> GetAll(string userId)
+        [HttpGet("GetCartProducts")]
+        public async Task<ActionResult<BaseCommandResponse>> GetAll()
         {
-            int CartId = await _cartService.GetCartByUser(userId);
+            int CartId = await _cartService.GetCartByUser(_authService.GetCurrentUserId());
             if (CartId == 0)
             {
                 return Ok(new BaseCommandResponse
@@ -48,7 +52,7 @@ namespace Attract.API.Controllers.Cart
                 });
             }
             return Ok(await _cartProductService.GetAllCartProducts(CartId));
-        }*/
+        }
         [HttpPut("UpdCtgry")]
         public async Task<ActionResult<BaseCommandResponse>> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {

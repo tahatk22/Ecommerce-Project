@@ -12,13 +12,13 @@ namespace Attract.Common.DTOs.Cart
     {
         public int Id { get; set; }
         public int CartId { get; set; }
-        public int ProductId { get; set; }
+        public int ProductQuantityId { get; set; }
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
-        public int ProductColorId { get; set; }
-        public string ProductColorName { get; set; }
-        public int ProductAvailableSizeId { get; set; }
-        public string ProductAvailableSizeName { get; set; }
+        public int ColorId { get; set; }
+        public string ColorName { get; set; }
+        public int AvailableSizeId { get; set; }
+        public string AvailableSizeName { get; set; }
         public int Quantity { get; set; }
     }
 }

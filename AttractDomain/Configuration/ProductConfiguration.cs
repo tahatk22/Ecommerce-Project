@@ -9,7 +9,13 @@ namespace AttractDomain.Configuration
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.HasOne(s => s.SubCategory).WithMany(a => a.Products).HasForeignKey(s => s.SubCategoryId);
+            builder
+                .HasKey(p => p.Id);
+
+            builder
+                .HasOne(s => s.SubCategory)
+                .WithMany(a => a.Products)
+                .HasForeignKey(s => s.SubCategoryId);
         }
     }
 }

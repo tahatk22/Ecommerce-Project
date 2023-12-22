@@ -8,6 +8,8 @@ namespace Attract.Common.DTOs.Color
 {
     public class ColorDTO
     {
-        public List<string> Names { get; set; }
+        public int Id {  get; set; }
+        public string Name { get; set; }
+        public string ColorHexa { get; set; }
     }
 }
