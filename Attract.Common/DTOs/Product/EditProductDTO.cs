@@ -1,7 +1,4 @@
-﻿using Attract.Common.DTOs.AvailableSize;
-using Attract.Common.DTOs.Color;
-using Attract.Common.DTOs.Image;
-using Attract.Common.DTOs.Tag;
+﻿using Attract.Common.DTOs.Tag;
 using AttractDomain.Enums;
 using System;
 using System.Collections.Generic;
