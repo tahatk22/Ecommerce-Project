@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attract.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231219074656_ConatctTbl")]
-    partial class ConatctTbl
+    [Migration("20231222191126_attract")]
+    partial class attract
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,7 +80,16 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("DiscountOption")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ModifyBy")
@@ -94,10 +103,7 @@ namespace Attract.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("SaleCount")
                         .HasColumnType("int");
 
                     b.Property<int?>("SubCategoryId")
@@ -108,6 +114,75 @@ namespace Attract.Infrastructure.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Product", "Attract");
+                });
+
+            modelBuilder.Entity("Attract.Domain.Entities.Attract.ProductTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifyBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifyOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ProductTags");
+                });
+
+            modelBuilder.Entity("Attract.Domain.Entities.Attract.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifyBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifyOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.AvailableSize", b =>
@@ -227,7 +302,7 @@ namespace Attract.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CartId")
+                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
                     b.Property<int>("CreatedBy")
@@ -245,25 +320,7 @@ namespace Attract.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProductAvailableSizeAvailableSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductAvailableSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductAvailableSizeProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductColorColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductColorProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int?>("ProductQuantityId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -273,11 +330,7 @@ namespace Attract.Infrastructure.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductAvailableSizeProductId", "ProductAvailableSizeAvailableSizeId");
-
-                    b.HasIndex("ProductColorProductId", "ProductColorColorId");
+                    b.HasIndex("ProductQuantityId");
 
                     b.ToTable("CartProduct", "Attract");
                 });
@@ -289,6 +342,9 @@ namespace Attract.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ColorHexa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -469,66 +525,6 @@ namespace Attract.Infrastructure.Migrations
                     b.ToTable("OrderDetail", "Attract");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AvailableSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProductId", "AvailableSizeId");
-
-                    b.HasIndex("AvailableSizeId");
-
-                    b.ToTable("ProductAvailableSize", "Attract");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifyBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifyOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProductId", "ColorId");
-
-                    b.HasIndex("ColorId");
-
-                    b.ToTable("ProductColor", "Attract");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductImage", b =>
                 {
                     b.Property<int>("Id")
@@ -573,6 +569,58 @@ namespace Attract.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImage", "Attract");
+                });
+
+            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductQuantity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AvailableSizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifyBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifyOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AvailableSizeId");
+
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductQuantity", "Attract");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.SubCategory", b =>
@@ -831,6 +879,21 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("SubCategory");
                 });
 
+            modelBuilder.Entity("Attract.Domain.Entities.Attract.ProductTag", b =>
+                {
+                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Attract.Domain.Entities.Attract.Tag", "Tag")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("TagId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("AttractDomain.Entities.Attract.Bill", b =>
                 {
                     b.HasOne("AttractDomain.Entities.Attract.Order", "Order")
@@ -861,23 +924,17 @@ namespace Attract.Infrastructure.Migrations
                 {
                     b.HasOne("AttractDomain.Entities.Attract.Cart", "Cart")
                         .WithMany("CartProducts")
-                        .HasForeignKey("CartId");
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
+                    b.HasOne("AttractDomain.Entities.Attract.ProductQuantity", "ProductQuantity")
                         .WithMany("CartProducts")
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("AttractDomain.Entities.Attract.ProductAvailableSize", null)
-                        .WithMany("CartProducts")
-                        .HasForeignKey("ProductAvailableSizeProductId", "ProductAvailableSizeAvailableSizeId");
-
-                    b.HasOne("AttractDomain.Entities.Attract.ProductColor", null)
-                        .WithMany("CartProducts")
-                        .HasForeignKey("ProductColorProductId", "ProductColorColorId");
+                        .HasForeignKey("ProductQuantityId");
 
                     b.Navigation("Cart");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductQuantity");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.OrderDetail", b =>
@@ -887,7 +944,7 @@ namespace Attract.Infrastructure.Migrations
                         .HasForeignKey("OrderId");
 
                     b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("OrderDetails")
+                        .WithMany()
                         .HasForeignKey("ProductId");
 
                     b.Navigation("Order");
@@ -895,51 +952,34 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.AvailableSize", "AvailableSize")
-                        .WithMany("ProductAvailableSizes")
-                        .HasForeignKey("AvailableSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("ProductAvailableSizes")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AvailableSize");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
-                {
-                    b.HasOne("AttractDomain.Entities.Attract.Color", "Color")
-                        .WithMany("ProductColors")
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("ProductColors")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Color");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductImage", b =>
                 {
                     b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("Images")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductQuantity", b =>
+                {
+                    b.HasOne("AttractDomain.Entities.Attract.AvailableSize", "AvailableSize")
+                        .WithMany("ProductQuantities")
+                        .HasForeignKey("AvailableSizeId");
+
+                    b.HasOne("AttractDomain.Entities.Attract.Color", "Color")
+                        .WithMany("ProductQuantities")
+                        .HasForeignKey("ColorId");
+
+                    b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
+                        .WithMany("ProductQuantities")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("AvailableSize");
+
+                    b.Navigation("Color");
 
                     b.Navigation("Product");
                 });
@@ -1013,20 +1053,19 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("Attract.Domain.Entities.Attract.Product", b =>
                 {
-                    b.Navigation("CartProducts");
+                    b.Navigation("ProductQuantities");
 
-                    b.Navigation("Images");
+                    b.Navigation("ProductTags");
+                });
 
-                    b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductAvailableSizes");
-
-                    b.Navigation("ProductColors");
+            modelBuilder.Entity("Attract.Domain.Entities.Attract.Tag", b =>
+                {
+                    b.Navigation("ProductTags");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.AvailableSize", b =>
                 {
-                    b.Navigation("ProductAvailableSizes");
+                    b.Navigation("ProductQuantities");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.Cart", b =>
@@ -1036,7 +1075,7 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.Color", b =>
                 {
-                    b.Navigation("ProductColors");
+                    b.Navigation("ProductQuantities");
                 });
 
             modelBuilder.Entity("AttractDomain.Entities.Attract.Order", b =>
@@ -1046,12 +1085,7 @@ namespace Attract.Infrastructure.Migrations
                     b.Navigation("OrderDetails");
                 });
 
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductAvailableSize", b =>
-                {
-                    b.Navigation("CartProducts");
-                });
-
-            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductColor", b =>
+            modelBuilder.Entity("AttractDomain.Entities.Attract.ProductQuantity", b =>
                 {
                     b.Navigation("CartProducts");
                 });

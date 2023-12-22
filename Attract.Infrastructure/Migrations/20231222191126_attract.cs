@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Attract.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class product : Migration
+    public partial class attract : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -113,6 +113,26 @@ namespace Attract.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Color", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contact",
+                schema: "Attract",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifyBy = table.Column<int>(type: "int", nullable: true),
+                    ModifyOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contact", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -721,6 +741,10 @@ namespace Attract.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CartProduct",
+                schema: "Attract");
+
+            migrationBuilder.DropTable(
+                name: "Contact",
                 schema: "Attract");
 
             migrationBuilder.DropTable(
