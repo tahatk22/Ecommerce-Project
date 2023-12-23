@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Service.IService;
+using Attract.Service.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,11 @@ namespace Attract.API.Controllers.AvailableSize
         public async Task<ActionResult<BaseCommandResponse>> UpdateAvailableSize(UpdateAvailableSizeDTO viewModel)
         {
             return Ok(await _AvailableSizeService.UpdateAvailableSize(viewModel));
+        }
+        [HttpDelete("Del")]
+        public async Task<ActionResult<BaseCommandResponse>> DelAvailableSize(int Id)
+        {
+            return Ok(await _AvailableSizeService.DeleteAvailableSize(Id));
         }
     }
 }

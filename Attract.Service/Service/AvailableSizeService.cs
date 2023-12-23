@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.AvailableSize;
 using Attract.Common.DTOs.Color;
+using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
@@ -66,6 +67,23 @@ namespace Attract.Service.Service
                 Success = true,
                 Message = "Updated Successfully"
             };
+        }
+
+        public async Task<BaseCommandResponse> DeleteAvailableSize(int id)
+        {
+            var response = new BaseCommandResponse();
+            var size = await _unitOfWork.GetRepository<AvailableSize>().GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (size == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = _mapper.Map<AvailableSize>(size);
+            _unitOfWork.GetRepository<AvailableSize>().Delete(size.Id);
+            await _unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
         }
     }
 }
