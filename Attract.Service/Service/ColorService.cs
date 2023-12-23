@@ -69,5 +69,22 @@ namespace Attract.Service.Service
                 Message = "Updated Successfully"
             };
         }
+
+        public async Task<BaseCommandResponse> DeleteColor(int id)
+        {
+            var response = new BaseCommandResponse();
+            var color = await _unitOfWork.GetRepository<Color>().GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (color == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = _mapper.Map<Color>(color);
+            _unitOfWork.GetRepository<Color>().Delete(color.Id);
+            await _unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
     }
 }

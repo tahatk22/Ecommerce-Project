@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Color;
 using Attract.Service.IService;
+using Attract.Service.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,11 @@ namespace Attract.API.Controllers.Color
         public async Task<ActionResult<BaseCommandResponse>> UpdateColor(UpdateColorDTO viewModel)
         {
             return Ok(await _colorService.UpdateColor(viewModel));
+        }
+        [HttpDelete("Del/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DelColor(int Id)
+        {
+            return Ok(await _colorService.DeleteColor(Id));
         }
     }
 }
