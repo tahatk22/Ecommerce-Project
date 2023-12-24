@@ -33,7 +33,7 @@ namespace Attract.API.Controllers.AvailableSize
         {
             return Ok(await _AvailableSizeService.UpdateAvailableSize(viewModel));
         }
-        [HttpDelete("Del/{id}")]
+        [HttpDelete("Del/{Id}")]
         public async Task<ActionResult<BaseCommandResponse>> DelAvailableSize(int Id)
         {
             return Ok(await _AvailableSizeService.DeleteAvailableSize(Id));

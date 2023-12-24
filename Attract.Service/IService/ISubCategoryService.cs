@@ -15,6 +15,7 @@ namespace Attract.Service.IService
         Task<BaseCommandResponse> GetSubCategory(int subCategoryId);
         Task<BaseCommandResponse> AddSubCategory(SubCategoryAddDto subCategoryAddDto);
         Task<BaseCommandResponse> UpdSubCategory(SubCategoryUpdDto subCategoryUpdDto);
+        Task<BaseCommandResponse> DeleteSubCategory(int id);
 
     }
 }

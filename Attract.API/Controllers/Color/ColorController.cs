@@ -33,7 +33,7 @@ namespace Attract.API.Controllers.Color
         {
             return Ok(await _colorService.UpdateColor(viewModel));
         }
-        [HttpDelete("Del/{id}")]
+        [HttpDelete("Del/{Id}")]
         public async Task<ActionResult<BaseCommandResponse>> DelColor(int Id)
         {
             return Ok(await _colorService.DeleteColor(Id));

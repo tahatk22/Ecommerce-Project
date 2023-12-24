@@ -36,6 +36,23 @@ namespace Attract.Service.Service
             return response;
         }
 
+        public async Task<BaseCommandResponse> DeleteSubCategory(int id)
+        {
+            var response = new BaseCommandResponse();
+            var subCategory = await unitOfWork.GetRepository<SubCategory>().GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (subCategory == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = mapper.Map<SubCategory>(subCategory);
+            unitOfWork.GetRepository<SubCategory>().Delete(subCategory.Id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
+
         public async Task<BaseCommandResponse> GetAllSubCategories()
         {
 
