@@ -11,7 +11,8 @@ namespace Attract.Common.DTOs.SubCategory
     {
         public int Id { get; set; }
         public string SubCategoryName { get; set; }
+        public int CategoryId { get; set; }
         public string Description { get; set; }
-        public IList<string> Products { get; set; }
+        //public IList<string> Products { get; set; }
     }
 }
