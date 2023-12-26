@@ -13,11 +13,13 @@ namespace Attract.Common.DTOs.Product
 {
     public class ProductDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Brand { get; set; }
         public bool IsArchived { get; set; }
-        public string DiscountOption { get; set; }
+        public int DiscountOption { get; set; }
+        public string DiscountOptionName { get; set; }
         public int Discount { get; set; }
         public int SubCategoryId { get; set; }
         public List<ProductQuantityDTO> ProductQuantities { get; set; }
@@ -26,6 +28,7 @@ namespace Attract.Common.DTOs.Product
 
     public class ProductQuantityDTO
     {
+        public int Id { get; set; }
         public ColorDTO Color { get; set; }
         public AvailableSizeDTO AvailableSize { get; set; }
         public int Quantity { get; set; }

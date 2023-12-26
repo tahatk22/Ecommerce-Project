@@ -37,7 +37,8 @@ namespace Attract.Common.Mapping
             CreateMap<EditProductQty, ProductQuantity>();
 
             CreateMap<Product, ProductDTO>()
-              .ForMember(dest => dest.ProductQuantities, opt => opt.MapFrom(src => src.ProductQuantities));
+              .ForMember(dest => dest.ProductQuantities, opt => opt.MapFrom(src => src.ProductQuantities))
+              .ForMember(dest => dest.DiscountOptionName, opt => opt.MapFrom(src => Enum.GetName(src.DiscountOption)));
 
              CreateMap<ProductQuantity, ProductQuantityDTO>();
 
