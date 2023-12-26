@@ -39,7 +39,7 @@ namespace Attract.Common.Mapping
             CreateMap<Product, ProductDTO>()
               .ForMember(dest => dest.ProductQuantities, opt => opt.MapFrom(src => src.ProductQuantities));
 
-            // CreateMap<ProductQuantity, ProductQuantityDTO>();
+             CreateMap<ProductQuantity, ProductQuantityDTO>();
 
             CreateMap<Category, CategoryDto>().ForMember(s => s.SubCategories, tr => tr.MapFrom(a => a.SubCategories.Select(s => s.SubCategoryName))).ReverseMap();
             CreateMap<CategoryAddDto, Category>();
