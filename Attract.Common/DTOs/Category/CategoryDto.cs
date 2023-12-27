@@ -1,4 +1,5 @@
 ﻿using Attract.Common.DTOs.Category;
+using Attract.Common.DTOs.SubCategory;
 using AttractDomain.Entities.Attract;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace Attract.Common.DTOs
     public class CategoryDto:CategoryAddDto
     {
         public int Id { get; set; }
-        public IList<string> SubCategories { get; set; }
+        public IList<SubCategoryDto> SubCategories { get; set; }
     }
 }

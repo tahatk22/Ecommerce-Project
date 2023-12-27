@@ -108,7 +108,7 @@ namespace Attract.Service.Service
                 {
                         //Update each ImageDTO in the collection
                         var imageUrl = $"https://{hostValue}/Images/Product/{product.ImageName}";
-                        product.ImageUrl = imageUrl;
+                        product.Image = imageUrl;
                 }
                 response.Success = true;
                 response.Data = new { Products = result, ProductCount = result.Count };
@@ -218,11 +218,11 @@ namespace Attract.Service.Service
             foreach (var item in product.productQuantities)
             {
                 var productDirectoryPath = GetProductDirectoryPath();
-                var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
+                var imagePath = Path.Combine(productDirectoryPath, item.Image.FileName);
                 // Save the image file
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await item.ImageFile.CopyToAsync(fileStream);
+                    await item.Image.CopyToAsync(fileStream);
                 }
                 var productQuantity = new ProductQuantity
                 {
@@ -231,7 +231,7 @@ namespace Attract.Service.Service
                     ColorId = item.Color.Id,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    ImageName = item.ImageFile.FileName
+                    ImageName = item.Image.FileName
                 };
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
             }            

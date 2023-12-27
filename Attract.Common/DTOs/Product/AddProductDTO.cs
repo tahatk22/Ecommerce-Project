@@ -35,6 +35,6 @@ namespace Attract.Common.DTOs.Product
         public int Price { get; set; }
 
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile Image { get; set; }
     }
 }
