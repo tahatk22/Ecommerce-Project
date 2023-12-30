@@ -112,5 +112,10 @@ namespace Attract.API.Controllers.Product
             var product = await productService.DeleteProduct(id);
             return Ok(product);
         }
+        [HttpGet("GetProduct/{productId}")]
+        public async Task<ActionResult<BaseCommandResponse>> GetProduct(int productId)
+        {
+            return Ok(await productService.GetProduct(productId));
+        }
     }
 }

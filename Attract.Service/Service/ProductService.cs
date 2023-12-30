@@ -1,10 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
-using Attract.Common.DTOs.AvailableSize;
-using Attract.Common.DTOs.Category;
-using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.Tag;
-using Attract.Common.Helpers;
 using Attract.Common.Helpers.ProductHelper;
 using Attract.Domain.Entities.Attract;
 using Attract.Framework.UoW;
@@ -15,8 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
-using static Attract.Common.DTOs.Product.AddProductDTO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Attract.Service.Service
 {
@@ -67,7 +61,7 @@ namespace Attract.Service.Service
                 AddProductTags(newProduct.Id, viewModel.tags);
                 await CreateProductDirectoryAsync(newProduct);
 
-                
+
                 await AddProductQuantities(newProduct.Id, viewModel);
                 await unitOfWork.SaveChangesAsync();
 
@@ -106,9 +100,9 @@ namespace Attract.Service.Service
 
                 foreach (var product in result.SelectMany(product => product.ProductQuantities))
                 {
-                        //Update each ImageDTO in the collection
-                        var imageUrl = $"https://{hostValue}/Images/Product/{product.ImageName}";
-                        product.Image = imageUrl;
+                    //Update each ImageDTO in the collection
+                    var imageUrl = $"https://{hostValue}/Images/Product/{product.ImageName}";
+                    product.Image = imageUrl;
                 }
                 response.Success = true;
                 response.Data = new { Products = result, ProductCount = result.Count };
@@ -151,6 +145,22 @@ namespace Attract.Service.Service
             }
 
             return response;
+        }
+        public async Task<BaseCommandResponse> GetProduct(int productId)
+        {
+            var response = new BaseCommandResponse();
+            var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == productId);
+            if (product == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            var result = mapper.Map<ProductDTO>(product);
+            response.Success = true;
+            response.Data = result;
+            return response;
+
         }
 
         #region private methods
@@ -234,7 +244,7 @@ namespace Attract.Service.Service
                     ImageName = item.Image.FileName
                 };
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
-            }            
+            }
         }
 
         private async Task EditProductQuantities(int productId, List<EditProductQty> productQuantities)
