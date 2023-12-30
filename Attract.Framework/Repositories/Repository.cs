@@ -281,6 +281,7 @@ namespace Attract.Framework.Repositories
         public virtual TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                          Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
                                          bool disableTracking = true,
                                          bool ignoreQueryFilters = false)
         {
@@ -295,7 +296,10 @@ namespace Attract.Framework.Repositories
             {
                 query = include(query);
             }
-
+            if (thenInclude != null)
+            {
+                query = thenInclude(query);
+            }
             if (predicate != null)
             {
                 query = query.Where(predicate);
@@ -321,6 +325,7 @@ namespace Attract.Framework.Repositories
         public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
             bool disableTracking = true,
             bool ignoreQueryFilters = false)
         {
@@ -335,7 +340,10 @@ namespace Attract.Framework.Repositories
             {
                 query = include(query);
             }
-
+            if (thenInclude != null)
+            {
+                query = thenInclude(query);
+            }
             if (predicate != null)
             {
                 query = query.Where(predicate);
@@ -371,6 +379,7 @@ namespace Attract.Framework.Repositories
                                                   Expression<Func<TEntity, bool>> predicate = null,
                                                   Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                                                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
                                                   bool disableTracking = true,
                                                   bool ignoreQueryFilters = false)
         {
@@ -385,7 +394,10 @@ namespace Attract.Framework.Repositories
             {
                 query = include(query);
             }
-
+            if (thenInclude != null)
+            {
+                query = thenInclude(query);
+            }
             if (predicate != null)
             {
                 query = query.Where(predicate);
@@ -411,6 +423,7 @@ namespace Attract.Framework.Repositories
                                                   Expression<Func<TEntity, bool>> predicate = null,
                                                   Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                                   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
                                                   bool disableTracking = true, bool ignoreQueryFilters = false)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -424,7 +437,10 @@ namespace Attract.Framework.Repositories
             {
                 query = include(query);
             }
-
+            if (thenInclude != null)
+            {
+                query = thenInclude(query);
+            }
             if (predicate != null)
             {
                 query = query.Where(predicate);

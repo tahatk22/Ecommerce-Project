@@ -149,7 +149,10 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> GetProduct(int productId)
         {
             var response = new BaseCommandResponse();
-            var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == productId);
+            var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == productId,
+            include: s => s.Include(p=> p.ProductQuantities).ThenInclude(t=>t.Color),
+            thenInclude:x=> x.Include(p => p.ProductQuantities).ThenInclude(t => t.AvailableSize));
+
             if (product == null)
             {
                 response.Success = false;
@@ -157,6 +160,16 @@ namespace Attract.Service.Service
                 return response;
             }
             var result = mapper.Map<ProductDTO>(product);
+            var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+
+            foreach (var p in result.ProductQuantities)
+            {
+                //Update each ImageDTO in the collection
+                var imageUrl = $"https://{hostValue}/Images/Product/{p.ImageName}";
+                p.Image = imageUrl;
+            }
+
+
             response.Success = true;
             response.Data = result;
             return response;

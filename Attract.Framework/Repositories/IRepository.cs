@@ -162,6 +162,7 @@ namespace Attract.Framework.Repositories
         TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
                                   Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
                                   bool disableTracking = true,
                                   bool ignoreQueryFilters = false);
 
@@ -180,6 +181,7 @@ namespace Attract.Framework.Repositories
                                            Expression<Func<TEntity, bool>> predicate = null,
                                            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                                      Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
                                            bool disableTracking = true,
                                            bool ignoreQueryFilters = false);
 
@@ -198,6 +200,7 @@ namespace Attract.Framework.Repositories
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
             bool disableTracking = true,
             bool ignoreQueryFilters = false);
 
@@ -214,6 +217,7 @@ namespace Attract.Framework.Repositories
         Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> thenInclude = null,
             bool disableTracking = true,
             bool ignoreQueryFilters = false);
         #endregion
