@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Cart;
 using Attract.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -8,6 +9,7 @@ using Microsoft.Identity.Client;
 namespace Attract.API.Controllers.Cart
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CartController : ControllerBase
     {

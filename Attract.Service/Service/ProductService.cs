@@ -428,7 +428,9 @@ namespace Attract.Service.Service
             {
                 products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
                 s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
-                /*s.Price.ToString().Contains(PagingParams.SearchString) ||*/ s.Brand.Contains(PagingParams.SearchString));
+                 s.Brand.Contains(PagingParams.SearchString.ToLower())||
+                 s.SubCategory.SubCategoryName.ToLower().Contains(PagingParams.SearchString.ToLower())||
+                 s.SubCategory.Category.CategoryName.ToLower().Contains(PagingParams.SearchString.ToLower()));
 
             }
             return products;
