@@ -1,9 +1,11 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Collection;
+using Attract.Common.Helpers;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,9 +47,22 @@ namespace Attract.Service.Service
             return response;
         }
 
-        public Task<BaseCommandResponse> GetCollection()
+        public async Task<BaseCommandResponse> GetAllCollections(PagingParams pagingParams)
         {
-            throw new NotImplementedException();
+            var response = new BaseCommandResponse();
+            var collections =  unitOfWork.GetRepository<Collection>().GetAll(include: s => s.Include(a => a.ProductQuantity)
+            .ThenInclude(a => a.Product));
+            if (collections == null)
+            {
+                response.Success = true;
+                response.Message = "No Collections Found";
+                return response;
+            }
+            var PagedCenter = await PagedList<Collection>.CreateAsync(collections, pagingParams.PageNumber, pagingParams.PageSize);
+            response.Data = new Pagination<Collection>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
+            response.Success = true;
+//            response.Data = collections;
+            return response;
         }
 
 
@@ -58,7 +73,7 @@ namespace Attract.Service.Service
         }
         private async Task SaveImageAsync(string directoryPath, IFormFile image)
         {
-            
+
             var imagePath = Path.Combine(directoryPath, image.FileName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {

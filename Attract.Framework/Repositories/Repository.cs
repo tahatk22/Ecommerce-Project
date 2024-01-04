@@ -152,6 +152,7 @@ namespace Attract.Framework.Repositories
                 return await query.ToListAsync();
             }
         }
+
         #endregion
 
         #region Insert
