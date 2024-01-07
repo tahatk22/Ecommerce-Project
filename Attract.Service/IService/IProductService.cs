@@ -11,5 +11,6 @@ namespace Attract.Service.IService
         Task<BaseCommandResponse> DeleteProduct(int id);
         Task<BaseCommandResponse> AddProduct(AddProductDTO viewModel);
         Task<BaseCommandResponse> EditProduct(EditProductDTO viewModel);
+         Task<int> GetProductQuantity(int id);
     }
 }

@@ -448,6 +448,12 @@ namespace Attract.Service.Service
             }
             return products;
         }
+
+        public async Task<int> GetProductQuantity(int id)
+        {
+            return (await unitOfWork.GetRepository<ProductQuantity>().GetFirstOrDefaultAsync(predicate: c => c.Id == id)).Quantity;
+        
+        }
         #endregion
     }
 }

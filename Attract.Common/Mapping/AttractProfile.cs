@@ -68,9 +68,12 @@ namespace Attract.Common.Mapping
 
             CreateMap<CartProduct, CartProductItemsForGet>()
                  .ForMember(dst => dst.ProductName, opt => opt.MapFrom(src => src.ProductQuantity.Product.Name))
+                 .ForMember(dst => dst.Image, opt => opt.MapFrom(src => src.ProductQuantity.ImageName))
                  .ForMember(dst => dst.ProductPrice, opt => opt.MapFrom(src => src.ProductQuantity.Price))
                  .ForMember(dst => dst.ColorName, opt => opt.MapFrom(src => src.ProductQuantity.Color.Name))
-                 .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductQuantity.AvailableSize.Name)).ReverseMap();
+                 .ForMember(dst => dst.ColorId, opt => opt.MapFrom(src => src.ProductQuantity.ColorId))
+                 .ForMember(dst => dst.AvailableSizeName, opt => opt.MapFrom(src => src.ProductQuantity.AvailableSize.Name))
+                 .ForMember(dst => dst.AvailableSizeId, opt => opt.MapFrom(src => src.ProductQuantity.AvailableSizeId)).ReverseMap();
             CreateMap<AddCartProductsDTO, CartProduct>();
             CreateMap<CartProductItemForUpdate, AddCartProductsDTO>();
 

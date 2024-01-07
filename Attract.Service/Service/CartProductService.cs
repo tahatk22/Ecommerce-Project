@@ -5,6 +5,7 @@ using Attract.Framework.UoW;
 using Attract.Service.IService;
 using AttractDomain.Entities.Attract;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,12 @@ namespace Attract.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CartProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public CartProductService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseCommandResponse> AddCartProduct(AddCartProductsDTO viewModel)
@@ -59,8 +62,10 @@ namespace Attract.Service.Service
             var cartProducts = await _unitOfWork.GetRepository<CartProduct>()
                 .GetAllAsync(
                 predicate: x => x.CartId == cartId,
-                include: s => 
+                include: s =>
                 s.Include(p => p.ProductQuantity)
+                 .ThenInclude(p => p.Product)
+                 .Include(p => p.ProductQuantity)
                 .ThenInclude(x => x.Color)
                 .Include(x => x.ProductQuantity)
                 .ThenInclude(x => x.AvailableSize));
@@ -71,6 +76,14 @@ namespace Attract.Service.Service
                 return response;
             }
             var items = _mapper.Map<List<CartProductItemsForGet>>(cartProducts);
+            var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+            foreach (var cartProduct in items)
+            {
+                //Update each ImageDTO in the collection
+                var imageUrl = $"https://{hostValue}/Images/Product/{cartProduct.Image}";
+                cartProduct.Image = imageUrl;
+            }
+            //var imageUrl = $"https://{hostValue}/Images/Product/{items.}";
             var result = new CartProductsDTO
             {
                 CartProducts = items

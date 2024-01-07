@@ -20,5 +20,6 @@ namespace Attract.Common.DTOs.Cart
         public int AvailableSizeId { get; set; }
         public string AvailableSizeName { get; set; }
         public int Quantity { get; set; }
+        public string Image { get; set; }
     }
 }

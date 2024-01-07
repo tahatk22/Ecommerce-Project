@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Cart;
 using Attract.Service.IService;
+using Attract.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,18 @@ namespace Attract.API.Controllers.Cart
         private readonly ICartService _cartService;
         private readonly ICartProductService _cartProductService;
         private readonly IAuthService _authService;
+        private readonly IProductService _productService; 
 
         public CartController(
             ICartService cartService, 
             ICartProductService cartProductService,
-            IAuthService authService)
+            IAuthService authService,
+            IProductService productService)
         {
             _cartService = cartService;
             _cartProductService = cartProductService;
             _authService = authService;
+            _productService = productService;
         }
 
         [HttpPost("AddToCart")]
@@ -37,6 +41,14 @@ namespace Attract.API.Controllers.Cart
                 {
                     Success = false,
                     Message = "Not Found.",
+                });
+            }
+            if (!await AddValidation(viewModel))
+            {
+                return Ok(new BaseCommandResponse
+                {
+                    Success = false,
+                    Message = "Not Enough Quantity",
                 });
             }
             return Ok(await _cartProductService.AddCartProduct(viewModel));
@@ -59,6 +71,11 @@ namespace Attract.API.Controllers.Cart
         public async Task<ActionResult<BaseCommandResponse>> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {
             return Ok(await _cartProductService.UpdateCartProducts(viewModel));
+        }
+        private async Task<bool> AddValidation(AddCartProductsDTO viewModel)
+        {
+            var productQuantity = await _productService.GetProductQuantity(viewModel.ProductQuantityId);
+            return productQuantity >= viewModel.Quantity;
         }
     }
 }
