@@ -43,14 +43,14 @@ namespace Attract.API.Controllers.Cart
                     Message = "Not Found.",
                 });
             }
-            if (!await AddValidation(viewModel))
-            {
-                return Ok(new BaseCommandResponse
-                {
-                    Success = false,
-                    Message = "Not Enough Quantity",
-                });
-            }
+            //if (!await AddValidation(viewModel))
+            //{
+            //    return Ok(new BaseCommandResponse
+            //    {
+            //        Success = false,
+            //        Message = "Not Enough Quantity",
+            //    });
+            //}
             return Ok(await _cartProductService.AddCartProduct(viewModel));
         }
         [HttpGet("GetCartProducts")]
