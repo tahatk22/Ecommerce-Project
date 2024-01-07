@@ -263,6 +263,7 @@ namespace Attract.Service.Service
 
         private async Task EditProductQuantities(int productId, List<EditProductQty> productQuantities)
         {
+            bool isImageUpdated = false;
             var existingQuantities = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: s => s.Id == productId);
 
             foreach (var item in existingQuantities)
@@ -287,13 +288,8 @@ namespace Attract.Service.Service
 
             foreach (var item in productQuantities)
             {
-                //var productDirectoryPath = GetProductDirectoryPath();
-                //var imagePath = Path.Combine(productDirectoryPath, item.ImageFile.FileName);
-                //// Save the image file
-                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                //{
-                //    await item.ImageFile.CopyToAsync(fileStream);
-                //}
+
+
                 var existingProduct = await unitOfWork.GetRepository<ProductQuantity>().GetFirstOrDefaultAsync(predicate: s => s.Id == item.Id);
 
                 if (existingProduct == null)
@@ -305,10 +301,26 @@ namespace Attract.Service.Service
                 // Update the existing product with new data
                 mapper.Map(item, existingProduct);
                 existingProduct.ProductId = productId;
-                //existingProduct.ImageName = Path.GetFullPath(item.ImageFile.FileName);
-
-                // Mark the product entity as modified (if necessary)
+                
+                if (item.Image != null)
+                {
+                    isImageUpdated = true;
+                    existingProduct.ImageName = item.Image.FileName;
+                }
                 unitOfWork.GetRepository<ProductQuantity>().UpdateAsync(existingProduct);
+                if (isImageUpdated)
+                {
+                    var productDirectoryPath = GetProductDirectoryPath();
+                    var imagePath = Path.Combine(productDirectoryPath, item.Image.FileName);
+                    // Save the image file
+                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await item.Image.CopyToAsync(fileStream);
+                    }
+                }
+                // Mark the product entity as modified (if necessary)
+              
+
             }
         }
 
@@ -365,64 +377,64 @@ namespace Attract.Service.Service
             // No need to save changes immediately; just return the updated product
             return existingProduct;
         }
-        private async Task UpdateProductImagesAsync(Product product, List<IFormFile> newImageFiles)
-        {
-            // Get existing images for the product
-            var existingImages = await unitOfWork.GetRepository<ProductImage>()
-                .GetAllAsync(predicate: s => s.ProductId == product.Id);
+        //private async Task UpdateProductImagesAsync(Product product, List<IFormFile> newImageFiles)
+        //{
+        //    // Get existing images for the product
+        //    var existingImages = await unitOfWork.GetRepository<ProductImage>()
+        //        .GetAllAsync(predicate: s => s.ProductId == product.Id);
 
-            // Determine which images need to be deleted
-            var imagesToDelete = existingImages
-                .Where(existingImage => !newImageFiles.Any(newImage => newImage.FileName == existingImage.ImageFileName))
-                .ToList();
+        //    // Determine which images need to be deleted
+        //    var imagesToDelete = existingImages
+        //        .Where(existingImage => !newImageFiles.Any(newImage => newImage.FileName == existingImage.ImageFileName))
+        //        .ToList();
 
-            // Delete images that are no longer associated with the product
-            foreach (var imageToDelete in imagesToDelete)
-            {
-                var imagePathToDelete = Path.Combine(GetProductDirectoryPath(), imageToDelete.ImageFileName);
+        //    // Delete images that are no longer associated with the product
+        //    foreach (var imageToDelete in imagesToDelete)
+        //    {
+        //        var imagePathToDelete = Path.Combine(GetProductDirectoryPath(), imageToDelete.ImageFileName);
 
-                // Delete the image file
-                if (File.Exists(imagePathToDelete))
-                {
-                    File.Delete(imagePathToDelete);
-                }
+        //        // Delete the image file
+        //        if (File.Exists(imagePathToDelete))
+        //        {
+        //            File.Delete(imagePathToDelete);
+        //        }
 
-                // Delete the image record from the database
-                unitOfWork.GetRepository<ProductImage>().Delete(imageToDelete);
-            }
+        //        // Delete the image record from the database
+        //        unitOfWork.GetRepository<ProductImage>().Delete(imageToDelete);
+        //    }
 
-            // Add or update the new images
-            foreach (var newImageFile in newImageFiles)
-            {
-                var productImage = existingImages.FirstOrDefault(pi => pi.ImageFileName == newImageFile.FileName);
+        //    // Add or update the new images
+        //    foreach (var newImageFile in newImageFiles)
+        //    {
+        //        var productImage = existingImages.FirstOrDefault(pi => pi.ImageFileName == newImageFile.FileName);
 
-                if (productImage == null)
-                {
-                    // Image is new, create a new record
-                    productImage = new ProductImage
-                    {
-                        ProductId = product.Id,
-                        ImageFileName = newImageFile.FileName,
-                        // Other properties if needed
-                    };
+        //        if (productImage == null)
+        //        {
+        //            // Image is new, create a new record
+        //            productImage = new ProductImage
+        //            {
+        //                ProductId = product.Id,
+        //                ImageFileName = newImageFile.FileName,
+        //                // Other properties if needed
+        //            };
 
-                    await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
-                }
-                else
-                {
-                    // Image already exists, update properties if needed
-                    productImage.ModifyOn = DateTime.UtcNow;
-                }
+        //            await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
+        //        }
+        //        else
+        //        {
+        //            // Image already exists, update properties if needed
+        //            productImage.ModifyOn = DateTime.UtcNow;
+        //        }
 
-                // Save the image file or update it
-                var imagePath = Path.Combine(GetProductDirectoryPath(), newImageFile.FileName);
+        //        // Save the image file or update it
+        //        var imagePath = Path.Combine(GetProductDirectoryPath(), newImageFile.FileName);
 
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await newImageFile.CopyToAsync(fileStream);
-                }
-            }
-        }
+        //        using (var fileStream = new FileStream(imagePath, FileMode.Create))
+        //        {
+        //            await newImageFile.CopyToAsync(fileStream);
+        //        }
+        //    }
+        //}
         private async Task<IQueryable<Product>> filterProducts(ProductPagination PagingParams, IQueryable<Product> products)
         {
             if (!string.IsNullOrEmpty(PagingParams.SearchString))

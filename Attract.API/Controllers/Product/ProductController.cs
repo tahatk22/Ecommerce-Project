@@ -89,7 +89,7 @@ namespace Attract.API.Controllers.Product
         }
 
         [HttpPut("UpdateProduct")]
-        public async Task<ActionResult<BaseCommandResponse>> UpdateProduct(EditProductDTO viewModel)
+        public async Task<ActionResult<BaseCommandResponse>> UpdateProduct([FromForm] EditProductDTO viewModel)
         {
             if (viewModel.Tags.Where(x => x.Id == 0).Any())
             {

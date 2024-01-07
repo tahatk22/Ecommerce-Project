@@ -1,5 +1,7 @@
 ﻿using Attract.Common.DTOs.Tag;
+using Attract.Common.Validation;
 using AttractDomain.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,7 @@ namespace Attract.Common.DTOs.Product
         public int Quantity { get; set; }
         public int Price { get; set; }
 
-        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
-        //public IFormFile ImageFile { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image { get; set; }
     }
 }
