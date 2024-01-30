@@ -24,11 +24,20 @@ namespace Attract.Service.Service
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AvailableSizeDTO>> GetAvailableSizes()
+        public async Task<BaseCommandResponse> GetAvailableSizes()
         {
+            var response=new BaseCommandResponse();
             var availableSizes = await _unitOfWork.GetRepository<AvailableSize>().GetAllAsync();
-            var result = _mapper.Map<IEnumerable<AvailableSizeDTO>>(availableSizes);
-            return result;
+            if(availableSizes == null)
+            {
+                response.Success=false;
+                response.Message = "Data not found";
+                return response;
+            }
+            var result = _mapper.Map<IList<AvailableSizeDTO>>(availableSizes);
+            response.Success=true;
+            response.Data = result;
+            return response;
         }
 
         public async Task<int> AddAvailableSize(AddAvailableSizeDTO viewModel)

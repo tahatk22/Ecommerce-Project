@@ -11,7 +11,7 @@ namespace Attract.Service.IService
 {
     public interface IAvailableSizeService
     {
-        Task<IEnumerable<AvailableSizeDTO>> GetAvailableSizes();
+        Task<BaseCommandResponse> GetAvailableSizes();
         Task<int> AddAvailableSize(AddAvailableSizeDTO viewModel);
         Task<BaseCommandResponse> UpdateAvailableSize(UpdateAvailableSizeDTO viewModel);
         Task <BaseCommandResponse> DeleteAvailableSize(int id);
