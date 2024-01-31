@@ -39,17 +39,18 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> DeleteProduct(int id)
         {
             var response = new BaseCommandResponse();
-            var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == id);
-            if (product != null)
+            var product = await unitOfWork.GetRepository<Product>().FindAsync(id);
+            if (product == null)
             {
-                unitOfWork.GetRepository<Product>().Delete(product);
-                await unitOfWork.SaveChangesAsync();
-                response.Success = true;
-                response.Message = "Deleted Successfully!";
+               
+                response.Success = false;
+                response.Message = $"There is no product with id {id}";
                 return response;
             }
-            response.Success = false;
-            response.Message = "Failed to delete the product!";
+            unitOfWork.GetRepository<Product>().Delete(product);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Message = "Deleted Successfully!";
             return response;
         }
         public async Task<BaseCommandResponse> AddProduct(AddProductDTO viewModel)
