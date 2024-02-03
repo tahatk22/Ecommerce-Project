@@ -177,7 +177,11 @@ namespace Attract.Service.Service
             return response;
 
         }
+        public async Task<int> GetProductQuantity(int id)
+        {
+            return (await unitOfWork.GetRepository<ProductQuantity>().GetFirstOrDefaultAsync(predicate: c => c.Id == id)).Quantity;
 
+        }
         #region private methods
         private async Task<Product> AddProductAsync(AddProductDTO productDTO)
         {
@@ -450,11 +454,7 @@ namespace Attract.Service.Service
             return products;
         }
 
-        public async Task<int> GetProductQuantity(int id)
-        {
-            return (await unitOfWork.GetRepository<ProductQuantity>().GetFirstOrDefaultAsync(predicate: c => c.Id == id)).Quantity;
-        
-        }
+
         #endregion
     }
 }

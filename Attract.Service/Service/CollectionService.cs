@@ -17,10 +17,12 @@ namespace Attract.Service.Service
     public class CollectionService : ICollectionService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public CollectionService(IUnitOfWork unitOfWork)
+        public CollectionService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             this.unitOfWork = unitOfWork;
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task<BaseCommandResponse> AddCollection(AddCollectionDTO addCollectionDTO)
         {
@@ -58,7 +60,33 @@ namespace Attract.Service.Service
                 response.Message = "No Collections Found";
                 return response;
             }
-            var PagedCenter = await PagedList<Collection>.CreateAsync(collections, pagingParams.PageNumber, pagingParams.PageSize);
+            var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
+
+            var transformedCollections = collections.Select(collection => new Collection
+            {
+                Id = collection.Id,
+                ProductQuantityId = collection.ProductQuantityId,
+                ProductQuantity = new ProductQuantity
+                {
+                    ImageName = $"https://{hostValue}/Images/Product/{collection.ProductQuantity.ImageName}",
+                    AvailableSizeId = collection.ProductQuantity.AvailableSizeId,
+                    ColorId = collection.ProductQuantity.ColorId,
+                    AvailableSize = collection.ProductQuantity.AvailableSize,
+                    Id = collection.ProductQuantity.Id,
+                    IsActive = collection.ProductQuantity.IsActive,
+                    Price= collection.ProductQuantity.Price,
+                    ProductId = collection.ProductQuantity.ProductId,
+                    Quantity = collection.ProductQuantity.Quantity,
+                    Color=collection.ProductQuantity.Color,
+                    CartProducts=collection.ProductQuantity.CartProducts,
+                    Product = collection.ProductQuantity.Product,
+                },
+                Image1 = GetFullImagePath(hostValue, collection.Image1),
+                Image2 = GetFullImagePath(hostValue, collection.Image2),
+                Image3 = GetFullImagePath(hostValue, collection.Image3)
+            });
+
+            var PagedCenter = await PagedList<Collection>.CreateAsync(transformedCollections, pagingParams.PageNumber, pagingParams.PageSize);
             response.Data = new Pagination<Collection>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
             response.Success = true;
 //            response.Data = collections;
@@ -79,6 +107,12 @@ namespace Attract.Service.Service
             {
                 await image.CopyToAsync(fileStream);
             }
+        }
+        private static string GetFullImagePath(string hostValue, string imageName)
+        {
+            // Construct the full image path based on your application's logic
+            // For example, if images are stored in a specific directory:
+            return $"https://{hostValue}/Images/Collection/{imageName}";
         }
         #endregion
     }
