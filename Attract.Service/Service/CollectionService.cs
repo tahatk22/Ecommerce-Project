@@ -68,7 +68,7 @@ namespace Attract.Service.Service
                 ProductQuantityId = collection.ProductQuantityId,
                 ProductQuantity = new ProductQuantity
                 {
-                    ImageName = $"https://{hostValue}/Images/Product/{collection.ProductQuantity.ImageName}",
+                    ImageName = $"http://{hostValue}/Images/Product/{collection.ProductQuantity.ImageName}",
                     AvailableSizeId = collection.ProductQuantity.AvailableSizeId,
                     ColorId = collection.ProductQuantity.ColorId,
                     AvailableSize = collection.ProductQuantity.AvailableSize,
@@ -112,7 +112,7 @@ namespace Attract.Service.Service
         {
             // Construct the full image path based on your application's logic
             // For example, if images are stored in a specific directory:
-            return $"https://{hostValue}/Images/Collection/{imageName}";
+            return $"http://{hostValue}/Images/Collection/{imageName}";
         }
         #endregion
     }

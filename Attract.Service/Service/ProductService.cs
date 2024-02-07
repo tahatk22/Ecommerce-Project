@@ -103,7 +103,7 @@ namespace Attract.Service.Service
                 foreach (var product in result.SelectMany(product => product.ProductQuantities))
                 {
                     //Update each ImageDTO in the collection
-                    var imageUrl = $"https://{hostValue}/Images/Product/{product.ImageName}";
+                    var imageUrl = $"http://{hostValue}/Images/Product/{product.ImageName}";
                     product.Image = imageUrl;
                 }
                 response.Success = true;
@@ -167,7 +167,7 @@ namespace Attract.Service.Service
             foreach (var p in result.ProductQuantities)
             {
                 //Update each ImageDTO in the collection
-                var imageUrl = $"https://{hostValue}/Images/Product/{p.ImageName}";
+                var imageUrl = $"http://{hostValue}/Images/Product/{p.ImageName}";
                 p.Image = imageUrl;
             }
 

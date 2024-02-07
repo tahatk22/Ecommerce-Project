@@ -80,10 +80,10 @@ namespace Attract.Service.Service
             foreach (var cartProduct in items)
             {
                 //Update each ImageDTO in the collection
-                var imageUrl = $"https://{hostValue}/Images/Product/{cartProduct.Image}";
+                var imageUrl = $"http://{hostValue}/Images/Product/{cartProduct.Image}";
                 cartProduct.Image = imageUrl;
             }
-            //var imageUrl = $"https://{hostValue}/Images/Product/{items.}";
+            //var imageUrl = $"http://{hostValue}/Images/Product/{items.}";
             var result = new CartProductsDTO
             {
                 CartProducts = items
