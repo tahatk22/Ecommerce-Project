@@ -21,6 +21,8 @@ namespace Attract.Common.DTOs.Product
         public int DiscountOption { get; set; }
         public string DiscountOptionName { get; set; }
         public int Discount { get; set; }
+        public int ProductTypeOption { get; set; }
+        public string ProductTypeOptionName { get; set; }
         public int SubCategoryId { get; set; }
         public List<ProductQuantityDTO> ProductQuantities { get; set; }
     }

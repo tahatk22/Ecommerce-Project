@@ -19,6 +19,7 @@ namespace Attract.Common.DTOs.Product
         public bool IsArchived { get; set; }
         public DiscountOption? DiscountOption { get; set; }
         public decimal Discount { get; set; }
+        public ProductTypeOption ProductTypeOption { get; set; }
         public int? SubCategoryId { get; set; }
 
         public List<TagDTO> Tags { get; set; }

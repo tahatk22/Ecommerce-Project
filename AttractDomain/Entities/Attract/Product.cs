@@ -22,6 +22,7 @@ namespace Attract.Domain.Entities.Attract
         //public bool RecommendedProducts { get; set; } = false;
         //public bool FeaturedProducts { get; set; } = false;
         //public bool TrendingProducts { get; set; } = false;
+        public ProductTypeOption ProductTypeOption { get; set; }
         public int SaleCount { get; set; } = 0;
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }

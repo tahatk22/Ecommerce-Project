@@ -42,12 +42,13 @@ namespace Attract.Service.Service
             var product = await unitOfWork.GetRepository<Product>().FindAsync(id);
             if (product == null)
             {
-               
+
                 response.Success = false;
                 response.Message = $"There is no product with id {id}";
                 return response;
             }
             unitOfWork.GetRepository<Product>().Delete(product);
+            await DeleteProductQuantites(id);
             await unitOfWork.SaveChangesAsync();
             response.Success = true;
             response.Message = "Deleted Successfully!";
@@ -152,8 +153,8 @@ namespace Attract.Service.Service
         {
             var response = new BaseCommandResponse();
             var product = await unitOfWork.GetRepository<Product>().GetFirstOrDefaultAsync(predicate: s => s.Id == productId,
-            include: s => s.Include(p=> p.ProductQuantities).ThenInclude(t=>t.Color),
-            thenInclude:x=> x.Include(p => p.ProductQuantities).ThenInclude(t => t.AvailableSize));
+            include: s => s.Include(p => p.ProductQuantities).ThenInclude(t => t.Color),
+            thenInclude: x => x.Include(p => p.ProductQuantities).ThenInclude(t => t.AvailableSize));
 
             if (product == null)
             {
@@ -266,6 +267,18 @@ namespace Attract.Service.Service
             }
         }
 
+        private async Task DeleteProductQuantites(int productId)
+        {
+            var productQtys = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: x => x.ProductId == productId);
+            if (productQtys.Count > 0)
+            {
+                foreach (var product in productQtys)
+                {
+                    unitOfWork.GetRepository<Product>().Delete(product);
+                }
+            }
+        }
+
         private async Task EditProductQuantities(int productId, List<EditProductQty> productQuantities)
         {
             bool isImageUpdated = false;
@@ -306,7 +319,7 @@ namespace Attract.Service.Service
                 // Update the existing product with new data
                 mapper.Map(item, existingProduct);
                 existingProduct.ProductId = productId;
-                
+
                 if (item.Image != null)
                 {
                     isImageUpdated = true;
@@ -324,7 +337,7 @@ namespace Attract.Service.Service
                     }
                 }
                 // Mark the product entity as modified (if necessary)
-              
+
 
             }
         }
@@ -446,8 +459,8 @@ namespace Attract.Service.Service
             {
                 products = products.Where(s => s.Name.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
                 s.Description.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
-                 s.Brand.Contains(PagingParams.SearchString.ToLower())||
-                 s.SubCategory.SubCategoryName.ToLower().Contains(PagingParams.SearchString.ToLower())||
+                 s.Brand.Contains(PagingParams.SearchString.ToLower()) ||
+                 s.SubCategory.SubCategoryName.ToLower().Contains(PagingParams.SearchString.ToLower()) ||
                  s.SubCategory.Category.CategoryName.ToLower().Contains(PagingParams.SearchString.ToLower()));
 
             }
