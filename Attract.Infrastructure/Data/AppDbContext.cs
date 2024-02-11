@@ -32,6 +32,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<CartProduct> CartProducts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Collection> Collections { get; set; }
+        public DbSet<Country> Countries{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

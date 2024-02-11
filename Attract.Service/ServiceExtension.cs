@@ -24,6 +24,7 @@ namespace Attract.Service
             services.AddScoped<ICartProductService,CartProductService>();
             services.AddScoped<IContactService,ConatctService>();
             services.AddScoped<ICollectionService,CollectionService>();
+            services.AddScoped<ICountryService,CountryService>();
 
         }
         /*public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

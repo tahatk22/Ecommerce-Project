@@ -4,6 +4,7 @@ using Attract.Common.DTOs.Cart;
 using Attract.Common.DTOs.Category;
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Contact;
+using Attract.Common.DTOs.Country;
 using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Common.DTOs.Product;
 using Attract.Common.DTOs.SubCategory;
@@ -63,6 +64,10 @@ namespace Attract.Common.Mapping
          .ForMember(dest => dest.ModifyOn, opt => opt.MapFrom(src => DateTime.UtcNow))
          .ForMember(dest => dest.ImgNm, opt => opt.Ignore());
 
+            #region Country
+            CreateMap<Country, AddCountryDTO>().ReverseMap();
+            CreateMap<Country, CountryDTO>().ReverseMap();
+            #endregion
 
             #region Cart
 
