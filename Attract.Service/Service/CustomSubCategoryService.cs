@@ -89,7 +89,7 @@ namespace Attract.Service.Service
             {
                 //Get the host value
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-                item.imgUrl = $"https://{hostValue}/Images/customsubcategory/{item.imgNm}";
+                item.imgUrl = $"http://{hostValue}/Images/customsubcategory/{item.imgNm}";
             }
             response.Success = true;
             response.Data = result;
@@ -109,7 +109,7 @@ namespace Attract.Service.Service
             var result = mapper.Map<CustomSubCategoryDto>(subCategory);
             //Get the host value
             var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-            result.imgUrl = $"https://{hostValue}/Images/customsubcategory/{result.imgNm}";
+            result.imgUrl = $"http://{hostValue}/Images/customsubcategory/{result.imgNm}";
             response.Success = true;
             response.Data = result;
             return response;
