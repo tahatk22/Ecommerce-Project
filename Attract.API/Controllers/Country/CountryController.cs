@@ -25,7 +25,7 @@ namespace Attract.API.Controllers.Country
             return Ok(country);
         }
 
-        [HttpGet("GetAllCountries")]
+        [HttpPost("GetAllCountries")]
         public async Task<ActionResult<BaseCommandResponse>> GetAllCountries([FromQuery] PagingParams pagingParams)
         {
             var countries = await countryService.GetAllCountries(pagingParams);
