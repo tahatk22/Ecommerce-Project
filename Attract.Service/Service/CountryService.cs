@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Collection;
 using Attract.Common.DTOs.Country;
+using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Common.Helpers;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -20,11 +21,13 @@ namespace Attract.Service.Service
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IMapper mapper;
 
-        public CountryService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+        public CountryService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.httpContextAccessor = httpContextAccessor;
+            this.mapper = mapper;
         }
         public async Task<BaseCommandResponse> AddCountry(AddCountryDTO addCountryDTO)
         {
@@ -53,7 +56,7 @@ namespace Attract.Service.Service
             return response;
         }
 
-        public async Task<BaseCommandResponse> GetAllCountries(PagingParams pagingParams)
+        public async Task<BaseCommandResponse> GetAllCountries()
         {
             var response = new BaseCommandResponse();
             var countries = unitOfWork.GetRepository<Country>().GetAll();
@@ -64,11 +67,13 @@ namespace Attract.Service.Service
                 return response;
             }
             var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-            var transformedCountries = countries.Select(country => new Country { Name = country.Name,
-            CountryFlag = GetFullImagePath(hostValue, country.CountryFlag)
-            });
-            var PagedCenter = await PagedList<Country>.CreateAsync(transformedCountries, pagingParams.PageNumber, pagingParams.PageSize);
-            response.Data = new Pagination<Country>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
+            var result = mapper.Map<IList<CountryDto>>(countries);
+            foreach (var item in result)
+            {
+                //Get the host value
+                item.CountryFlag = $"http://{hostValue}/Images/customsubcategory/{item.CountryFlag}";
+            }
+            response.Data = result;
             response.Success = true;
             return response;
         }

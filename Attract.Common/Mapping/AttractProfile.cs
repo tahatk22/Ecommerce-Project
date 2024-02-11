@@ -67,7 +67,7 @@ namespace Attract.Common.Mapping
 
             #region Country
             CreateMap<Country, AddCountryDTO>().ReverseMap();
-            CreateMap<Country, CountryDTO>().ReverseMap();
+            CreateMap<Country, CountryDto>().ReverseMap();
             #endregion
 
             #region Cart

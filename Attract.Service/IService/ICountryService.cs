@@ -12,6 +12,6 @@ namespace Attract.Service.IService
     public interface ICountryService
     {
         Task<BaseCommandResponse> AddCountry(AddCountryDTO addCountryDTO);
-        Task<BaseCommandResponse> GetAllCountries(PagingParams pagingParams);
+        Task<BaseCommandResponse> GetAllCountries();
     }
 }

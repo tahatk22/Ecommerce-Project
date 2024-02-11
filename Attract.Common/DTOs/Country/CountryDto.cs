@@ -1,5 +1,4 @@
-﻿using Attract.Common.Validation;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Attract.Common.DTOs.Country
 {
-    public class AddCountryDTO
+    public class CountryDto
     {
         public string Name { get; set; }
 
         //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
-        public IFormFile CountryFlag { get; set; }
+        public string CountryFlag { get; set; }
     }
 }
