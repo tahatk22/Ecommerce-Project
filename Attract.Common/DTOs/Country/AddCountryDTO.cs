@@ -12,7 +12,7 @@ namespace Attract.Common.DTOs.Country
     {
         public string Name { get; set; }
 
-        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
+        //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
         public IFormFile CountryFlag { get; set; }
     }
 
