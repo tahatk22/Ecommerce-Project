@@ -33,6 +33,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Country> Countries{ get; set; }
+        public DbSet<Slider> Sliders{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

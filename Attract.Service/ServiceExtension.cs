@@ -25,6 +25,7 @@ namespace Attract.Service
             services.AddScoped<IContactService,ConatctService>();
             services.AddScoped<ICollectionService,CollectionService>();
             services.AddScoped<ICountryService,CountryService>();
+            services.AddScoped<ISliderService,SliderService>();
 
         }
         /*public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

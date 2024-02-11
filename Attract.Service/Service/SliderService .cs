@@ -2,6 +2,7 @@
 using Attract.Common.DTOs.Collection;
 using Attract.Common.DTOs.Country;
 using Attract.Common.DTOs.CustomSubCategory;
+using Attract.Common.DTOs.Slider;
 using Attract.Common.Helpers;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -17,22 +18,22 @@ using System.Threading.Tasks;
 
 namespace Attract.Service.Service
 {
-    public class CountryService : ICountryService
+    public class SliderService : ISliderService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
 
-        public CountryService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public SliderService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.httpContextAccessor = httpContextAccessor;
             this.mapper = mapper;
         }
-        public async Task<BaseCommandResponse> AddCountry(AddCountryDTO addCountryDTO)
+        public async Task<BaseCommandResponse> AddSlider(AddSliderDto addSliderDto)
         {
             var response = new BaseCommandResponse();
-            if (addCountryDTO == null)
+            if (addSliderDto == null)
             {
                 response.Success= false;
                 response.Message = "Please Add Vaild Image and Name";
@@ -43,35 +44,35 @@ namespace Attract.Service.Service
             {
                 Directory.CreateDirectory(productDirectoryPath);
             }
-            await SaveImageAsync(productDirectoryPath, addCountryDTO.CountryFlag);
-            var newCountry = new Country
+            await SaveImageAsync(productDirectoryPath, addSliderDto.Image);
+            var newSlider = new Slider
             {
-                Name = addCountryDTO.Name,
-                CountryFlag = Guid.NewGuid().ToString() + "_" + addCountryDTO.CountryFlag.FileName
+                Title = addSliderDto.Title,
+                Image = Guid.NewGuid().ToString() + "_" + addSliderDto.Image.FileName 
             };
-            await unitOfWork.GetRepository<Country>().InsertAsync(newCountry);
+            await unitOfWork.GetRepository<Slider>().InsertAsync(newSlider);
             await unitOfWork.SaveChangesAsync();
             response.Success = true;
-            response.Data = newCountry.Id;
+            response.Data = newSlider.Id;
             return response;
         }
 
-        public async Task<BaseCommandResponse> GetAllCountries()
+        public async Task<BaseCommandResponse> GetAllSlider()
         {
             var response = new BaseCommandResponse();
-            var countries = unitOfWork.GetRepository<Country>().GetAll();
-            if (countries == null)
+            var sliders = unitOfWork.GetRepository<Slider>().GetAll();
+            if (sliders == null)
             {
                 response.Success = true;
                 response.Message = "No Collections Found";
                 return response;
             }
             var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
-            var result = mapper.Map<IList<CountryDto>>(countries);
+            var result = mapper.Map<IList<SliderDto>>(sliders);
             foreach (var item in result)
             {
                 //Get the host value
-                item.CountryFlag = $"http://{hostValue}/Images/customsubcategory/{item.CountryFlag}";
+                item.Image = $"http://{hostValue}/Images/Slider/{item.Image}";
             }
             response.Data = result;
             response.Success = true;
@@ -82,7 +83,7 @@ namespace Attract.Service.Service
         #region Private methods
         private string GetProductDirectoryPath()
         {
-            return Path.Combine("wwwroot", "Images", "Countries");
+            return Path.Combine("wwwroot", "Images", "Slider");
         }
 
         private async Task SaveImageAsync(string directoryPath, IFormFile image)

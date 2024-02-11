@@ -7,6 +7,7 @@ using Attract.Common.DTOs.Contact;
 using Attract.Common.DTOs.Country;
 using Attract.Common.DTOs.CustomSubCategory;
 using Attract.Common.DTOs.Product;
+using Attract.Common.DTOs.Slider;
 using Attract.Common.DTOs.SubCategory;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.DTOs.User;
@@ -107,6 +108,9 @@ namespace Attract.Common.Mapping
             CreateMap<Tag, AddTagDTO>().ReverseMap();
             CreateMap<Tag, UpdateTagDTO>().ReverseMap();
 
+            #endregion
+            #region Slider
+            CreateMap<Slider, SliderDto>().ReverseMap();
             #endregion
 
         }
