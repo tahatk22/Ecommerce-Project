@@ -110,8 +110,7 @@ namespace Attract.Service.Service
         }
         private static string GetFullImagePath(string hostValue, string imageName)
         {
-            // Construct the full image path based on your application's logic
-            // For example, if images are stored in a specific directory:
+
             return $"http://{hostValue}/Images/Collection/{imageName}";
         }
         #endregion

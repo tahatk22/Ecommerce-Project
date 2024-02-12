@@ -97,18 +97,31 @@ namespace Attract.Service.Service
                     return response;
                 }
                 products = await filterProducts(productPagination, products);
-
-                var result = mapper.Map<IList<ProductDTO>>(products);
+                var transformedProduct = products.Select(product => new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    ProductQuantities = product.ProductQuantities,
+                    Brand = product.Brand,
+                    Discount= product.Discount,
+                    IsArchived = product.IsArchived,
+                    SubCategoryId= product.SubCategoryId,
+                    ProductTags = product.ProductTags,
+                    ProductTypeOption = product.ProductTypeOption,
+                    DiscountOption = product.DiscountOption,
+                    Description = product.Description,
+                    SaleCount = product.SaleCount                  
+                });
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
 
-                foreach (var product in result.SelectMany(product => product.ProductQuantities))
+                foreach (var product in transformedProduct.SelectMany(product => product.ProductQuantities))
                 {
                     //Update each ImageDTO in the collection
                     var imageUrl = $"http://{hostValue}/Images/Product/{product.ImageName}";
-                    product.Image = imageUrl;
+                    product.ImageName = imageUrl;
                 }
-                response.Success = true;
-                response.Data = new { Products = result, ProductCount = result.Count };
+                var PagedCenter = await PagedList<Product>.CreateAsync(transformedProduct, productPagination.PageNumber, productPagination.PageSize);
+                response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
                 return response;
             }
             catch (Exception ex)
