@@ -67,7 +67,7 @@ namespace Attract.API.Controllers.Cart
             }
             return Ok(await _cartProductService.GetAllCartProducts(CartId));
         }
-        [HttpPut("UpdCtgry")]
+        [HttpPut("UpdCart")]
         public async Task<ActionResult<BaseCommandResponse>> UpdateCartProducts(UpdateCartProductsDTO viewModel)
         {
             return Ok(await _cartProductService.UpdateCartProducts(viewModel));
