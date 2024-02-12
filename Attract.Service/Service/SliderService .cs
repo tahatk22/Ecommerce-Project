@@ -23,7 +23,7 @@ namespace Attract.Service.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
-
+        private bool sliderVal = false;
         public SliderService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
@@ -100,6 +100,16 @@ namespace Attract.Service.Service
             // Construct the full image path based on your application's logic
             // For example, if images are stored in a specific directory:
             return $"http://{hostValue}/Images/Countries/{imageName}";
+        }
+
+        public async Task<BaseCommandResponse> SetSliderVal(bool sliderValue)
+        {
+            var response = new BaseCommandResponse();
+            sliderVal = sliderValue;
+            response.Data = sliderVal;
+            response.Success = true;
+            return response;
+
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Slider;
 using Attract.Service.IService;
+using Attract.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Attract.API.Controllers.Slider
@@ -29,5 +30,13 @@ namespace Attract.API.Controllers.Slider
             var countries = await sliderService.GetAllSlider();
             return Ok(countries);
         }
+
+        [HttpPost("setSliderVal")]
+        public async Task<ActionResult<BaseCommandResponse>> SetSliderVal(bool value)
+        {
+            var slider = await sliderService.SetSliderVal(value);
+            return Ok(slider);
+        }
+
     }
 }
