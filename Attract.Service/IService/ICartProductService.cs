@@ -13,5 +13,6 @@ namespace Attract.Service.IService
         Task<BaseCommandResponse> AddCartProduct(AddCartProductsDTO viewModel);
         Task<BaseCommandResponse> GetAllCartProducts(int cartId);
         Task<BaseCommandResponse> UpdateCartProducts(UpdateCartProductsDTO viewModel);
+        Task<BaseCommandResponse> DeleteCartProduct(int id);
     }
 }

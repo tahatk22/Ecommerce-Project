@@ -10,6 +10,9 @@ namespace Attract.Common.DTOs.User
     public class UserDTO : LoginUserDTO
     {
         public string Gender { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public long PhoneNumber { get; set; }
     }
     public class RegisterDTO : LoginUserDTO
     {

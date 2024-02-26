@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Attract.Service.Service
 {
@@ -32,7 +33,7 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> AddCountry(AddCountryDTO addCountryDTO)
         {
             var response = new BaseCommandResponse();
-            if (addCountryDTO == null)
+            if (addCountryDTO.Name == null || addCountryDTO.CountryFlag == null)
             {
                 response.Success= false;
                 response.Message = "Please Add Vaild Image and Name";
@@ -94,11 +95,73 @@ namespace Attract.Service.Service
                 await image.CopyToAsync(fileStream);
             }
         }
+        private async Task DeleteImageAsync(string ImageName , string directoryPath)
+        {
+            var LastUnderScore = ImageName.LastIndexOf('_');
+            var RealImageName = ImageName.Substring(LastUnderScore + 1);
+            var ImageToBeDeleted = Path.Combine(directoryPath, RealImageName);
+            File.Delete(ImageToBeDeleted);
+        }
         private static string GetFullImagePath(string hostValue, string imageName)
         {
             // Construct the full image path based on your application's logic
             // For example, if images are stored in a specific directory:
             return $"http://{hostValue}/Images/Countries/{imageName}";
+        }
+
+        public async Task<BaseCommandResponse> UpdateCountry(UpdateCountryDto updateCountryDto)
+        {
+            var response = new BaseCommandResponse();
+            var result = await unitOfWork.GetRepository<Country>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == updateCountryDto.Id);
+            if (result == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            if (updateCountryDto.CountryFlag != null)
+            {
+                var productDirectoryPath = GetProductDirectoryPath();
+                if (!Directory.Exists(productDirectoryPath))
+                {
+                    Directory.CreateDirectory(productDirectoryPath);
+                }
+                await DeleteImageAsync(result.CountryFlag, productDirectoryPath);
+                await SaveImageAsync(productDirectoryPath, updateCountryDto.CountryFlag);
+                result.Name = updateCountryDto.Name;
+                result.CountryFlag = Guid.NewGuid().ToString() + "_" + updateCountryDto.CountryFlag.FileName;
+            }
+            else
+            {
+                var CurrentCountry = await unitOfWork.GetRepository<Country>().GetFirstOrDefaultAsync(predicate: x => x.Id == updateCountryDto.Id);
+                result.Name = updateCountryDto.Name; 
+                result.CountryFlag = CurrentCountry.CountryFlag;
+            }
+            unitOfWork.GetRepository<Country>().UpdateAsync(result);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = result.Id;
+            return response;
+        }
+
+        public async Task<BaseCommandResponse> DeleteCountry(int id)
+        {
+            var response = new BaseCommandResponse();
+            var result = await unitOfWork.GetRepository<Country>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (result == null) 
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            var directorypath = GetProductDirectoryPath();
+            await DeleteImageAsync(result.CountryFlag, directorypath);
+            unitOfWork.GetRepository<Country>().Delete(id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
         }
         #endregion
     }

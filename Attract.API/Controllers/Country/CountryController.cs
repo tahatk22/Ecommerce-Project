@@ -31,5 +31,17 @@ namespace Attract.API.Controllers.Country
             var countries = await countryService.GetAllCountries();
             return Ok(countries);
         }
+        [HttpPut("UpdateCountry")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateCountry(UpdateCountryDto updateCountryDto)
+        {
+            var UpdatedCountry = await countryService.UpdateCountry(updateCountryDto);
+            return Ok(UpdatedCountry);
+        }
+        [HttpDelete("DeleteCountry/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteCountry(int id)
+        {
+            var DeletedCountry = await countryService.DeleteCountry(id);
+            return Ok(DeletedCountry);
+        }
     }
 }

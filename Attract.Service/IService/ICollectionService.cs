@@ -12,6 +12,8 @@ namespace Attract.Service.IService
     public interface ICollectionService
     {
         Task<BaseCommandResponse> AddCollection(AddCollectionDTO addCollectionDTO);
+        Task<BaseCommandResponse> UpdateCollection(UpdateCollectionDTO updatedCollectionDTO);
         Task<BaseCommandResponse> GetAllCollections(PagingParams pagingParams);
+        Task<BaseCommandResponse> DeleteCollection(int id);
     }
 }

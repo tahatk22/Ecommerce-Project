@@ -13,5 +13,7 @@ namespace Attract.Service.IService
     {
         Task<BaseCommandResponse> AddCountry(AddCountryDTO addCountryDTO);
         Task<BaseCommandResponse> GetAllCountries();
+        Task<BaseCommandResponse> UpdateCountry(UpdateCountryDto updateCountryDto);
+        Task<BaseCommandResponse> DeleteCountry(int id);
     }
 }

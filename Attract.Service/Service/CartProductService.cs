@@ -55,6 +55,25 @@ namespace Attract.Service.Service
                 Data = cartProductToBeAdded.Id
             };
         }
+
+        public async Task<BaseCommandResponse> DeleteCartProduct(int id)
+        {
+            var response = new BaseCommandResponse();
+            var cartProduct = await _unitOfWork.GetRepository<CartProduct>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (cartProduct == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            _unitOfWork.GetRepository<CartProduct>().Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Message = "Deleted Successfully";
+            return response;
+        }
+
         public async Task<BaseCommandResponse> GetAllCartProducts(int cartId)
         {
 

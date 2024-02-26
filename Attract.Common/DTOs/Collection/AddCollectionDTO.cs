@@ -15,4 +15,8 @@ namespace Attract.Common.DTOs.Collection
         public IFormFile Image2 { get; set; }
         public IFormFile Image3 { get; set; }
     }
+    public class UpdateCollectionDTO : AddCollectionDTO
+    {
+        public int id { get; set; }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Attract.Common.BaseResponse;
 using Attract.Common.DTOs.Collection;
+using Attract.Common.DTOs.Country;
 using Attract.Common.Helpers;
 using Attract.Framework.UoW;
 using Attract.Service.IService;
@@ -93,11 +94,89 @@ namespace Attract.Service.Service
             return response;
         }
 
-
+        public async Task<BaseCommandResponse> UpdateCollection(UpdateCollectionDTO updatedCollectionDTO)
+        {
+            var response = new BaseCommandResponse();
+            var UpdatedCollection = await unitOfWork.GetRepository<Collection>()
+                                    .GetFirstOrDefaultAsync(predicate: x => x.Id == updatedCollectionDTO.id);
+            if (UpdatedCollection == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            if (updatedCollectionDTO.Image1 != null)
+            {
+                var productDirectoryPath = GetProductDirectoryPath();
+                if (!Directory.Exists(productDirectoryPath))
+                {
+                    Directory.CreateDirectory(productDirectoryPath);
+                }
+                await DeleteImageAsync(UpdatedCollection.Image1, productDirectoryPath);
+                await SaveImageAsync(productDirectoryPath, updatedCollectionDTO.Image1);
+                UpdatedCollection.Image1 = updatedCollectionDTO.Image1.FileName;
+            }
+            if (updatedCollectionDTO.Image2 != null)
+            {
+                var productDirectoryPath = GetProductDirectoryPath();
+                if (!Directory.Exists(productDirectoryPath))
+                {
+                    Directory.CreateDirectory(productDirectoryPath);
+                }
+                await DeleteImageAsync(UpdatedCollection.Image2, productDirectoryPath);
+                await SaveImageAsync(productDirectoryPath, updatedCollectionDTO.Image2);
+                UpdatedCollection.Image2 = updatedCollectionDTO.Image2.FileName;
+            }
+            if (updatedCollectionDTO.Image3 != null)
+            {
+                var productDirectoryPath = GetProductDirectoryPath();
+                if (!Directory.Exists(productDirectoryPath))
+                {
+                    Directory.CreateDirectory(productDirectoryPath);
+                }
+                await DeleteImageAsync(UpdatedCollection.Image3, productDirectoryPath);
+                await SaveImageAsync(productDirectoryPath, updatedCollectionDTO.Image3);
+                UpdatedCollection.Image3 = updatedCollectionDTO.Image3.FileName;
+            }
+            UpdatedCollection.ProductQuantityId = updatedCollectionDTO.ProductQuantityId;
+            UpdatedCollection.ModifyOn = DateTime.Now;
+            unitOfWork.GetRepository<Collection>().UpdateAsync(UpdatedCollection);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = UpdatedCollection.Id;
+            return response;
+        }
+        public async Task<BaseCommandResponse> DeleteCollection(int id)
+        {
+            var response = new BaseCommandResponse();
+            var Collection = await unitOfWork.GetRepository<Collection>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (Collection == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            var directorypath = GetProductDirectoryPath();
+            await DeleteImageAsync(Collection.Image1, directorypath);
+            await DeleteImageAsync(Collection.Image2, directorypath);
+            await DeleteImageAsync(Collection.Image3, directorypath);
+            unitOfWork.GetRepository<Collection>().Delete(id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
         #region private methods
         private string GetProductDirectoryPath()
         {
             return Path.Combine("wwwroot", "Images", "Collection");
+        }
+        private async Task DeleteImageAsync(string ImageName, string directoryPath)
+        {
+            var LastUnderScore = ImageName.LastIndexOf('_');
+            var RealImageName = ImageName.Substring(LastUnderScore + 1);
+            var ImageToBeDeleted = Path.Combine(directoryPath, RealImageName);
+            File.Delete(ImageToBeDeleted);
         }
         private async Task SaveImageAsync(string directoryPath, IFormFile image)
         {
@@ -113,6 +192,8 @@ namespace Attract.Service.Service
 
             return $"http://{hostValue}/Images/Collection/{imageName}";
         }
+
+
         #endregion
     }
 }

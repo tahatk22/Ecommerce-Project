@@ -15,4 +15,8 @@ namespace Attract.Common.DTOs.Country
         //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
         public IFormFile CountryFlag { get; set; }
     }
+    public class UpdateCountryDto : AddCountryDTO
+    {
+        public int Id { get; set; }
+    }
 }

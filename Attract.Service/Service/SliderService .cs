@@ -106,6 +106,12 @@ namespace Attract.Service.Service
         {
             var response = new BaseCommandResponse();
             sliderVal = sliderValue;
+            var AllSliders = await unitOfWork.GetRepository<Slider>().GetAllAsync();
+            foreach (var sliders in AllSliders)
+            {
+                sliders.SliderValue = sliderValue;
+                await unitOfWork.SaveChangesAsync();
+            }
             response.Data = sliderVal;
             response.Success = true;
             return response;

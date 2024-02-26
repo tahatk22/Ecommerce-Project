@@ -37,5 +37,10 @@ namespace Attract.API.Controllers.Category
         {
             return Ok(await catgeoryService.UpdCategory(categoryUpdDto));
         }
+        [HttpDelete("DeleteCategory/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteCategory(int id)
+        {
+            return Ok(await catgeoryService.DeleteCategory(id));
+        }
     }
 }

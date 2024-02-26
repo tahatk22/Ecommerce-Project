@@ -43,6 +43,22 @@ namespace Attract.Service.Service
             return response;
         }
 
+        public async Task<BaseCommandResponse> DeleteContact(int id)
+        {
+            var response = new BaseCommandResponse();
+            var Contact = await unitOfWork.GetRepository<Contact>().GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (Contact == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            unitOfWork.GetRepository<Contact>().Delete(Contact.Id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
+
         public async Task<BaseCommandResponse> GetAllConatcts()
         {
             var response = new BaseCommandResponse();

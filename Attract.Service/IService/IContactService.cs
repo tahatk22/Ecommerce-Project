@@ -14,5 +14,6 @@ namespace Attract.Service.IService
         Task<BaseCommandResponse> GetAllConatcts();
         Task<BaseCommandResponse> AddConatct(List<AddContactDTO> addContactDTOs);
         Task<BaseCommandResponse> UpdateContact(ContactDTO contactDTO);
+        Task<BaseCommandResponse> DeleteContact(int id);
     }
 }

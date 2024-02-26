@@ -253,6 +253,9 @@ namespace Attract.Service.Service
                 UserName=userDTO.Email,
                 Email = userDTO.Email,
                 Gender = userDTO.Gender,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                PhoneNumber = userDTO.PhoneNumber.ToString(),
             };
         }
         private async Task<JwtSecurityToken> GenerateToken(User user)

@@ -31,5 +31,15 @@ namespace Attract.API.Controllers.Collection
             var response = await collectionService.GetAllCollections(pagingParams);
             return Ok(response);
         }
+        [HttpPut("UpdateCollection")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateCollection(UpdateCollectionDTO updateCollectionDTO)
+        {
+            return Ok(await collectionService.UpdateCollection(updateCollectionDTO));
+        }
+        [HttpDelete("DeleteCollection/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteCollection (int id)
+        {
+            return Ok(await collectionService.DeleteCollection(id));
+        }
     }
 }

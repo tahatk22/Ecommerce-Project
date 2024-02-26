@@ -77,5 +77,10 @@ namespace Attract.API.Controllers.Cart
             var productQuantity = await _productService.GetProductQuantity(viewModel.ProductQuantityId);
             return productQuantity >= viewModel.Quantity;
         }
+        [HttpDelete("DeleteCartProduct/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteCartProduct(int id)
+        {
+            return Ok(await _cartProductService.DeleteCartProduct(id));
+        }
     }
 }

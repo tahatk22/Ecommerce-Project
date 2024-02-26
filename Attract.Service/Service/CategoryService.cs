@@ -80,5 +80,22 @@ namespace Attract.Service.Service
             response.Data = result;
             return response;
         }
+
+        public async Task<BaseCommandResponse> DeleteCategory(int id)
+        {
+            var response = new BaseCommandResponse();
+            var Category = await unitOfWork.GetRepository<Category>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (Category == null)
+            {
+                response.Success = false;
+                response.Message = "Not Found";
+                return response;
+            }
+            unitOfWork.GetRepository<Category>().Delete(Category.Id);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            return response;
+        }
     }
 }

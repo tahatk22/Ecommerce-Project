@@ -37,5 +37,11 @@ namespace Attract.API.Controllers
             var contacts = await contactService.UpdateContact(contactDTO);
             return Ok(contacts);
         }
+        [HttpDelete("DeleteContact/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteContact(int id)
+        {
+            var DeletedContact = await contactService.DeleteContact(id);
+            return Ok(DeletedContact);
+        }
     }
 }
