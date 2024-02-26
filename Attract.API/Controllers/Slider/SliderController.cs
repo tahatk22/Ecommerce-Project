@@ -37,6 +37,11 @@ namespace Attract.API.Controllers.Slider
             var slider = await sliderService.SetSliderVal(value);
             return Ok(slider);
         }
+        [HttpGet("GetCurrentSliderValue")]
+        public async Task<ActionResult<BaseCommandResponse>> GetCurrentSliderValue()
+        {
+            return Ok(await sliderService.GetCurrentSliderValue());
+        }
 
     }
 }

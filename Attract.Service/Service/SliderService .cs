@@ -52,6 +52,16 @@ namespace Attract.Service.Service
             };
             await unitOfWork.GetRepository<Slider>().InsertAsync(newSlider);
             await unitOfWork.SaveChangesAsync();
+            var sliderVal = await unitOfWork.GetRepository<SliderValue>().GetFirstOrDefaultAsync();
+            if (sliderVal == null)
+            {
+                var SliderValue = new SliderValue
+                {
+                    Value = true
+                };
+                await unitOfWork.GetRepository<SliderValue>().InsertAsync(SliderValue);
+                await unitOfWork.SaveChangesAsync();
+            }
             response.Success = true;
             response.Data = newSlider.Id;
             return response;
@@ -105,17 +115,35 @@ namespace Attract.Service.Service
         public async Task<BaseCommandResponse> SetSliderVal(bool sliderValue)
         {
             var response = new BaseCommandResponse();
-            sliderVal = sliderValue;
-            var AllSliders = await unitOfWork.GetRepository<Slider>().GetAllAsync();
-            foreach (var sliders in AllSliders)
+            var sliderVal = await unitOfWork.GetRepository<SliderValue>().GetFirstOrDefaultAsync();
+            if (sliderVal == null)
             {
-                sliders.SliderValue = sliderValue;
-                await unitOfWork.SaveChangesAsync();
+                response.Success = true;
+                response.Message = "No Slider Value Found";
+                return response;
             }
+            sliderVal.Value = sliderValue;
+            unitOfWork.GetRepository<SliderValue>().UpdateAsync(sliderVal);
+            await unitOfWork.SaveChangesAsync();
             response.Data = sliderVal;
             response.Success = true;
             return response;
 
+        }
+
+        public async Task<BaseCommandResponse> GetCurrentSliderValue()
+        {
+            var response = new BaseCommandResponse();
+            var sliderVal = await unitOfWork.GetRepository<SliderValue>().GetFirstOrDefaultAsync();
+            if (sliderVal == null)
+            {
+                response.Success = true;
+                response.Message = "No Slider Value Found";
+                return response;
+            }
+            response.Data = sliderVal;
+            response.Success = true;
+            return response;
         }
         #endregion
     }

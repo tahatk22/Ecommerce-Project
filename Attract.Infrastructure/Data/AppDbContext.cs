@@ -25,6 +25,7 @@ namespace Attract.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
         public DbSet<Bill> Bills{ get; set; }
+        public DbSet<SliderValue> SliderValue{ get; set; }
         //public DbSet<ProductAvailableSize> ProductAvailableSizes{ get; set; }
         //public DbSet<ProductColor> ProductColors{ get; set; }
         public DbSet<CustomSubCategory> customSubCategories{ get; set; }
