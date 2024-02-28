@@ -2,6 +2,7 @@
 using Attract.Common.DTOs.Color;
 using Attract.Common.DTOs.Tag;
 using Attract.Common.Validation;
+using AttractDomain.Entities.Attract;
 using AttractDomain.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -26,6 +27,7 @@ namespace Attract.Common.DTOs.Product
         
         public List<TagDTO> tags { get; set; }
         public List<ProductQty> productQuantities { get; set; }
+        public ProductImages productImages { get; set; }
     }
 
     public class ProductQty
@@ -37,5 +39,14 @@ namespace Attract.Common.DTOs.Product
 
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
         public IFormFile Image { get; set; }
+    }
+    public class ProductImages
+    {
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image1 { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image2 { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image3 { get; set; }
     }
 }

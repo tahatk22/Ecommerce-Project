@@ -19,8 +19,8 @@ namespace AttractDomain.Entities.Attract
         public string Name { get; set; }
         public int ProductId { get; set; }
         public virtual Product Product { get; set; }
-        public string ImageFileName { get; set; }
-        public string ImageColor { get; set; }
-        public string ImageColorHexa { get; set; }
+        public string ImageFileName1 { get; set; }
+        public string ImageFileName2 { get; set; }
+        public string ImageFileName3 { get; set; }
     }
 }

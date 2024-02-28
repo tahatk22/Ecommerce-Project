@@ -14,5 +14,6 @@ namespace AttractDomain.Enums
         Best_Sellers = 3,
         Offers = 4,
         Last_Deals = 5,
+        Gallery = 6
     }
 }

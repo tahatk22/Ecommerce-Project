@@ -64,8 +64,11 @@ namespace Attract.Service.Service
                 AddProductTags(newProduct.Id, viewModel.tags);
                 await CreateProductDirectoryAsync(newProduct);
 
-
                 await AddProductQuantities(newProduct.Id, viewModel);
+                if (viewModel.ProductTypeOption == AttractDomain.Enums.ProductTypeOption.Gallery)
+                {
+                    await AddProductImages(newProduct.Id, viewModel);
+                }
                 await unitOfWork.SaveChangesAsync();
 
                 response.Success = true;
@@ -88,7 +91,8 @@ namespace Attract.Service.Service
             {
                 products = unitOfWork.GetRepository<Product>().GetAll()
                     .Include(s => s.ProductQuantities).ThenInclude(x => x.Color)
-                   .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize);
+                   .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize)
+                   .Include(s => s.Images);
 
                 if (products == null || !products.Any())
                 {
@@ -107,6 +111,7 @@ namespace Attract.Service.Service
                     IsArchived = product.IsArchived,
                     SubCategoryId= product.SubCategoryId,
                     ProductTags = product.ProductTags,
+                    Images = product.Images,
                     ProductTypeOption = product.ProductTypeOption,
                     DiscountOption = product.DiscountOption,
                     Description = product.Description,
@@ -119,6 +124,16 @@ namespace Attract.Service.Service
                     //Update each ImageDTO in the collection
                     var imageUrl = $"http://{hostValue}/Images/Product/{product.ImageName}";
                     product.ImageName = imageUrl;
+                }
+                foreach (var product in transformedProduct.SelectMany(product => product.Images))
+                {
+                    //Update each ImageDTO in the collection
+                    var imageUrl1 = $"http://{hostValue}/Images/Product/{product.ImageFileName1}";
+                    product.ImageFileName1 = imageUrl1;
+                    var imageUrl2 = $"http://{hostValue}/Images/Product/{product.ImageFileName2}";
+                    product.ImageFileName2 = imageUrl2;
+                    var imageUrl3 = $"http://{hostValue}/Images/Product/{product.ImageFileName3}";
+                    product.ImageFileName3 = imageUrl3;
                 }
                 var PagedCenter = await PagedList<Product>.CreateAsync(transformedProduct, productPagination.PageNumber, productPagination.PageSize);
                 response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
@@ -279,7 +294,22 @@ namespace Attract.Service.Service
                 await unitOfWork.GetRepository<ProductQuantity>().InsertAsync(productQuantity);
             }
         }
-
+        private async Task AddProductImages(int productId, AddProductDTO product)
+        {
+            var productDirectoryPath = GetProductDirectoryPathForGallery();
+            var imagePath = Path.Combine(productDirectoryPath, product.productImages.Image1.FileName);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image1);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image2);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image3);
+            var productImage = new ProductImage
+            {
+                ProductId = productId,
+                ImageFileName1 = product.productImages.Image1.FileName,
+                ImageFileName2 = product.productImages.Image2.FileName,
+                ImageFileName3 = product.productImages.Image3.FileName
+            };
+            await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
+        }
         private async Task DeleteProductQuantites(int productId)
         {
             var productQtys = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: x => x.ProductId == productId);
@@ -384,7 +414,10 @@ namespace Attract.Service.Service
         {
             return Path.Combine("wwwroot", "Images", "Product");
         }
-
+        private string GetProductDirectoryPathForGallery()
+        {
+            return Path.Combine("wwwroot", "Images", "Gallery");
+        }
         private string SanitizeDirectoryName(string input)
         {
             return input.Replace(" ", "_");
@@ -479,7 +512,15 @@ namespace Attract.Service.Service
             }
             return products;
         }
+        private async Task SaveImageAsync(string directoryPath, IFormFile image)
+        {
 
+            var imagePath = Path.Combine(directoryPath, image.FileName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await image.CopyToAsync(fileStream);
+            }
+        }
 
         #endregion
     }

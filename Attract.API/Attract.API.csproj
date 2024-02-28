@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Images\customsubcategory\" />
     <Folder Include="wwwroot\Images\Countries\" />
+    <Folder Include="wwwroot\Images\Gallery\" />
     <Folder Include="wwwroot\Images\Product\" />
     <Folder Include="wwwroot\Images\Slider\" />
   </ItemGroup>

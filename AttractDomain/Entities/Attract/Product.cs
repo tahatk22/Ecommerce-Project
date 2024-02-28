@@ -27,11 +27,11 @@ namespace Attract.Domain.Entities.Attract
         public int? SubCategoryId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         //public ICollection<OrderDetail> OrderDetails { get; set; }
-        //public ICollection<ProductImage> Images { get; set; }
         //public ICollection<ProductAvailableSize> ProductAvailableSizes { get; set; }
         //public ICollection<ProductColor> ProductColors { get; set; }
         public ICollection<ProductQuantity> ProductQuantities { get; set; }
         public ICollection<ProductTag> ProductTags { get; set; }
+        public ICollection<ProductImage>? Images { get; set; }
 
     }
 }

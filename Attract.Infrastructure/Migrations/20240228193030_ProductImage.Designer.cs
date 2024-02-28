@@ -4,6 +4,7 @@ using Attract.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attract.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240228193030_ProductImage")]
+    partial class ProductImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1093,7 +1096,7 @@ namespace Attract.Infrastructure.Migrations
             modelBuilder.Entity("AttractDomain.Entities.Attract.ProductImage", b =>
                 {
                     b.HasOne("Attract.Domain.Entities.Attract.Product", "Product")
-                        .WithMany("Images")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1191,8 +1194,6 @@ namespace Attract.Infrastructure.Migrations
 
             modelBuilder.Entity("Attract.Domain.Entities.Attract.Product", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("ProductQuantities");
 
                     b.Navigation("ProductTags");
