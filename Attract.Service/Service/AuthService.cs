@@ -56,6 +56,7 @@ namespace Attract.Service.Service
             }
             var user = CreateAdminUser(request);
             var adminRoleExists = await EnsureAdminRoleExists();
+            var userRoleExists = await EnsureUserRoleExists();
             try
             {
                 var result = await userManager.CreateAsync(user, request.Password);
@@ -65,6 +66,19 @@ namespace Attract.Service.Service
                     {
                         var addToRoleResult = await userManager.AddToRoleAsync(user, "Admin");
                         if(!addToRoleResult.Succeeded)
+                        {
+                            response.Success = false;
+                            response.Message = $"Failed to assign admin role to the user {user.UserName}";
+                            return response;
+                        }
+                        response.Success = true;
+                        response.Message = "Registerd Successfully!";
+                        return response;
+                    }
+                    else
+                    {
+                        var addToRoleResult = await userManager.AddToRoleAsync(user, "User");
+                        if (!addToRoleResult.Succeeded)
                         {
                             response.Success = false;
                             response.Message = $"Failed to assign admin role to the user {user.UserName}";
@@ -103,16 +117,16 @@ namespace Attract.Service.Service
                 return response;
             }
 
-            bool isAdminOrSuperAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower()) 
-                || await userManager.IsInRoleAsync(user, "SuperAdmin".ToLower());
+            //bool isAdminOrSuperAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower()) 
+            //    || await userManager.IsInRoleAsync(user, "SuperAdmin".ToLower());
             var userRole=await userManager.GetRolesAsync(user);
-            if (!isAdminOrSuperAdmin)
-            {
-                response.Success = false;
-                response.Message = "Admin Login Required!";
-                return response;
-            }
-
+            //if (!isAdminOrSuperAdmin)
+            //{
+            //    response.Success = false;
+            //    response.Message = "Admin Login Required!";
+            //    return response;
+            //}
+            bool userRoleName = userRole.FirstOrDefault() == "Admin" ? true : false;
             var result = await signInManager.PasswordSignInAsync(user.UserName, loginUserDTO.Password, false, lockoutOnFailure: false);
 
             if (result.IsNotAllowed || !result.Succeeded)
@@ -129,8 +143,8 @@ namespace Attract.Service.Service
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
                 UserName = user.UserName,
-                Role = userRole  
-
+                Role = userRole,  
+                isAdmin = userRoleName
             };
 
             response.Success = true;
@@ -234,6 +248,18 @@ namespace Attract.Service.Service
 
             return true;
         }
+        private async Task<bool> EnsureUserRoleExists()
+        {
+            var userRoleExists = await roleManager.RoleExistsAsync("User".ToLower());
+
+            if (!userRoleExists)
+            {
+                var createRoleResult = await roleManager.CreateAsync(new IdentityRole("User"));
+                return createRoleResult.Succeeded;
+            }
+
+            return true;
+        }
         private async Task<IdentityResult> AddUserToAdminRole(User user)
         {
             return await userManager.AddToRoleAsync(user, "Admin");
@@ -244,6 +270,9 @@ namespace Attract.Service.Service
             {
                 UserName = userDTO.Email,
                 Email = userDTO.Email,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                PhoneNumber = userDTO.PhoneNumber.ToString()
             };
         }
         private User CreateUser(UserDTO userDTO)

@@ -14,7 +14,7 @@ namespace Attract.Common.DTOs.User
         public string LastName { get; set; }
         public long PhoneNumber { get; set; }
     }
-    public class RegisterDTO : LoginUserDTO
+    public class RegisterDTO : UserDTO
     {
         public bool IsAdmin { get; set; }
     }
