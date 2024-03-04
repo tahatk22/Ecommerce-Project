@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AttractDomain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Attract.Common.Helpers
     {
         private const int MaxPageSize = 50;
         public int PageNumber { get; set; } = 1;
+        public int? Color { get; set; }
+        public ProductTypeOption? ProductOption { get; set; }
         public string DateFrom { get; set; }
         public string DateTo { get; set; }
         private int pageSize = 1;

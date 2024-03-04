@@ -89,10 +89,19 @@ namespace Attract.Service.Service
             IQueryable<Product> products;
             try
             {
-                products = unitOfWork.GetRepository<Product>().GetAll()
+                    products = unitOfWork.GetRepository<Product>().GetAll()
                     .Include(s => s.ProductQuantities).ThenInclude(x => x.Color)
                    .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize)
                    .Include(s => s.Images);
+
+                if (productPagination.ProductOption != null)
+                {
+                    products = products.Where(x => x.ProductTypeOption == productPagination.ProductOption);
+                }
+                if (productPagination.Color != null)
+                {
+                    products = products.Where(x => x.ProductQuantities.Any(x => x.Color.Id == productPagination.Color));
+                }
 
                 if (products == null || !products.Any())
                 {
