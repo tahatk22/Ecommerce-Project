@@ -72,7 +72,9 @@ namespace Attract.Service.Service
             foreach (var item in result)
             {
                 //Get the host value
-                item.CountryFlag = $"http://{hostValue}/Images/customsubcategory/{item.CountryFlag}";
+                var LastUnderScore = item.CountryFlag.LastIndexOf('_');
+                var RealImageName = item.CountryFlag.Substring(LastUnderScore + 1);
+                item.CountryFlag = $"http://{hostValue}/Images/customsubcategory/{RealImageName}";
             }
             response.Data = result;
             response.Success = true;
@@ -88,7 +90,6 @@ namespace Attract.Service.Service
 
         private async Task SaveImageAsync(string directoryPath, IFormFile image)
         {
-
             var imagePath = Path.Combine(directoryPath, image.FileName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {

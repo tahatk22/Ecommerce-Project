@@ -15,5 +15,7 @@ namespace Attract.Service.IService
         Task<BaseCommandResponse> GetAllSlider();
         Task<BaseCommandResponse> SetSliderVal(bool sliderValue);
         Task<BaseCommandResponse> GetCurrentSliderValue();
+        Task<BaseCommandResponse> UpdateSlider(UpdateSliderDto updateSliderDto);
+        Task<BaseCommandResponse> DeleteSlider(int id);
     }
 }

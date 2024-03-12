@@ -15,4 +15,8 @@ namespace Attract.Common.DTOs.Slider
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]
         public IFormFile Image { get; set; }
     }
+    public class UpdateSliderDto : AddSliderDto
+    {
+        public int Id { get; set; }
+    }
 }

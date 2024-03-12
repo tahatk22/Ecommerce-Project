@@ -82,7 +82,9 @@ namespace Attract.Service.Service
             foreach (var item in result)
             {
                 //Get the host value
-                item.Image = $"http://{hostValue}/Images/Slider/{item.Image}";
+                var LastUnderScore = item.Image.LastIndexOf('_');
+                var RealImageName = item.Image.Substring(LastUnderScore + 1);
+                item.Image = $"http://{hostValue}/Images/Slider/{RealImageName}";
             }
             response.Data = result;
             response.Success = true;
@@ -98,7 +100,6 @@ namespace Attract.Service.Service
 
         private async Task SaveImageAsync(string directoryPath, IFormFile image)
         {
-
             var imagePath = Path.Combine(directoryPath, image.FileName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
@@ -142,6 +143,67 @@ namespace Attract.Service.Service
                 return response;
             }
             response.Data = sliderVal;
+            response.Success = true;
+            return response;
+        }
+        private async Task DeleteImageAsync(string ImageName, string directoryPath)
+        {
+            var LastUnderScore = ImageName.LastIndexOf('_');
+            var RealImageName = ImageName.Substring(LastUnderScore + 1);
+            var ImageToBeDeleted = Path.Combine(directoryPath, RealImageName);
+            File.Delete(ImageToBeDeleted);
+        }
+        public async Task<BaseCommandResponse> UpdateSlider(UpdateSliderDto updateSliderDto)
+        {
+            var response = new BaseCommandResponse();
+            var result = await unitOfWork.GetRepository<Slider>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == updateSliderDto.Id);
+            if (result == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            if (updateSliderDto.Image != null)
+            {
+                var productDirectoryPath = GetProductDirectoryPath();
+                if (!Directory.Exists(productDirectoryPath))
+                {
+                    Directory.CreateDirectory(productDirectoryPath);
+                }
+                await DeleteImageAsync(result.Image, productDirectoryPath);
+                await SaveImageAsync(productDirectoryPath, updateSliderDto.Image);
+                result.Title = updateSliderDto.Title;
+                result.Image = Guid.NewGuid().ToString() + "_" + updateSliderDto.Image.FileName;
+            }
+            else
+            {
+                var CurrentSlider = await unitOfWork.GetRepository<Slider>().GetFirstOrDefaultAsync(predicate: x => x.Id == updateSliderDto.Id);
+                result.Title = updateSliderDto.Title;
+                result.Image = CurrentSlider.Image;
+            }
+            unitOfWork.GetRepository<Slider>().UpdateAsync(result);
+            await unitOfWork.SaveChangesAsync();
+            response.Success = true;
+            response.Data = result.Id;
+            return response;
+        }
+
+        public async Task<BaseCommandResponse> DeleteSlider(int id)
+        {
+            var response = new BaseCommandResponse();
+            var result = await unitOfWork.GetRepository<Slider>()
+                .GetFirstOrDefaultAsync(predicate: x => x.Id == id);
+            if (result == null)
+            {
+                response.Success = false;
+                response.Message = "Contact not found.";
+                return response;
+            }
+            var directorypath = GetProductDirectoryPath();
+            await DeleteImageAsync(result.Image, directorypath);
+            unitOfWork.GetRepository<Slider>().Delete(id);
+            await unitOfWork.SaveChangesAsync();
             response.Success = true;
             return response;
         }

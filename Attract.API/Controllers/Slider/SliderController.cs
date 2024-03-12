@@ -42,6 +42,17 @@ namespace Attract.API.Controllers.Slider
         {
             return Ok(await sliderService.GetCurrentSliderValue());
         }
-
+        [HttpPut("UpdateSlider")]
+        public async Task<ActionResult<BaseCommandResponse>> UpdateSlider(UpdateSliderDto updateSliderDto)
+        {
+            var UpdatedSlider = await sliderService.UpdateSlider(updateSliderDto);
+            return Ok(UpdatedSlider);
+        }
+        [HttpDelete("DeleteSlider/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DeleteSlider(int id)
+        {
+            var DeletedSlider = await sliderService.DeleteSlider(id);
+            return Ok(DeletedSlider);
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace Attract.Service.Service
                 return response;
             }
             unitOfWork.GetRepository<Product>().Delete(product);
-            await DeleteProductQuantites(id);
+            //await DeleteProductQuantites(id);
             await unitOfWork.SaveChangesAsync();
             response.Success = true;
             response.Message = "Deleted Successfully!";

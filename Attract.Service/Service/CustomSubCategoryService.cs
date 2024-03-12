@@ -88,8 +88,11 @@ namespace Attract.Service.Service
             foreach (var item in result)
             {
                 //Get the host value
+                var LastUnderScore = item.imgNm.LastIndexOf('_');
+                var RealImageName = item.imgNm.Substring(LastUnderScore + 1);
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
                 item.imgUrl = $"http://{hostValue}/Images/customsubcategory/{item.imgNm}";
+                item.imgUrl = RealImageName;
             }
             response.Success = true;
             response.Data = result;

@@ -9,6 +9,7 @@ namespace Attract.Common.DTOs.Country
 {
     public class CountryDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
 
         //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]

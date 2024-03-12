@@ -32,10 +32,10 @@ namespace Attract.API.Controllers.CustomSubCategory
         {
             return Ok(await customSubCategoryService.UpdCustomSubCategory(customSubCategoryUpdDto));
         }
-        [HttpDelete("DelCustomSubCtgry")]
-        public async Task<ActionResult<BaseCommandResponse>> DelCustomSubCtgry(int customSubCtgryId)
+        [HttpDelete("DelCustomSubCtgry/{id}")]
+        public async Task<ActionResult<BaseCommandResponse>> DelCustomSubCtgry(int id)
         {
-            return Ok(await customSubCategoryService.DeleteCustomSubCategory(customSubCtgryId));
+            return Ok(await customSubCategoryService.DeleteCustomSubCategory(id));
         }
         [HttpGet("GetCustomSubCategory/{customSubCtgryId}")]
         public async Task<ActionResult<BaseCommandResponse>> GetCustomSubCategory(int customSubCtgryId)

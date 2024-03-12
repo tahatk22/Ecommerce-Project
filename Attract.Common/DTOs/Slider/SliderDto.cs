@@ -8,6 +8,7 @@ namespace Attract.Common.DTOs.Slider
 {
     public class SliderDto
     {
+        public int Id { get; set; }
         public string Title { get; set; }
 
         //[AllowedExtensions(new[] { ".jpg", ".jpeg", ".png", ".gif" })]

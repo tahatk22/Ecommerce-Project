@@ -116,16 +116,13 @@ namespace Attract.Service.Service
                 response.Message = "User Not Found!";
                 return response;
             }
-
-            //bool isAdminOrSuperAdmin = await userManager.IsInRoleAsync(user, "Admin".ToLower()) 
-            //    || await userManager.IsInRoleAsync(user, "SuperAdmin".ToLower());
             var userRole=await userManager.GetRolesAsync(user);
-            //if (!isAdminOrSuperAdmin)
-            //{
-            //    response.Success = false;
-            //    response.Message = "Admin Login Required!";
-            //    return response;
-            //}
+            if (userRole.Count == 0)
+            {
+                response.Success = false;
+                response.Message = "User Not Found!";
+                return response;
+            }
             bool userRoleName = userRole.FirstOrDefault() == "Admin" ? true : false;
             var result = await signInManager.PasswordSignInAsync(user.UserName, loginUserDTO.Password, false, lockoutOnFailure: false);
 
@@ -143,8 +140,12 @@ namespace Attract.Service.Service
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
                 UserName = user.UserName,
-                Role = userRole,  
-                isAdmin = userRoleName
+                Role = userRole,
+                isAdmin = userRoleName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Gender = user.Gender,
+                Phone = user.PhoneNumber,
             };
 
             response.Success = true;
@@ -156,6 +157,13 @@ namespace Attract.Service.Service
             var user = await userManager.FindByEmailAsync(userDTO.Email);
             var response = new BaseCommandResponse();
             if (user == null)
+            {
+                response.Success = false;
+                response.Message = "User Not Found!";
+                return response;
+            }
+            var userRole = await userManager.GetRolesAsync(user);
+            if (userRole.Count != 0)
             {
                 response.Success = false;
                 response.Message = "User Not Found!";
@@ -175,7 +183,11 @@ namespace Attract.Service.Service
                 Id = user.Id.ToString(),
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Gender = user.Gender,
+                Phone = user.PhoneNumber,
             };
             response.Success = true;
             response.Data = responseAuth;
