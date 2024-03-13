@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using OpenQA.Selenium;
+using System.Linq;
 
 namespace Attract.Service.Service
 {
@@ -47,8 +48,9 @@ namespace Attract.Service.Service
                 response.Message = $"There is no product with id {id}";
                 return response;
             }
+            await DeleteProductTags(id);
+            await DeleteProductQuantites(id);
             unitOfWork.GetRepository<Product>().Delete(product);
-            //await DeleteProductQuantites(id);
             await unitOfWork.SaveChangesAsync();
             response.Success = true;
             response.Message = "Deleted Successfully!";
@@ -89,10 +91,12 @@ namespace Attract.Service.Service
             IQueryable<Product> products;
             try
             {
-                    products = unitOfWork.GetRepository<Product>().GetAll()
-                    .Include(s => s.ProductQuantities).ThenInclude(x => x.Color)
-                   .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize)
-                   .Include(s => s.Images);
+                products = unitOfWork.GetRepository<Product>().GetAll()
+                .Include(s => s.ProductQuantities).ThenInclude(x => x.Color)
+               .Include(s => s.ProductQuantities).ThenInclude(x => x.AvailableSize)
+               .Include(s => s.Images)
+               .Include(s => s.SubCategory).ThenInclude(x => x.Category);
+
 
                 if (productPagination.ProductOption != null)
                 {
@@ -102,6 +106,14 @@ namespace Attract.Service.Service
                 {
                     products = products.Where(x => x.ProductQuantities.Any(x => x.Color.Id == productPagination.Color));
                 }
+                if (productPagination.SubCategory != null)
+                {
+                    products = products.Where(x => x.SubCategoryId == productPagination.SubCategory);
+                }
+                if (productPagination.Category != null)
+                {
+                    products = products.Where(x => x.SubCategory.Category.Id == productPagination.Category);
+                }
 
                 if (products == null || !products.Any())
                 {
@@ -110,31 +122,36 @@ namespace Attract.Service.Service
                     return response;
                 }
                 products = await filterProducts(productPagination, products);
-                var transformedProduct = products.Select(product => new Product
+                var transformedProduct = products.Select(product => new TransProduct
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    ProductQuantities = product.ProductQuantities,
-                    Brand = product.Brand,
-                    Discount= product.Discount,
-                    IsArchived = product.IsArchived,
-                    SubCategoryId= product.SubCategoryId,
-                    ProductTags = product.ProductTags,
-                    Images = product.Images,
-                    ProductTypeOption = product.ProductTypeOption,
-                    DiscountOption = product.DiscountOption,
-                    Description = product.Description,
-                    SaleCount = product.SaleCount                  
+                    Products = new Product
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        ProductQuantities = product.ProductQuantities,
+                        Brand = product.Brand,
+                        Discount = product.Discount,
+                        IsArchived = product.IsArchived,
+                        SubCategoryId = product.SubCategoryId,
+                        SubCategory = product.SubCategory,
+                        ProductTags = product.ProductTags,
+                        Images = product.Images,
+                        ProductTypeOption = product.ProductTypeOption,
+                        DiscountOption = product.DiscountOption,
+                        Description = product.Description,
+                        SaleCount = product.SaleCount
+                    },
+                    Category = product.SubCategory.Category.CategoryName
                 });
                 var hostValue = httpContextAccessor.HttpContext.Request.Host.Value;
 
-                foreach (var product in transformedProduct.SelectMany(product => product.ProductQuantities))
+                foreach (var product in transformedProduct.SelectMany(product => product.Products.ProductQuantities))
                 {
                     //Update each ImageDTO in the collection
                     var imageUrl = $"http://{hostValue}/Images/Product/{product.ImageName}";
                     product.ImageName = imageUrl;
                 }
-                foreach (var product in transformedProduct.SelectMany(product => product.Images))
+                foreach (var product in transformedProduct.SelectMany(product => product.Products.Images))
                 {
                     //Update each ImageDTO in the collection
                     var imageUrl1 = $"http://{hostValue}/Images/Product/{product.ImageFileName1}";
@@ -144,8 +161,8 @@ namespace Attract.Service.Service
                     var imageUrl3 = $"http://{hostValue}/Images/Product/{product.ImageFileName3}";
                     product.ImageFileName3 = imageUrl3;
                 }
-                var PagedCenter = await PagedList<Product>.CreateAsync(transformedProduct, productPagination.PageNumber, productPagination.PageSize);
-                response.Data = new Pagination<Product>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
+                var PagedCenter = await PagedList<TransProduct>.CreateAsync(transformedProduct, productPagination.PageNumber, productPagination.PageSize);
+                response.Data = new Pagination<TransProduct>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
                 return response;
             }
             catch (Exception ex)
@@ -326,7 +343,18 @@ namespace Attract.Service.Service
             {
                 foreach (var product in productQtys)
                 {
-                    unitOfWork.GetRepository<Product>().Delete(product);
+                    unitOfWork.GetRepository<ProductQuantity>().Delete(product);
+                }
+            }
+        }
+        private async Task DeleteProductTags(int productId)
+        {
+            var productTgas = await unitOfWork.GetRepository<ProductTag>().GetAllAsync(predicate: x => x.ProductId == productId);
+            if (productTgas.Count > 0)
+            {
+                foreach (var product in productTgas)
+                {
+                    unitOfWork.GetRepository<ProductTag>().Delete(product);
                 }
             }
         }
@@ -334,7 +362,7 @@ namespace Attract.Service.Service
         private async Task EditProductQuantities(int productId, List<EditProductQty> productQuantities)
         {
             bool isImageUpdated = false;
-            var existingQuantities = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: s => s.Id == productId);
+            var existingQuantities = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: s => s.ProductId == productId);
 
             foreach (var item in existingQuantities)
             {
@@ -396,7 +424,7 @@ namespace Attract.Service.Service
 
         private async Task EditProductTags(int productId, List<TagDTO> productTags)
         {
-            var existingTags = await unitOfWork.GetRepository<ProductTag>().GetAllAsync(predicate: s => s.Id == productId);
+            var existingTags = await unitOfWork.GetRepository<ProductTag>().GetAllAsync(predicate: s => s.ProductId == productId);
             var incomingTagsId = productTags.Select(x => x.Id);
             foreach (var item in existingTags)
             {

@@ -74,7 +74,7 @@ namespace Attract.Service.Service
                 //Get the host value
                 var LastUnderScore = item.CountryFlag.LastIndexOf('_');
                 var RealImageName = item.CountryFlag.Substring(LastUnderScore + 1);
-                item.CountryFlag = $"http://{hostValue}/Images/customsubcategory/{RealImageName}";
+                item.CountryFlag = $"http://{hostValue}/Images/Countries/{RealImageName}";
             }
             response.Data = result;
             response.Success = true;
