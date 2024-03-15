@@ -350,9 +350,32 @@ namespace Attract.Service.Service
         }
         private async Task DeleteProductQuantites(int productId)
         {
+            var CartPs = new List<CartProduct>();
             var productQtys = await unitOfWork.GetRepository<ProductQuantity>().GetAllAsync(predicate: x => x.ProductId == productId);
             if (productQtys.Count > 0)
             {
+                foreach (var productQty in productQtys)
+                {
+                    var CProducts = await unitOfWork.GetRepository<CartProduct>()
+                        .GetAllAsync(predicate: x => x.ProductQuantityId == productQty.Id);
+                    if (CProducts.Count > 0)
+                    {
+                        CartPs.AddRange(CProducts);
+                    }
+                }
+                if (CartPs.Count > 0)
+                {
+                    foreach (var item in CartPs)
+                    {
+                        var CP = await unitOfWork.GetRepository<CartProduct>().GetAllAsync(predicate: x => x.CartId == item.CartId && x.Id != item.Id);
+                        if (CP.Count == 0)
+                        {
+                            var Carts = await unitOfWork.GetRepository<Cart>().GetFirstOrDefaultAsync(predicate: x => x.Id == item.CartId);
+                            unitOfWork.GetRepository<Cart>().Delete(Carts);
+                        }
+                        unitOfWork.GetRepository<CartProduct>().Delete(item);
+                    }
+                }
                 foreach (var product in productQtys)
                 {
                     unitOfWork.GetRepository<ProductQuantity>().Delete(product);
