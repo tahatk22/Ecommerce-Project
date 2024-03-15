@@ -154,12 +154,18 @@ namespace Attract.Service.Service
                 foreach (var product in transformedProduct.SelectMany(product => product.Products.Images))
                 {
                     //Update each ImageDTO in the collection
-                    var imageUrl1 = $"http://{hostValue}/Images/Product/{product.ImageFileName1}";
+                    var imageUrl1 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName1}";
                     product.ImageFileName1 = imageUrl1;
-                    var imageUrl2 = $"http://{hostValue}/Images/Product/{product.ImageFileName2}";
+                    var imageUrl2 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName2}";
                     product.ImageFileName2 = imageUrl2;
-                    var imageUrl3 = $"http://{hostValue}/Images/Product/{product.ImageFileName3}";
+                    var imageUrl3 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName3}";
                     product.ImageFileName3 = imageUrl3;
+                    var imageUrl4 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName4}";
+                    product.ImageFileName4 = imageUrl4;
+                    var imageUrl5 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName5}";
+                    product.ImageFileName5 = imageUrl5;
+                    var imageUrl6 = $"http://{hostValue}/Images/Gallery/{product.ImageFileName6}";
+                    product.ImageFileName6 = imageUrl6;
                 }
                 var PagedCenter = await PagedList<TransProduct>.CreateAsync(transformedProduct, productPagination.PageNumber, productPagination.PageSize);
                 response.Data = new Pagination<TransProduct>(PagedCenter.CurrentPage, PagedCenter.PageSize, PagedCenter.TotalCount, PagedCenter);
@@ -327,12 +333,18 @@ namespace Attract.Service.Service
             SaveImageAsync(productDirectoryPath, product.productImages.Image1);
             SaveImageAsync(productDirectoryPath, product.productImages.Image2);
             SaveImageAsync(productDirectoryPath, product.productImages.Image3);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image4);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image5);
+            SaveImageAsync(productDirectoryPath, product.productImages.Image6);
             var productImage = new ProductImage
             {
                 ProductId = productId,
                 ImageFileName1 = product.productImages.Image1.FileName,
                 ImageFileName2 = product.productImages.Image2.FileName,
-                ImageFileName3 = product.productImages.Image3.FileName
+                ImageFileName3 = product.productImages.Image3.FileName,
+                ImageFileName4 = product.productImages.Image4.FileName,
+                ImageFileName5 = product.productImages.Image5.FileName,
+                ImageFileName6 = product.productImages.Image6.FileName
             };
             await unitOfWork.GetRepository<ProductImage>().InsertAsync(productImage);
         }

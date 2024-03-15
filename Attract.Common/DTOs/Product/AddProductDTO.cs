@@ -48,5 +48,11 @@ namespace Attract.Common.DTOs.Product
         public IFormFile Image2 { get; set; }
         [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
         public IFormFile Image3 { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image4 { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image5 { get; set; }
+        [AllowedExtensions(new[] { ".jpg", ".jpeg", ".png" })]
+        public IFormFile Image6 { get; set; }
     }
 }

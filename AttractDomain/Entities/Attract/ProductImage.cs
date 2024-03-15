@@ -22,5 +22,8 @@ namespace AttractDomain.Entities.Attract
         public string ImageFileName1 { get; set; }
         public string ImageFileName2 { get; set; }
         public string ImageFileName3 { get; set; }
+        public string ImageFileName4 { get; set; }
+        public string ImageFileName5 { get; set; }
+        public string ImageFileName6 { get; set; }
     }
 }
