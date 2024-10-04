@@ -86,5 +86,32 @@ namespace Attract.Service.Service
             response.Success = true;
             return response;
         }
+
+        public async Task<BaseCommandResponse> AddColorRange(List<AddColorDTO> addColorDTOs)
+        {
+            var BaseCommandResponse = new BaseCommandResponse();
+            int Count = 0;
+            for (int i = 0; i < addColorDTOs.Count; i++)
+            {
+                var color = new Color
+                {
+                    Name = addColorDTOs[i].Name,
+                    ColorHexa = addColorDTOs[i].ColorHexa,
+                    CreatedBy = 1,
+                    CreatedOn = DateTime.Now,
+                };
+                try
+                {
+                    _unitOfWork.GetRepository<Color>().Insert(color);
+                    await _unitOfWork.SaveChangesAsync();
+                    BaseCommandResponse.Message = $" {Count++} Added Successfully ";
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return BaseCommandResponse;
+        }
     }
 }
