@@ -18,6 +18,12 @@ namespace Attract.API.Controllers.Color
             _colorService = colorService;
         }
 
+        [HttpPost("AddColorRang")]
+        public async Task<IActionResult> AddColorRange(List<AddColorDTO> addColorDTOs)
+        {
+            return Ok(await _colorService.AddColorRange(addColorDTOs));
+        }
+
         [HttpPost("Add")]
         public async Task<ActionResult<BaseCommandResponse>> AddColor(AddColorDTO viewModel)
         {

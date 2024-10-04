@@ -14,5 +14,6 @@ namespace Attract.Service.IService
         Task<int> AddColor(AddColorDTO viewModel);
         Task<BaseCommandResponse> UpdateColor(UpdateColorDTO viewModel);
         Task<BaseCommandResponse> DeleteColor(int id);
+        Task<BaseCommandResponse> AddColorRange(List<AddColorDTO> addColorDTOs);
     }
 }
